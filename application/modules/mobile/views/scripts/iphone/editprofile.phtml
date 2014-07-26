@@ -1,0 +1,22 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	
+	if(!empty($this->expired_flag)){
+		
+		 echo '<session_expired>'.$this->expired_flag.'</session_expired>';
+		
+		
+	} else {
+	
+	echo '<editprofile>';
+        echo '<success_flag>'.$this->success_flag.'</success_flag>';
+       
+        echo '<msg>'.$this->msg.'</msg>';
+       
+        
+	echo '</editprofile>';
+	
+	}
+?>

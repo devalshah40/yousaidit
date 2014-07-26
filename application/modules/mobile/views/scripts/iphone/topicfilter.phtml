@@ -1,0 +1,38 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+		if(!empty($this->expired_flag)){
+		
+		 echo '<session_expired>'.$this->expired_flag.'</session_expired>';
+		
+		
+	} else {
+	echo '<filter>';
+	if($this->success_flag == 1){
+		echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<msg>".$this->msg."</msg>";
+		
+//		if(!empty($this->country1)){
+//		echo "<country>";
+//	
+//		echo "<id>".$this->country1."</id>";
+//	
+//		echo "</country>";
+//		
+////			if(!empty($this->cat_id)){
+////		echo "<category>";
+////	
+////		echo "<id>".$this->cat_id."</id>";
+////	
+////		echo "</category>";
+////			}
+//			}
+		}else{
+		echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<msg>".$this->msg."</msg>";
+	}   
+	
+	echo '</filter>';
+	}
+?>

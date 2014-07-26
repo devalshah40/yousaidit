@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery-1.7.2.min.js"></script>
+<!--
+
+<script type="text/javascript" src="<?php //echo $this->baseUrl(); ?>/js/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="<?php //echo $this->baseUrl(); ?>/js/highcharts/modules/exporting.js"> </script>
+
+-->
+
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		$('#cmdClose').click(
+			function(){
+				 parent.$.fancybox.close();
+			}
+		);
+		
+
+		var chart;
+		    Highcharts.setOptions({
+		        colors: ['#99cc33', '#0099cc', '#ff3333', '#ffdc00', '#ff9933']
+		    });
+		    chart = new Highcharts.Chart({
+		        chart: {
+		            renderTo: 'container',
+		            plotBackgroundColor: null,
+		            plotBorderWidth: null,
+		            borderWidth: 0,
+		            plotShadow: false,
+		            backgroundColor: false,
+		             events: {
+		                load: drawImages
+		                }
+		            },
+		        title: {
+		            text: "",
+		        style: {
+		                width: '600px'
+		            }
+		        },
+		        legend: {
+		            backgroundColor: '#FCFFC5',
+					maxHeight: 50,
+		            symbolPadding: 40,
+					itemStyle: {
+		                fontFamily: 'arial',
+		                fontWeight:'bold',
+		                fontSize: '15px'
+		            },
+		            itemMarginTop: 12,
+		            itemMarginBottom: 12
+		        },
+		        tooltip: {
+		            enabled : false
+		        },
+		        credits: {
+		                    text: 'YouSaidIt',
+		                    href: 'http://www.yousaidit.eu/'
+		        },
+		     plotOptions: {
+		        pie: {
+		        allowPointSelect: true,
+		        dataLabels: {
+		            enabled: true,
+		            connectorWidth: 0,
+		            style: {
+		                fontFamily: 'arial',
+		                fontWeight:'bold',
+		                fontSize: '15px'
+		            }
+		            
+		        },
+		         point: {
+		                events: {
+		                    legendItemClick: function () {
+		                        return false; // <== returning false will cancel the default action
+		                    }
+		                }
+		            },
+		            showInLegend: true
+		        }
+		    },
+		            series: [{
+
+		                type: 'pie',
+
+		                name: '',
+
+		                data: [ <?php echo $this->data; ?> ]
+
+		            }],
+		            exporting: {
+		                filename: 'My-YouSaidIt-Topic-Responses',
+		                enableImages: true,
+		                   width: 800,
+		                   buttons: {
+		                       exportButton: {
+		                           menuItems: null,
+		                           onclick: function() {
+		                                   chart.exportChart(null, {
+		       								title: {
+		       									text: '<?php  	$dusman = array("'", ",", "/", "\n");
+		       													$qq = str_replace($dusman, "", $this->title);
+		       													echo $qq; ?>',
+		       									align: 'center',
+		       									style: { width: '500px'  }
+		       								},
+		       								chart: { marginTop: 100, borderWidth: 1  },
+		       								labels: {
+		          	                             items: [{
+			          	                            	html: 'Total number of responses : <?php echo $this->total_votes; ?> - <?php echo date("F j, Y, g:i A"); ?>',
+		          	                                 style: {
+		          	                                     left: -5,
+		          	                                     top: 283,
+		          	                                     fontSize: '8px'
+		          	                                 }
+		          	                             }
+
+		          	                             ]
+		          	                         }
+		       							});
+		                           }
+		                       }
+		                   }
+		               }
+
+		          
+
+		        });
+		function drawImages() {
+		    var chart = this;
+		    for (var i = 0; i < chart.series[0].data.length; i++) {
+		         chart.series[0].data[i].dataLabel.add('');
+    	     	var colorData =	chart.series[0].data[i].color ;
+ 		     	chart.legend.allItems[i].legendItem.css({ color: colorData  });
+				 var legendRenderer = chart.legend.allItems[i].legendItem.renderer;
+				 legendRenderer.image('http://dev.yousaidit.eu/public/js/jquery/jquery.raty/img/face-'+chart.series[0].data[i].response+'-response.png', 21, 8, 30, 28).attr({ zIndex: 100  }).css({  cursor: 'pointer'}).add(chart.legend.allItems[i].legendGroup);
+			}
+		}
+	});
+</script>
+<style type="text/css">
+html,body { font-size:0.850em; color:#333; font-family:Arial, verdana, Helvetica, sans-serif; margin:0; padding:0; }
+input[type="submit"], input[type="button"] { padding:2px 5px; background-repeat:repeat-x; background-color:#cacaca; font-weight: bold; }
+h1,h2,h3{ font-family:Georgia, 'Times New Roman', Times, serif; text-shadow:0 1px 1px #d8d9d9; margin:3px; color: #666; border-bottom:3px double #999;
+background:#efefef; padding:5px; }
+.grdheader{	background:#525252; color:#FFF; padding:5px 0; font-weight: bold; text-shadow:#525252 1px 1px; }
+.odd { background-color: #e1e1e1; height: 32px; }
+.even{ background-color: #efefef; height: 32px; }
+.tablesyle { border: 1px solid #000;}
+</style>
+</head>
+<body>
+<?php
+    if( !empty($this->errorMsg)){   ?>
+		<div class="error_msg"><?php echo $this->errorMsg; ?></div>
+<?php
+    }else{    ?>
+		<h2><?php echo stripslashes($this->title); ?></h2>
+<?php
+        if(!empty($this->arrTopic)){
+			$percent1 = "0";$percent2 ="0";$percent3 = "0";$percent4 = "0";$percent5 = "0";
+			
+			foreach($this->arrTopic as $k=>$v) {
+				extract($v);
+				if($response == 1) {
+					$percent1 = $percent ;
+				}else if($response == 2){
+					$percent2 = $percent ;
+				}else if($response == 3){
+					$percent3 = $percent ;
+				}else if($response == 4){
+					$percent4 = $percent ;
+				}else if($response == 5){
+					$percent5 = $percent ;
+				}
+			}
+?>
+
+	<table width="100%" border="0" cellpadding="2" cellspacing="2">
+	<tr>
+		<td align="center">
+			<img src='<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/face-1-response.png'/><br/>
+     		<font color='#99cc33' size="4%"><?php echo $percent1; ?>&nbsp;%</font>
+     	</td>
+		<td align="center">
+			<img src='<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/face-2-response.png'/><br/>
+			<font color='#0099cc' size="4%"><?php echo $percent2; ?>&nbsp;%</font>
+		</td>
+		<td align="center">
+			<img src='<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/face-3-response.png'/><br/>
+			<font color='#ff3333' size="4%"><?php echo $percent3; ?>&nbsp;%</font>
+		</td>
+		<td align="center">
+			<img src='<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/face-4-response.png'/><br/>
+			<font color='#ffdc00' size="4%"><?php echo $percent4; ?>&nbsp;%</font>
+		</td>
+		<td align="center">
+			<img src='<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/face-5-response.png'/><br/>
+			<font color='#ff9933' size="4%"><?php echo $percent5; ?>&nbsp;%</font>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="5" align="left">
+			<strong>Total number of responses : <?php echo $this->total_votes; ?></strong>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="5">
+			<div id="container" style="width:520px; height:400px; margin: 0 auto"></div>
+		</td>
+	</tr>
+	</table>
+<?php
+        }else {    ?>
+            <table width="100%" border="0" cellpadding="2" cellspacing="2">
+			<tr>
+				<td align="center">No responses found for selected topic</td>
+			</tr>
+			</table>
+<?php
+        }         ?>
+<?php
+	}    ?>
+</body>
+  <!-- #content -->

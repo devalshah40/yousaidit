@@ -1,0 +1,66 @@
+<script type="text/javascript">
+$(document).ready(
+function(){
+	$("form input:text[name='txtSubject']").focus(
+		function(){
+			$(this).select();
+		}
+	);
+	$("form textarea[name='txtMsg']").focus(
+		function(){
+			$(this).select();
+		}
+	);
+});
+</script>
+<div id="contentarea">
+    <?php echo $this->leftmenu; ?>
+    <div id="right-content">
+      <div class="pgheader">
+        <h2>Invite Friends</h2>
+      </div>
+      <div class="area">
+         <?php if( !empty($this->errorMsg)){   ?>
+          	<div class="error_msg">
+          	    <?php echo $this->errorMsg; ?>
+           	</div>
+         <?php  }    ?>
+    <form id="frmInvite" method='post' action='<?php echo $this->baseUrl(); ?>/invite-friends.html'>
+      <div id="invite-frds">
+        <ul>
+          <li><label> To : </label></li>
+          <li>
+            <textarea name='txtEmail' id='txtEmail' rows="5" cols="50"><?php echo $this->txtEmail; ?></textarea>
+            <br/><span style="font-size: 10px; text-align:center; ">Separate multiple email address using SEMI COLON <strong>;</strong> OR COMMA <strong>,</strong></span>
+          </li>
+			<li>&nbsp;</li>
+          <li><label>Subject : </label></li>
+          <li>
+            <input type='text' value="<?php echo empty($this->txtSubject)?'Invitation To Join YouSaidIt':$this->txtSubject; ?>" name='txtSubject' id='txtSubject' size="50" maxlength="100">
+          </li>
+         <li>&nbsp;</li>
+          <li><label>Custom Message : </label></li>
+          <li>
+            <textarea name='txtMsg' id='txtMsg' rows="7" cols="50"><?php echo empty($this->txtMsg)?
+         "Hey
+         
+          I recommend this cool App that gives you the chance to raise a topic that you feel strongly about and find other people's views on it. Likewise, you can express your view on what others feel strongly about!
+
+		  Check it out at the App Store, Google Play Store or online at www.yousaidit.eu
+         ":stripslashes($this->txtMsg); ?></textarea>
+          </li>
+        </ul>
+		
+      </div>
+      <br/>
+      <div align="center">
+        <input type="submit" name="cmdSubmit" value="Send Invitation">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="submit" name="cmdCancel" value="Cancel">
+      </div>
+    </form>
+      
+      </div>
+    </div>
+  </div>
+  <!-- #content -->

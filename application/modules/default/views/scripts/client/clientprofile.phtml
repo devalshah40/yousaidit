@@ -1,0 +1,72 @@
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/datepicker/jquery.datepick.js"></script>
+<script type="text/javascript">
+$(document).ready(
+	function(){
+        $('#dob').datepick(
+			{dateFormat: 'dd M yy'}
+		);
+	}
+);
+</script>
+<form id="frmMemberProfile" method="POST" action="<?php echo $this->baseUrl(); ?>/client-profile.html">
+       <?php if( !empty($this->errorMsg)){   ?>
+            	<div class="error_msg">
+            	    <?php echo $this->errorMsg; ?>
+            	</div>
+            <?php  }    ?>
+        
+		<input type="hidden" name="user_id" value="<?php echo $this->clientinfo['user_id']; ?>">
+        <input type="hidden" name="c_email" value="<?php echo $this->clientinfo['email']; ?>">
+
+         <div id="profilepage">
+        <fieldset>
+        	<ul class="profiledit">
+            	<li><h3>Personal Details :</h3>
+				<dl>
+					<dt><label>First Name : <font color="#FF0000">*</font> </label></dt>
+                    <dd><input tabindex="1" type="text" name="first_name" id="first_name" value="<?php echo $this->clientinfo['firstname']; ?>"></dd>
+                    <dt><label>Last Name : <font color="#FF0000">*</font></label></dt>
+                    <dd><input tabindex="2" type="text" name="last_name" id="last_name" value="<?php echo $this->clientinfo['lastname']; ?>" size="25" maxlength="25"></dd>
+					<dt><label>E-Mail : <font color="#FF0000">*</font></label></dt>
+                    <dd><input tabindex="3" type="text" name="email" id="email" value="<?php echo $this->clientinfo['email']; ?>"></dd>
+                    <dt><label>Company : </label></dt>
+                    <dd><input type="text" tabindex="4"  name="company_name" id="company_name" value="<?php echo $this->client_detail['company_name']; ?>" class="company"></dd>
+				</dl>
+                </li>
+                <li><h3>Contact Details :</h3>
+				<dl>
+                    <dt><label>Country : <font color="#FF0000">*</font></label></dt>
+                    <dd><select name="country" tabindex="5"  id="country">
+            		<option value="">Select Country</option>
+            
+    		        <?php foreach($this->countryList as $k => $v){ ?>
+	
+		            <option <?php echo ($this->client_detail['country_id'] == $v['country_id'])?'selected':''; ?> value="<?php echo $v['country_id']; ?>"><?php echo $v['country_name']; ?></option>
+          
+	  				<?php   }   ?>
+          			</select> </dd>
+                    
+                  
+                    <dt><label>Sign Up Date : </label></dt>
+                    <dd><input readonly="readonly" type="text" value="<?php echo $this->dateFormat($this->clientinfo['created_date'], null, 'd/m/Y'); ?>"></dd>
+                    
+                    <dt><label>Password :</label></dt>
+                    <dd><input tabindex="6" type="password" name="password" id="password" value=""></dd>
+                    
+                    <dt><label>Confirm Password:</label></dt>
+                    <dd><input tabindex="7" type="password" name="c_password" id="c_password" value="" size="20" maxlength="20"></dd>
+                                        
+				</dl>
+			 </li>
+            </ul>
+            <br/>
+            <div align="center" >
+            	
+            	<input type="submit" tabindex="8" name="cmdSubmit" id="cmdSubmit" value="Save">
+        		&nbsp;
+        		<input tabindex="9" type="submit" name="cmdCancel" id="cmdCancel" value="Cancel">
+              
+            </div>
+        </fieldset>
+    </div>
+</form>

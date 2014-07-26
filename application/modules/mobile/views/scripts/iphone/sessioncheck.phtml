@@ -1,0 +1,8 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	echo '<sessioncheck>';
+	    echo "<success_flag>".$this->success_flag."</success_flag>";
+	echo '</sessioncheck>';
+?>

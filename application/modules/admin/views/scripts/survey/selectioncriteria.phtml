@@ -1,0 +1,321 @@
+<?php //echo '<pre>'; print_r($this->arr); echo '</pre>'; exit; ?>
+<script type="text/javascript">
+$("document").ready(
+	function(){
+		$("form input:checkbox[name='chkAB[]']").change(
+			function(){
+				var ss = 'txtAgeCSS' + $(this).val();
+				var mf = 'txtAgeCMF' + $(this).val();
+
+				if( $(this).attr('checked') == true){
+					$("form [name=" + ss +"]").removeAttr('disabled');
+					$("form [name=" + mf +"]").removeAttr('disabled');
+					$("form [name=" + ss +"]").val(0);
+					$("form [name=" + ss +"]").select();
+
+				}else{
+					$("form [name=" + ss +"]").attr('disabled', true);
+					$("form [name=" + mf +"]").attr('disabled', true);
+					$("form [name=" + ss +"]").val('');
+					$("form [name=" + mf +"]").val('');
+				}
+			}
+		);
+
+		$("#SFAge input:text[name*='txtAgeCSS']").blur(
+	        function(){
+            	 var mf = 'txtAgeCMF' + $(this).attr('id');
+                 $.ajax({    type    : "GET",
+                 url     : '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/survey/sampleframe/ab/' + $(this).attr('id') + '/id/<?php echo $this->surveyinfo['survey_id']; ?>',
+                 success : function(data) {
+                 	$("form [name=" + mf + "]").val(data);
+                 },
+				    error	: function(data) {
+                  		alert('Error encountered. Cannot continue.');
+				    }
+                 });
+			}
+		);
+
+		$('#chkSFAge').change(
+			function(){
+				if($(this).attr('checked') == 1){
+					$('#sf_age').show();
+				}else{
+					$('#sf_age').hide();
+				}
+			}
+		);
+
+		var chkFlag = false;
+		$("form input:checkbox[name='chkAB[]']").each(
+			function(){
+				if(this.checked == true){
+					chkFlag = true;
+				}
+			}
+		);
+
+		if(chkFlag == true){
+			$('#chkSFAge').attr('checked', 'checked');
+		}
+		
+		$('#chkSFAge').trigger('change');
+
+		$("form input:checkbox[name='udf[]']").change(
+			function(){
+				if($(this).attr('checked') == true){
+					$('#udf' + $(this).val()).show();
+				}else{
+					$('#udf' + $(this).val()).hide();
+				}
+			}
+		);
+
+		var chkFlag = false;
+		$("form input:checkbox[name='udf[]']").each(
+			function(){
+				if($(this).attr('checked') == true){
+					$('#udf' + $(this).val()).show();
+				}else{
+					$('#udf' + $(this).val()).hide();
+				}
+			}
+		);
+
+		
+	}
+);
+</script>
+
+<style type="text/css">
+.post-code {
+	text-transform:uppercase;
+}
+</style>
+<form name='frmSurveyCriteria' id='frmSurveyCriteria' method="POST" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/survey/selectioncriteria">
+  <input type="hidden" name="id" id="id" value="<?php echo $this->surveyinfo['survey_id']; ?>">
+  <input type="hidden" name="cid" id="cid" value="<?php echo $this->surveyinfo['client_id']; ?>">
+  <input type="hidden" name="client_type" id="client_type" value="<?php echo ($this->surveyinfo['client_type'] == 'CC')?1:0; ?>">
+  <input type="hidden" name="pg" id="pg" value="<?php echo $this->pg; ?>">
+  <input type="hidden" name="survey_questions_flag" id="survey_questions_flag" value="<?php echo $this->survey_questions_flag; ?>">
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+      <td><table width="100%" cellpadding="0" cellspacing="15" border="0">
+      	<tr>
+      		<td height="30">
+      			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+      			<tr>
+      				<td height="30" style="font-size: 14px; font-weight: bold; color: red; ">
+      					Survey : <?php echo stripslashes($this->surveyinfo['title']); ?>
+      				</td>
+      				<td align="right">
+      					<input type='submit' name='cmdMemberSampleCount' id='cmdMemberSampleCount' value='&nbsp;Get Eligible Members Count&nbsp;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font size="3" color="red"><strong><?php echo !empty($this->cnt)?$this->cnt . ' Members Found':''; ?></strong></font>&nbsp;&nbsp;
+      					&nbsp;&nbsp;&nbsp;&nbsp;
+      				</td>
+      			</tr>
+      			</table>
+      		</td>
+      	</tr>
+          <tr>
+            <td width="100%" valign="top">
+            <table width="100%" id='datatable' cellpadding="2" cellspacing="2" border="0" align="center" bordercolor="#a2a2a2" >
+                <tr>
+                  <td colspan="2" height="30" align="left"><h2>Default Selection Parameters</h2></td>
+                </tr>
+                <tr>
+                  <td height="30" width="30%" valign="top" align="right"><label>Member Level : </label></td>
+                  <td height="30" width="70%" align="left">&nbsp;
+                    <select multiple="multiple" name="level_id[]" id="level_id">
+                      <?php foreach($this->memberLevel as $k => $v){
+         $selectedFlag = false;
+         if($this->parameters['level_id']){
+             foreach($this->parameters['level_id'] as $k1 => $v1){
+                if($v1 == $v['id']){
+                   $selectedFlag = true;
+                   break;
+                }
+             }
+         }        ?>
+                      <option <?php echo ($selectedFlag == true)?'selected="selected"':''; ?> value="<?php echo $v['id']; ?>"><?php echo $v['name']; ?></option>
+                      <?php }   ?>
+                    </select></td>
+                </tr>
+                <tr>
+                  <td height="30" width="30%" align="right"><label>Gender : </label></td>
+                  <td height="30" width="70%" align="left">&nbsp;
+                    <select name="gender" id="gender">
+                      <option <?php echo ($this->parameters['gender'] == 'A')?'Selected':''; ?> value="A">All</option>
+                      <option <?php echo ($this->parameters['gender'] == 'M')?'Selected':''; ?> value="M">Male</option>
+                      <option <?php echo ($this->parameters['gender'] == 'F')?'Selected':''; ?> value="F">Female</option>
+                    </select></td>
+                </tr>
+                <tr>
+                  <td height="30" width="30%" align="right"><label>Post Code : </label></td>
+                  <td height="30" width="70%" align="left">&nbsp;
+                    <input type="text" name="post_code" class='post-code' id="post_code" value="<?php echo $this->parameters['post_code']; ?>" maxlength="8" size="8"></td>
+                </tr>
+<!--            <tr>
+                  <td height="30" width="30%" align="right"><label>Min Age : </label></td>
+                  <td height="30" width="70%" align="left">&nbsp;
+                    <input type="text" name="min_age" id="min_age" pattern="[0-9]*" value="<?php echo $this->parameters['min_age']; ?>" size="2" maxlength="2"></td>
+                </tr>
+                <tr>
+                  <td height="30" width="30%" align="right"><label>Max Age : </label></td>
+                  <td height="30" width="70%" align="left">&nbsp;
+                    <input type="text" name="max_age" id="max_age" pattern="[0-9]*" value="<?php echo $this->parameters['max_age']; ?>" size="2" maxlength="2"></td>
+                </tr>	 -->
+                <tr>
+                  <td colspan="2" height="30" align="left"><h2>Sample Frames</h2></td>
+                </tr>
+                <tr>
+                  <td colspan="2" height="30" align="left" style="font-size: 12px; font-weight: bold;">Age&nbsp;&nbsp;&nbsp;<input title="Click To Include 'Age' in Survey Selection Criteria" type='checkbox' value="1" name="chkSFAge" id="chkSFAge"></td>
+                </tr>
+                <tr id='sf_age'>
+                  <td colspan="2" id='SFAge' bgcolor="#F2EBF7">
+                  	<table width="100%" cellpadding="2" cellspacing="1" border="0">
+					<tr bgcolor="#ffffff">
+						<td height="30">&nbsp;</td>
+						<td>&nbsp;<b>Age Category</b></td>
+						<td align="center"><b>Sample Size Requested</b></td>
+						<td align="center"><b>Matches Found</b></td>
+					</tr>
+<?php foreach($this->ageBands as $ak => $av){
+        $chkFlag = false;
+        if(!empty($this->parameters['ageband'])){
+            foreach($this->parameters['ageband'] as $pk => $pv){
+                if($pv[0] == $av['ab_id']){
+                    $chkFlag = true;    break;
+                }
+            }
+        }                ?>
+					<tr bgcolor="#ffffff">
+						<td height="30" align="center"><input <?php echo ($chkFlag == true)?'checked="checked"':''; ?> type='checkbox' name='chkAB[]' value='<?php echo $av['ab_id']; ?>'></td>
+						<td><b>&nbsp;
+						<?php if($av['min_age'] == 0){ ?>
+							&nbsp;&lt;&nbsp;<?php echo $av['max_age']; ?>
+						<?php }else if($av['max_age'] == 0){ ?>
+							&nbsp;&gt;=&nbsp;<?php echo $av['min_age']; ?>
+						<?php }else{    ?>
+							&gt;=&nbsp;<?php echo $av['min_age']; ?>&nbsp; &amp; &nbsp;&lt;&nbsp;<?php echo $av['max_age']; ?>
+						<?php }   ?>
+						</b></td>
+						<td align="center"><input <?php echo ($chkFlag == true)?'':'disabled="disabled"'; ?>  type='text' name='txtAgeCSS<?php echo $av['ab_id']; ?>' id='<?php echo $av['ab_id']; ?>' value='<?php echo ($chkFlag == true)?$pv[1]:''; ?>' size="4" maxlength="4" ></td>
+						<td align="center"><input <?php echo ($chkFlag == true)?'':'disabled="disabled"'; ?>  readonly="readonly" type='text' name='txtAgeCMF<?php echo $av['ab_id']; ?>' id='<?php echo $av['ab_id']; ?>' value='<?php echo ($chkFlag == true)?$pv[2]:''; ?>' size="4" maxlength="4" ></td>
+					</tr>
+<?php }    ?>
+                  	</table>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td colspan="2" height="30" align="left"><h2>Custom Selection Parameters</h2></td>
+                </tr>
+				<tr>
+					<td colspan="10">
+					<?php foreach($this->arr as $k => $v){  ?>
+	                    <?php if( !empty($this->parameters['udf']) ){
+    	                          foreach($this->parameters['udf'] as $uk => $uv){
+    	                            $selectedFlag = false;
+    	                            foreach($v['udf'] as $udf_k => $udf_v){
+    	                                if('udf'.$udf_v['udf_id'] == $uk){
+    	                                    $selectedFlag = true; break;
+    	                                }
+    	                            }
+    	                            if($selectedFlag){    break;    }
+    	                          }
+	                          } ?>
+                    	<input <?php echo ($selectedFlag)?'checked="checked"':''; ?> type='checkbox' value='<?php echo $v['fg']['fg_id']; ?>' name='udf[]'>
+                    	&nbsp;
+                    	<span id='grp<?php echo $v['fg']['fg_id']; ?>'><b><?php echo stripslashes($v['fg']['name']); ?></b></span>
+                    	&nbsp;&nbsp;&nbsp;&nbsp;
+		<?php }    ?>
+					</td>
+				</tr>
+                <tr>
+                  <td colspan="2" style="font-size: 13px;" >
+		<?php foreach($this->arr as $k => $v){  ?>
+		
+		<div id='udf<?php echo $v['fg']['fg_id']; ?>' style="display: none; border: 1px dotted red; padding: 5px 10px 5px 10px;">
+			<font color='red'>
+			<b><?php echo stripslashes($v['fg']['name']); ?></b>
+			</font>
+			<br/><br/>
+                    <?php foreach($v['udf'] as $k1 => $v1){    ?>
+                    
+                    <?php if($v1['type_of_control'] == 'checkbox' || $v1['type_of_control'] == 'drop_down_multiple' || $v1['type_of_control'] == 'drop_down_single' || $v1['type_of_control'] == 'radio_button'){ ?>
+                    <font color='#3100F0'>"&nbsp;<?php echo stripslashes($v1['caption']); ?>&nbsp;"&nbsp;<b>?</b></font><br/><br/>
+                    <?php     foreach($v1['dv'] as $k2 => $v2){
+				            $selectedFlag = false;
+				            if(!empty($this->parameters['udf'])){
+    				            foreach($this->parameters['udf'] as $uk => $uv){
+    				                if($uv[0] == $v1['udf_id']){
+    				                    for($uvi = 1; $uvi < count($uv); $uvi++ ){
+    				                        if($uv[$uvi] == $v2['udf_dv_id']){
+    				                            $selectedFlag = true;
+    				                        }
+    				                    }
+    				                }
+    				            }
+				            }                ?>
+                    <input <?php echo ($selectedFlag)?'checked="checked"':''; ?> value='<?php echo $v2['udf_dv_id']; ?>' type="checkbox" style="border: 1px solid black;"  name="udf<?php echo $v1['udf_id']; ?>[]" style="width: 250px;" >
+                    &nbsp;&nbsp;<?php echo $v2['caption'];?>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <?php     }    ?>
+                    <br/><br/>
+                    
+                    <?php }    ?>
+                    
+                    <?php if($v1['type_of_control'] == 'textbox'){    ?>
+                    	<font color='#3100F0'>"&nbsp;<?php echo stripslashes($v1['caption']); ?>&nbsp;"&nbsp;<b>?</b></font><br><br>
+				    <?php   $condition = null;
+				            $value = null;
+				            if(!empty($this->parameters['udf'])){
+    				            foreach($this->parameters['udf'] as $uk => $uv){
+    				                if($uv[0] == $v1['udf_id']){
+    				                    $condition = $uv[1];
+    				                    $value = $uv[2];
+    				                }
+    				            }
+				            }                    ?>
+                    <select name='udf_c_<?php echo $v1['udf_id']; ?>'>
+                      <option <?php echo ($condition == 'E')?'selected="selected"':''; ?> value="E">Equal To</option>
+                      <option <?php echo ($condition == 'G')?'selected="selected"':''; ?> value="G">Greater Then</option>
+                      <option <?php echo ($condition == 'L')?'selected="selected"':''; ?> value="L">Less Then</option>
+                    </select>
+                    <input style="border: 1px solid black; width: 250px;"  <?php echo !empty($v1['max_length'])?'maxlength="'.$v1['max_length'].'"':''; ?> type='text' name='udf<?php echo $v1['udf_id']; ?>' value="<?php echo $value; ?>" ><br/>
+				        <?php if($v1['data_type'] == 'numeric'){ ?>
+                    		Only Numeric [0 to 9] Values Allowed
+                	    <?php }else{    ?>
+							Only Alpha numeric values allowed
+        	            <?php }    ?>
+	                    <?php if( !empty($v1['max_length']) && $v1['data_type'] == 'numeric' ){ ?> -- Maximum digits allowed <?php echo $v1['max_length']; ?>  <?php }    ?>
+    	                <?php if( !empty($v1['max_length']) && $v1['data_type'] != 'numeric' ){ ?> -- Maximum characters allowed <?php echo $v1['max_length']; ?>  <?php }    ?>
+					
+					 <br/><br/>
+					
+                    <?php }    ?>
+                    
+                    
+                    
+                    
+
+                    <?php     }  ?>
+                    
+                    </div>
+                    
+                    <?php }    ?></td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="center"><input type="submit" name="cmdSubmit" id="cmdSubmit" value="Update">
+        &nbsp;&nbsp;&nbsp;
+        <input type="button" name="cmdCancel" id="cmdCancel" value="Back To Survey Listing"></td>
+    </tr>
+  </table>
+</form>

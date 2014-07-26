@@ -1,0 +1,22 @@
+<div id="contentarea" style="border:5px solid #fff; border-radius:15px; padding:2%; width:80%; margin:1% auto;">
+<h2>Thank You</h2>
+      <br/>
+      <p style="font-weight: normal;" >
+        <?php if ( $this->is_error == false) { ?>
+				Thank you for responding to our survey.<br/><br/>
+
+				Our analysis and understanding of the information you and other customers have given us is a crucial part of our efforts to improve the support we provide for our customers, and to offer you the very best services and products that we can.<br/><br/>
+				
+				Thank you for taking the time and trouble to help us do this.<br/><br/>
+				
+				YouSaidIt
+        <?php }else{ ?>
+
+        	<?php echo $this->err_msg; ?>
+
+        <?php }      ?>
+      </p>
+</div>
+<div align="center">
+	<input type="button" onclick="javascript:top.location='<?php echo $this->baseUrl(); ?>/user-home.html'" value="Continue" />
+</div>

@@ -1,0 +1,35 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	echo '<signin>';
+		echo "<user_id>".$this->user_id."</user_id>";
+		echo "<email>".$this->email."</email>";
+		
+		echo "<fname>".$this->fname."</fname>";
+		echo "<lname>".$this->lname."</lname>";
+		echo "<dob>".$this->dob."</dob>";
+		echo "<countryProfile>".$this->country."</countryProfile>";
+		
+		echo "<gender>".$this->gender."</gender>";
+		echo "<address1>".$this->address1."</address1>";
+		echo "<address2>".$this->address2."</address2>";
+		echo "<town>".$this->town."</town>";
+		echo "<county>".$this->county."</county>";
+		echo "<postcode>".$this->postcode."</postcode>";
+		echo "<userInterest>".$this->intrestid."</userInterest>";
+		echo "<userInterestName>".$this->intrestname."</userInterestName>";
+		echo "<signupData>".$this->signupData."</signupData>";
+		echo "<sharing>".$this->sharing."</sharing>";
+		
+		echo "<countryProfileName>".$this->countryName."</countryProfileName>";
+		
+		
+		//  if( !empty($this->sid) ) {
+	    echo "<sid>".$this->sid."</sid>";
+		//  }
+	    echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<msg>".$this->msg."</msg>";
+		
+	echo '</signin>';
+?>

@@ -1,0 +1,30 @@
+<header>
+	<div id="logo"></div>
+</header>
+  <!-- #header -->
+  <div id="contentarea">
+    <form class="login" id="frmLogin" method="POST" action="client-login.html">
+      <p>
+        <label for="login">Email:</label>
+        <input type="text" name="txtUserName" id="txtUserName" value="" class="username">
+      </p>
+      <p>
+        <label for="password">Password:</label>
+        <input type="password" name="txtPassword" id="txtPassword" value="" class="password">
+      </p>
+      <p class="login-submit">
+        <button type="submit" name="cmdMSubmit" id="cmdMSubmit" class="login-button">Login</button>
+      </p>
+      <p class="forgot-password">
+      <span id="span1"><a href="<?php echo $this->baseUrl(); ?>/signup.html">Sign Up</a></span>
+      <span id="span2"><a href="<?php echo $this->baseUrl(); ?>/recover-password.html">Recover your password?</a></span></p>
+      <div class="error-msg">
+            <?php if( !empty($this->errorMsg)){   ?>
+            	<div class="error_msg">
+            	    <?php echo $this->errorMsg; ?>
+            	</div>
+            <?php  }    ?>
+      </div>
+    </form>
+    <div align="center" class="map-img"></div>
+  </div>

@@ -1,0 +1,216 @@
+@import url('inner.css');
+@import url('button.css');
+@import url('formstyles.css');
+@import url('pagination.css');
+@charset "utf-8";
+
+/* CSS Document */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+	background: transparent;
+	border: 0;
+	margin: 0;
+	padding: 0;
+	vertical-align: baseline;
+}
+ol, ul { list-style: none; }
+input, select, textarea, button { font-size: 13px; font-family: Arial,Helvetica, sans-serif; outline: none; margin: 0; }
+a { text-decoration: none; color: #d6f693; outline: none; }
+button { outline: none; }
+a img { border: 0; }
+h1,h2,h3,h4,h5, span.h3 { font-family: 'RobotoBoldCondensed', Arial, Helvetica, sans-serif; font-weight: normal; }
+small { font-size: 11px; }
+h1 { font-size: 30px; }
+h2 { font-size: 24px; }
+h3 { font-size: 20px; }
+h4 { font-size: 16px; }
+h5 { font-size: 13px; }
+div,span{ display:block;}
+/**************************************************************/
+html,body {	margin:0; padding:0; height:100%; }
+body { background:url("../images/main-background.jpg") center top no-repeat fixed; font-size: 13px; background-size:100%;
+	font-family: Arial, Helvetica, sans-serif; color: #efefef; line-height: 21px; height:100%; 
+}
+p{ text-align: justify; padding:1% 0; }
+#wrapper { min-height:100%; position:relative; }
+header{ border:0px solid #FF0000; margin:0 auto; width:96%; /* width:90%; */ display:block; overflow:hidden;}
+footer { background:#222222; width:100%; /* position:absolute; */ bottom:0; left:0; padding:7px 0; margin:0 auto 2px auto; color:#fff;
+	text-align:center; overflow:auto; }
+footer #links{ float:right; border:0px solid #CCC; padding:0 15px;  }
+#logo{ background:url(../images/ysi-logo.png) 55% top no-repeat; margin:0 auto; min-width:300px; min-height:175px; border:0px solid #FFF; }
+#contentarea{ padding-bottom:20px; border:0px solid #FF0000; width:96%; /* width:90%; */ margin:0 auto; overflow: auto;}
+#tabs{ border:0px solid #FF0000; width:90%; margin:1% auto;}
+.map-img{ background:url(../images/image.png) no-repeat center top; min-height:354px; }
+.error-msg{ color:#FEFC52; font-size:120%; font-weight:bold; text-align: center; padding:3px;    }
+
+/* ==========================================*/
+
+/* ==========================================*/
+/* ====================  Login form  ====================== */
+.login {
+ 	border:0px solid #FF0000;
+ 	position: relative;
+ 	margin:25px auto;
+ 	width: 400px;
+ 	padding-right: 32px;
+ 	color: #a8a7a8;
+ 	text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.8);
+}
+.login p {
+	margin: 0 0 10px;
+}
+input, button, label {
+	font-size: 15px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.login input[type=text], input[type=password] {
+	width: 300px;
+	height: 40px;
+	color: #525252;
+	padding: 0 10px;
+}
+/*
+.login input[type=text], input[type=password] {
+  padding: 0 10px;
+  width: 300px;
+  height: 40px;
+  color: #525252;
+  border: 0;
+  border-radius: 5px;
+}
+*/
+label {
+	float: left;
+	width: 100px;
+	line-height: 40px;
+	padding-right: 10px;
+	letter-spacing: 1px;
+	text-align: right;
+}
+.forgot-password {
+	padding-left: 100px;
+	font-size: 13px;
+	font-weight: bold;
+	color: #d6f693;
+	border: 0px solid #fff;
+	display: block;
+	overflow: auto;
+}
+.forgot-password #span1 {
+	float: left;
+}
+.forgot-password #span2 {
+	float: right;
+}
+.login-submit {
+	position: absolute;
+	background: #555555;
+	top: 12px;
+	right: 0;
+	width: 48px;
+	height: 48px;
+	padding: 8px;
+	border-radius: 32px;
+	-webkit-box-shadow: 0 0 4px #555555;
+	-moz-box-shadow: 0 0 4px 555555;
+	box-shadow: 0 0 4px 555555;
+}
+.login-submit:before, .login-submit:after {
+	content: '';
+	z-index: 1;
+	position: absolute;
+}
+.login-submit:before {
+	top: 28px;
+	left: -4px;
+	width: 4px;
+	height: 10px;
+	-webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.06);
+	-moz-box-shadow: inset 0 1px rgba(255, 255, 255, 0.06);
+	box-shadow: inset 0 1px rgba(255, 255, 255, 0.06);
+}
+.login-submit:after {
+	top: -4px;
+	right: -4px;
+	bottom: -4px;
+	width: 36px;
+}
+.login-button {
+	position: relative;
+	z-index: 2;
+	width: 48px;
+	height: 48px;
+	padding: 0 0 48px;
+	/* Fix wrong positioning in Firefox 9 & older (bug 450418) */
+	cursor: pointer;
+	text-indent: 120%;
+	white-space: nowrap;
+	overflow: hidden;
+	background: none;
+	border: 0;
+	border-radius: 24px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2), 0 1px rgba(255, 255, 255, 0.1);
+	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2), 0 1px rgba(255, 255, 255, 0.1);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2), 0 1px rgba(255, 255, 255, 0.1);/* Must use another pseudo element for the gradient background because Webkit */
+  /* clips the background incorrectly inside elements with a border-radius.     */
+}
+.login-button:before {
+	content: '';
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	right: 5px;
+	bottom: 5px;
+	border-radius: 24px;
+	/*  background-color: #00a2d3; */
+	background: #c3e27d;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ccea89), color-stop(100%, #96b64f));
+	background-image: -webkit-linear-gradient(top, #ccea89, #96b64f);
+	background-image: -moz-linear-gradient(top, #ccea89, #96b64f);
+	background-image: -ms-linear-gradient(top, #ccea89, #96b64f);
+	background-image: -o-linear-gradient(top, #ccea89, #96b64f);
+	background-image: linear-gradient(top, #ccea89, #96b64f);
+	-webkit-box-shadow: inset 0 0 0 1px #69852e, 0 0 0 5px rgba(0, 0, 0, 0.16);
+	-moz-box-shadow: inset 0 0 0 1px #69852e, 0 0 0 5px rgba(0, 0, 0, 0.16);
+	box-shadow: inset 0 0 0 1px #69852e, 0 0 0 5px rgba(0, 0, 0, 0.16);
+}
+.login-button:active:before {
+	/*  background-color: #0591ba; */
+	background: #afd164;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #96b64f), color-stop(100%, #ccea89));
+	background-image: -webkit-linear-gradient(top, #96b64f, #ccea89);
+	background-image: -moz-linear-gradient(top, #96b64f, #ccea89);
+	background-image: -ms-linear-gradient(top, #96b64f, #ccea89);
+	background-image: -o-linear-gradient(top, #96b64f, #ccea89);
+	background-image: linear-gradient(top, #96b64f, #ccea89);
+}
+.login-button:after {
+	content: '';
+	position: absolute;
+	top: 15px;
+	left: 12px;
+	width: 25px;
+	height: 19px;
+	background: url("../images/arrow.png") 0 0 no-repeat;
+}
+ button::-moz-focus-inner, input::-moz-focus-inner {
+ border: 0;
+ padding: 0;
+}
+.lt-ie9 input[type=text], .lt-ie9 input[type=password] {
+	line-height: 40px;
+	background: #282828;
+}
+.lt-ie9 .login-submit {
+	position: absolute;
+	top: 12px;
+	right: -28px;
+	padding: 4px;
+}
+.lt-ie9 .login-submit:before, .lt-ie9 .login-submit:after {
+	display: none;
+}
+.lt-ie9 .login-button {
+	line-height: 48px;
+}

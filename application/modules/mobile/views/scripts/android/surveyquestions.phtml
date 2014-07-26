@@ -1,0 +1,27 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	echo '<SQuestions>';
+    if($this->success_flag == 1){ $cnt = 1;
+        foreach($this->questions as $k => $v){
+           $que_desc = htmlentities(stripslashes($cnt . ". " . $v['que_info']['description']),  ENT_COMPAT, 'UTF-8');
+           $new_que_desc = str_replace('&pound;', '&#163;', $que_desc);
+
+           echo '<SQuestion>';
+                echo '<qid>'.$v['que_info']['sq_id'].'</qid>';
+                echo '<qtype>'.$v['que_info']['answer_type'].'</qtype>';
+                echo '<qmax>'.$v['que_info']['max_answer'].'</qmax>';
+            //    echo '<ptitle>'.$v['que_info']['positive_text'].'</ptitle>';
+            //    echo '<ntitle>'.$v['que_info']['negative_text'].'</ntitle>';
+                echo '<title>'.$new_que_desc.'</title>';
+                echo '<response_required>'.$v['que_info']['response_required'].'</response_required>';
+                echo '<rule_flag>'.$v['hide_que'].'</rule_flag>';
+           echo '</SQuestion>';   $cnt++;
+        }
+    }else{
+	    echo "<success_flag>".$this->success_flag."</success_flag>";
+        echo "<msg>".$this->msg."</msg>";
+    }
+	echo '</SQuestions>';
+?>

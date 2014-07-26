@@ -1,0 +1,63 @@
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		$('#cmdCancel').click(
+			function(){
+		location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/mailtemplates/index';
+			}
+		);
+	}
+)
+</script>
+<form name='frmMailTempedit' id='frmMailTempedit' method="POST" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/mailtemplates/<?php echo strtolower($this->action); ?>">
+  <input type="hidden" name="id" id="id" value="<?php echo $this-> getTemplate['mailid'];?>">
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+      <td width="100%"><!---->
+
+        <table width="100%" cellpadding="2" cellspacing="2" border="0" align="center" bordercolor="#a2a2a2" >
+              <tr>
+            <td height="30" width="30%" align="right"><label>Description : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="description" size="50" maxlength="150" value="<?php echo stripslashes($this->getTemplate['description']); ?>"></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" valign="top" align="right"><label>Subject: </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+               <input type="text" name="subject" size="50" maxlength="150" value="<?php echo stripslashes($this->getTemplate['subject']); ?>"></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>From Caption : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+               <input type="text" name="from_caption" size="50" maxlength="150" value="<?php echo stripslashes($this->getTemplate['from_caption']); ?>"></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>From Email : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="from_email" size="50" maxlength="150" value="<?php echo stripslashes($this->getTemplate['from_email']); ?>"></td>
+          </tr>
+
+          <tr>
+            <td height="30" width="30%" valign="top" align="right"><label>Mail text :</label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <textarea rows="15" cols="75" name="mail_text" id="mail_text"><?php echo stripslashes($this->getTemplate['mail_text']); ?></textarea></td>
+          </tr>
+
+
+          <tr>
+            <td height="30" width="30%" align="right">&nbsp;
+              <label>Last Update Date Time : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->getTemplate['last_update_datetime'], 'dt'); ?></b></td>
+          </tr>
+
+        </table>
+
+        <!----></td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="center"><input type="submit" name="cmdSubmit" id="cmdSubmit" value="Edit">
+        &nbsp;&nbsp;&nbsp;
+        <input type="button" name="cmdCancel" id="cmdCancel" value="Cancel"></td>
+    </tr>
+  </table>
+</form>

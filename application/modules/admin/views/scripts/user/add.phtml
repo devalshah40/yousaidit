@@ -1,0 +1,231 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl (); ?>/js/datepicker/smoothness.datepick.css" />
+<script type="text/javascript" language="javascript" src="<?php	echo $this->baseUrl ();	?>/js/datepicker/jquery.datepick.js"></script>
+<script type="text/javascript">
+$(document).ready(
+	function(){
+		
+        $('#dob').datepick(
+			{dateFormat: 'dd M yy'}
+		);
+
+
+
+    	}
+);
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		$('#cmdCancel').click(
+			function(){
+				location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/user/index/gid/' +  $("#gid").val() + '/page/' +  $("#pg").val();
+			}
+		);
+	}
+)
+</script>
+
+<form name='frmUser' id='frmUser' method="POST" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/user/<?php echo strtolower($this->action); ?>details">
+  <input type="hidden" name="id" id="id" value="<?php echo $this->userinfo['user_id']; ?>">
+    <input type="hidden" name="gid" id="gid" value="<?php echo $this->gid; ?>">
+  <input type="hidden" name="pg" id="pg" value="<?php echo $this->pg; ?>">
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+      <td width="100%"><!---->
+        <table width="100%" cellpadding="2" cellspacing="2" border="0" align="center">
+          <tr>
+            <td height="30" width="30%" align="right"><label>First Name : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="firstname" id="firstname" value="<?php echo $this->userinfo['firstname']; ?>" size="25" maxlength="25">&nbsp;&nbsp;<font class="compulsory" >*</font></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Last Name : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="lastname" id="lastname" value="<?php echo $this->userinfo['lastname']; ?>" size="25" maxlength="25">&nbsp;&nbsp;<font class="compulsory" >*</font></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>E-Mail : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="email" id="email" value="<?php echo $this->userinfo['email']; ?>" size="40" maxlength="100">&nbsp;&nbsp;<font class="compulsory" >*</font></td>
+          </tr>
+           <?php if($this->gid == 3) { ?>
+          <tr>
+              <td height="30" width="30%" align="right"><label>Company Name: </label></td>
+              <td height="30" width="70%" align="left">&nbsp;
+              	<input type="text" name="company_name" id="company_name" size="60" maxlength="100" value="<?php echo $this->client_detail['company_name']; ?>" class="company"><font class="compulsory" >*</font></td>
+         </tr>
+         
+         <?php } ?>
+          <?php if($this->gid == 1) { ?>
+          <tr>
+    
+            <td height="30" width="30%" align="right"><label>Username : </label></td>
+            <td height="30" width="70%" align="left"><?php   if($this->action != 'Add'){     ?>
+              &nbsp;<b><?php echo $this->userinfo['username']; ?></b>
+              <?php   }else{     ?>
+              &nbsp;
+              <input type="text" name="username" id="username" value="<?php echo $this->userinfo['username']; ?>" size="20" maxlength="20">
+              <?php   }     ?></td>
+          </tr>
+          
+           <?php } ?>
+           <?php if($this->gid == 2) { ?>
+      
+          <tr>
+            <td height="30" width="30%" align="right"><label>Address 1 :</label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="address1" id="address1" value="<?php echo !empty($this->userDetailsInfo['address1']) ? $this->userDetailsInfo['address1'] : '';?>">&nbsp;&nbsp;<font class="compulsory" >*</font></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Address 2 :</label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+                <input type="text" name="address2" id="address2" value="<?php echo !empty($this->userDetailsInfo['address2']) ? $this->userDetailsInfo['address2'] : '';?>"></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Town :</label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+               <input type="text" name="town" id="town" value="<?php echo !empty($this->userDetailsInfo['town']) ? $this->userDetailsInfo['town'] : '';?>">&nbsp;&nbsp;<font class="compulsory" >*</font></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>County :</label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="county" id="county" value="<?php echo !empty($this->userDetailsInfo['county']) ? $this->userDetailsInfo['county'] : '';?>">&nbsp;&nbsp;<font class="compulsory" >*</font></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Postal Code :</label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="postcode" id="postcode" value="<?php echo !empty($this->userDetailsInfo['postcode']) ? $this->userDetailsInfo['postcode'] : '';?>" >&nbsp;&nbsp;<font class="compulsory" >*</font></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Gender :</label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+		        <!--<select  name="gender" id="gender" >
+		               <option value="">Select Gender</option>
+		               <option value="Male" <?php echo ($this->userDetailsInfo['gender'] == "Male" ) ? 'Selected' : ''; ?>>Male</option>
+		               <option value="Female" <?php echo ($this->userDetailsInfo['gender']  == "Female") ? 'Selected' : ''; ?>>Female</option>
+		         </select>-->
+		     <input type="text" disabled="disabled" readonly="readonly" name="gender" id="gender" value="<?php echo $this->userDetailsInfo['gender']; ?>" size="11" maxlength="11" ></td>
+		     </td>
+          </tr>
+          <tr>
+           	<td height="30" width="30%" align="right"><label>Date of birth : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              	<input type="text" disabled="disabled" readonly="readonly" name="dob" id="dob" value="<?php echo $this->userDetailsInfo['dob']; ?>" size="11" maxlength="11" class="calendar"></td>
+           </tr>
+              
+              
+       <tr>
+                      
+                      <td height="30" width="30%" align="right"><label>Country</label></td>
+          <td height="30" width="70%" align="left">&nbsp;
+          <select name="country" id="country" style="width:264px;">
+            <option value="">Select Country</option>
+            
+            <?php foreach($this->countryList as $k => $v){ ?>
+	      
+            <option <?php echo ($this->userDetailsInfo['country_id'] == $v['country_id'])?'selected':''; ?> value="<?php echo $v['country_id']; ?>"><?php echo $v['country_name']; ?></option>
+          
+	  <?php   }   ?>
+          </select> <font class="compulsory" >*</font></td></tr>
+              
+<?php  }elseif($this->gid == 3){ ?>
+                <tr>
+                      
+                      <td height="30" width="30%" align="right"><label>Country</label></td>
+          <td height="30" width="70%" align="left">&nbsp;
+				<select name="country" id="country" style="width:264px;">
+            <option value="">Select Country</option>
+            
+            <?php foreach($this->countryList as $k => $v){ ?>
+	      
+            <option <?php echo ($this->client_detail['country_id'] == $v['country_id'])?'selected':''; ?> value="<?php echo $v['country_id']; ?>"><?php echo $v['country_name']; ?></option>
+          
+	  <?php   }   ?>
+          </select>
+          <font class="compulsory" >*</font></td></tr>
+          
+     <?php } ?>
+      <?php if($this->gid == 2) { ?>
+                  <tr>
+                      <td height="30" width="30%" align="right"><label>User Interest</label></td>
+            <td height="30" width="70%" align="left">
+          <?php 	$exp = explode (',', $this->userDetailsInfo['interest']); ?>
+          <?php
+              foreach ( $this->interesteList as $k => $v ){
+                  $selected_flag = false ;
+                  foreach ( $exp as $jd  ){
+                      if($jd ==  $v['name'] ) {
+                          $selected_flag = true;
+                          break;
+                      } ?>
+          <?php  } ?>
+				<input disabled="disabled" <?php echo ($selected_flag == true)?'checked="checked"':''; ?> type='checkbox' value=<?php echo $v['name'];?> name='chkInterest[]'><?php echo $v['name'];?>
+	<?php	}?>
+          </td>
+              </tr>
+        <tr>
+			<td height="30" width="30%" align="right">	<label>Allowed Data Sharing :</label></td>
+			<td><input disabled="disabled" type='checkbox' <?php echo (($this->userDetailsInfo['data_share']) == 'Y')?'checked="checked"':''; ?> value='Y' name='chkShareData'></td>
+        </tr>
+      <?php  } ?>
+               <tr>
+            <td height="30" width="30%" align="right"><label>Password : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="password" name="password" id="password" value="" size="20" maxlength="20">&nbsp;&nbsp;<font class="compulsory" >*</font></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Confirm Password : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="password" name="c_password" id="c_password" value="" size="20" maxlength="20">&nbsp;&nbsp;<font class="compulsory" >*</font></td>
+          </tr>
+     
+      
+       
+          <?php   if($this->action != 'Add'){     ?>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Sign Up Date : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->userinfo['created_date']); ?></b></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Last Login Date Time : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->userinfo['lastlogin_datetime'], 'dt'); ?></b></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Last Update Date Time : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->userinfo['updated_datetime'], 'dt'); ?></b></td>
+          </tr>
+          
+        
+          
+          
+          <?php   }     ?>
+          
+          
+          
+          
+          <tr>
+            <td height="30" align="right"><label>Status : </label></td>
+            <td height="30" align="left">&nbsp;
+              <select class="select" name="status" id="status">
+                <option <?php echo ($this->userinfo['status'] == 'Active')?'Selected':''; ?> value="Active">Active</option>
+                <option <?php echo ($this->userinfo['status'] == 'Inactive')?'Selected':''; ?> value="Inactive">InActive</option>
+              </select></td>
+          </tr>
+        </table>
+        
+        <!----></td>
+    </tr>
+    
+    <tr>
+      <td height="30" colspan="3" align="right"><font class="compulsory">*</font>&nbsp;Indicates Compulsory Fields </td>
+    </tr>
+    
+    <tr>
+      <td height="30" colspan="3" align="center"><input type="submit" name="cmdSubmit" id="cmdSubmit" value="<?php echo ($this->action == 'Edit')?'Update':$this->action; ?>">
+        &nbsp;&nbsp;&nbsp;
+        <input type="button" name="cmdCancel" id="cmdCancel" value="Cancel"></td>
+    </tr>
+  </table>
+</form>

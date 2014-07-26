@@ -1,0 +1,178 @@
+<script type="text/javascript" src="<?php echo $this->baseUrl (); ?>/js/jquery/jquery.tablednd.js">
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("table tr#tdata").mouseout(
+		function () {
+			$(this).removeClass('active_row');
+			$(this).addClass('nonactive_row');
+		}
+	);
+
+	$('table.data tbody tr:odd').addClass('odd');
+	$('table.data tbody tr:even').addClass('even');
+
+	$("table tr#tdata").mouseover(
+		function () {
+			$(this).removeClass('nonactive_row');
+			$(this).addClass('active_row');
+		}
+	);
+
+	  $(".paginationControl").change(
+		    	function() {
+		        	var page_index = null;
+		        	page_index = $(this).val();
+		        	window.location = page_index;
+		    	}
+		    );
+
+    $("#chkAll").click(
+    	function() {
+    		var checked_status = this.checked;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					this.checked = checked_status;
+				}
+			);
+    	}
+    );
+
+	$(".cmdDelete").click(
+		function() {
+			var cnt = 0;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					if( this.checked == true){
+						cnt++;
+					}
+				}
+			);
+			if(cnt > 0){
+				ans = confirm("Confirm Operation on Selected Records(s) ?");
+				if(ans == false){
+					return false;
+				}
+			}else{
+				alert('No Records Selected.');
+				return false;
+			}
+		}
+	);
+
+	$(".cmdBack").click(
+		function() {
+			location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/index/page/1';
+		}
+	);
+
+	$("#dragrow").tableDnD({
+		onDrop:function(table, row) {
+	           	var rows = table.tBodies[0].rows;
+	           	var arr;
+	           	for (var i=0; i < rows.length; i++) {
+					arr = rows[i].id.split(' ');
+	               	$("#srt-order" + arr[1]).val(i+1);
+	           	}
+	    }
+	});
+	
+	
+});
+</script>
+
+<form name='frmQueResponseSet' id='frmQueResponseSet' method="POST" action="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/question/responseset">
+<input type='hidden' name='qid' value='<?php echo $this->queinfo['question_id']; ?>'>
+
+  <div class="contentdetails">
+    <table width="100%" cellpadding="2" cellspacing="2" border="0">
+      <tr>
+        <td class="searchdiv">
+			<table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td width="10%" align="left" valign="top" height="30">&nbsp;<b>Question :</b></td>
+              <td width="90%" align="left" height="30">&nbsp;<?php echo stripslashes(nl2br($this->queinfo['description'])); ?></td>
+            </tr>
+          	</table>
+        </td>
+      </tr>
+      <tr>
+        <td height="3"></td>
+      </tr>
+      <tr>
+        <td class="tablesyle"><?php
+	if( !empty($this->paginator) ){					?>
+	 <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td colspan="10"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+             <tr>
+              <td align="left" height="35" colspan="10">&nbsp;
+                <input type="submit" name="cmdDelete" class="cmdDelete" value="Delete Selected Response Set From Question">
+                &nbsp;&nbsp;
+                <input type="submit" name="cmdSortOrder" id="cmdSortOrder" value="Update Response Set Sort Order">
+                &nbsp;&nbsp;
+                <input type="button" name="cmdBack" class="cmdBack" value="Back To Question Listing">
+              </td>
+            </tr>
+          </table>
+          <table id="dragrow" width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+            <thead>
+              <tr class="grdheader">
+                <td width="3%" align="left"><input type="checkbox" name="chkAll" id="chkAll" value="1" style="border:0px"></td>
+                <td align="left" width="46%">&nbsp;Response Set Title, Answers</td>
+                <td width="43%" align="left">Description</td>
+                <td width="8%" align="center">Sort Order</td>
+              </tr>
+            </thead>
+            <tbody>	
+             <?php	
+              $row_id = 0;
+              foreach($this->paginator as $v){	?>
+            <tr id="tdata <?php echo $row_id; ?>">
+                <td valign="top" align="left"><input type="checkbox" name="chk[]" id="chk" value="<?php echo $v['rsetInfo']["qrs_id"]; ?>" style="border:0px">
+                	<input type='hidden' name='h_qrs_id[]' value='<?php echo $v['rsetInfo']["qrs_id"]; ?>'>
+                </td>
+                <td align="left" height="30">&nbsp;<?php echo $v['rsetInfo']['title']; ?>
+<?php    if( !empty($v['answers'])){        ?>
+			<ul style="line-height: 20px; margin: 0;">
+<?php       foreach($v['answers'] as $ak => $av){    ?>
+
+				<li><a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/answer/edit/aid/<?php	echo $av['answer_id']; ?>/page/<?php echo $this->pg; ?>/qrset/1"><?php echo $av['answer_text']; ?></a></li>
+<?php     	}     ?>
+			</ul>
+<?php    }        ?>
+                </td>
+                <td valign="top" align="left">&nbsp;<?php echo $v['rsetInfo']["description"]; ?></td>
+                <td valign="top" align="center"><input type='text' name='txtSortOrder[]' id='srt-order<?php echo $row_id; ?>' value='<?php echo $v['rsetInfo']['sort_order']?>' size='3' maxlength="3"></td>
+              </tr>
+              <?php		$row_id++;         }											?>
+            </tbody>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td align="left" height="35" colspan="10">&nbsp;
+                <input type="submit" name="cmdDelete" class="cmdDelete" value="Delete Selected Response Set From Question">
+                &nbsp;&nbsp;
+                <input type="submit" name="cmdSortOrder" id="cmdSortOrder" value="Update Response Set Sort Order">
+                &nbsp;&nbsp;
+                <input type="button" name="cmdBack" class="cmdBack" value="Back To Question Listing">
+              </td>
+            </tr>
+            <tr>
+              <td colspan="10"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+          </table>
+          <?php
+	}else{											?>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td height="50" valign="middle" align="center">No response set / answers found for selected question</td>
+            </tr>
+          </table>
+          <?php
+	}												?></td>
+      </tr>
+    </table>
+  </div>
+</form>

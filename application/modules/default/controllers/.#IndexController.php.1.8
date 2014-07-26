@@ -1,0 +1,100 @@
+<?php
+
+class IndexController extends My_UserController {
+
+    /**
+     * init() function, call init() function of parent class
+     *
+     */
+    public function init() {
+        parent::init();
+    }
+
+    /**
+     * Default Action
+     *
+     */
+    public function indexAction() {
+        
+        $this->view->pageTitle = ': Home';
+        $this->view->header_title = ' Home';
+        
+        $result = $this->_helper->sessioncheck($this->_session->session_data, $this->_session->session_data['login_flag']);
+        
+        if ($result == true){
+            $this->_redirector->gotoUrl('user-home.html');
+        }
+    }
+
+    public function aboutusAction() {
+        $this->view->pageTitle = ': About Us';
+        $this->view->header_title = ' About Us';
+        $response = $this->getResponse();
+    }
+
+    public function termsofuseAction() {
+        $this->view->pageTitle = ': Terms Of Use';
+        $this->view->header_title = ' About Us';
+    }
+
+    public function privacypolicyAction() {
+        $this->view->pageTitle = ': Privacy Policy';
+        $this->view->header_title = ' Privacy Policy';
+    }
+
+	public function settingsAction(){
+		$result = $this->_helper->sessioncheck($this->_session->session_data, $this->_session->session_data['login_flag']);
+        
+        if (empty($result)){
+            $this->_flashMessenger->addMessage(LOGIN_REQUIRED);
+            $this->_redirector->gotoUrl('index.html');
+        }
+        
+        if( !empty($this->_session->fbsession_data['fb_login_flag']) && $this->_session->fbsession_data['fb_login_flag'] === true){
+            $this->view->fb_login_flag = $this->_session->fbsession_data['fb_login_flag'];
+        }else{
+            $this->view->fb_login_flag = null;
+        }
+        
+	    $this->view->leftmenu = $this->view->render('leftmenu.phtml');
+	}
+	
+	public function facebookAction(){
+        $config = Zend_Registry::get('config');
+        $facebook = new My_Facebook( array('appId' => $config->fb->app_id, 'secret' => $config->fb->app_secret, 'cookie' => true) );
+        $session = $facebook->getSession();
+        
+        if (! empty($session)){
+            $uid = $facebook->getUser();
+            $user = $facebook->api('/me');
+            
+            if (! empty($user)){
+                //echo '<pre>';        print_r($user);        echo '</pre><br/>';
+                $this->_session->fbsession_data['fb_login_flag'] = true;
+                $this->_session->fbsession_data['fb_oauth_uid']  = $uid;
+                $this->_session->fbsession_data['fb_user_name'] = $user['name'];
+            }else{
+                $this->_flashMessenger->addMessage('Error(s) encountered, Cannot login to facebook');
+            }
+            //echo '<pre>';        print_r($this->_session->session_data);        echo '</pre><br/>';
+            //exit;
+            $this->_redirector->gotoUrl('settings.html');
+        }else{
+            $login_url = $facebook->getLoginUrl();
+            header("Location: " . $login_url);
+            exit;
+        }
+    }
+    
+    public function facebooklogoutAction(){
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+            
+        $this->_session->fbsession_data = null;
+        $this->_redirector->gotoUrl('user-home.html');
+    }
+
+    public function twitterAction(){
+        
+    }
+}

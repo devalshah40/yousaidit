@@ -1,0 +1,75 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl(); ?>/js/datepicker/smoothness.datepick.css" />
+<script type="text/javascript" language="javascript" src="<?php echo $this->baseUrl(); ?>/js/datepicker/jquery.datepick.js"></script>
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		$('#cmdCancel').click(
+			function(){
+				location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/responseset/index/page/' +  $("#pg").val();
+			}
+		);
+        $('#dob').datepick(
+			{dateFormat: 'd M yy'}
+		);
+	}
+)
+</script>
+
+<table width="100%" cellpadding="2" cellspacing="2" border="0">
+  <form name='frmADDres' id='frmADDres' method="POST" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/responseset/<?php echo strtolower($this->action); ?>">
+    <input type="hidden" name="id" id="id" value="<?php echo $this->resInfo['rs_id']; ?>">
+    <input type="hidden" name="pg" id="pg" value="<?php echo $this->pg; ?>">
+    <tr>
+      <td width="100%"><!---->
+        
+        <table width="100%" cellpadding="2" cellspacing="2" border="0" align="center">
+          
+          <tr>
+            <td height="30" width="30%" align="right">&nbsp;<label>Title : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="title" id="title" value="<?php echo $this->resInfo['title']; ?>" size="30" maxlength="50"> &nbsp;&nbsp;<font class="compulsory">*</font></td> 
+          </tr>
+          
+           <tr>
+            <td height="30" width="30%" valign="top" align="right"><label>Description : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <textarea rows="5" cols="50" name="description" id="description"><?php echo stripslashes($this->resInfo['description']); ?></textarea></td>
+          </tr>
+        
+          <?php   if($this->action != 'Add'){     ?>
+          
+          <tr>
+            <td height="30" width="30%" align="right">&nbsp;
+              <label>Add Date : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->resInfo['add_date']); ?></b></td>
+          </tr>
+      
+          <tr>
+            <td height="30" width="30%" align="right">&nbsp;
+              <label>Last Update Date Time : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->resInfo['last_update_datetime'], 'dt'); ?></b></td>
+          </tr>
+          <?php   }     ?>
+          <tr>
+            <td height="30" align="right">&nbsp;
+              <label>Status : </label></td>
+            <td height="30" align="left">&nbsp;
+              <select class="select" name="status" id="status">
+                <option <?php echo ($this->resInfo['status'] == 'Active')?'Selected':''; ?> value="Active">Active</option>
+                <option <?php echo ($this->resInfo['status'] == 'Inactive')?'Selected':''; ?> value="Inactive">InActive</option>
+              </select></td>
+          </tr>
+        </table>
+        
+        <!----></td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="right"><font class="compulsory">*</font>&nbsp;Indicates Compulsory Fields </td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="center"><input type="submit" name="cmdSubmit" id="cmdSubmit" value="<?php echo ($this->action == 'Edit')?'Save':'Add'; ?>">
+        &nbsp;&nbsp;&nbsp;
+        <input type="button" name="cmdCancel" id="cmdCancel" value="Cancel"></td>
+    </tr>
+  </form>
+</table>

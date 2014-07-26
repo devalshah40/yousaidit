@@ -1,0 +1,24 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+		if(!empty($this->expired_flag)){
+		
+		 echo '<session_expired>'.$this->expired_flag.'</session_expired>';
+		
+		
+	} else {
+	echo '<survey_response>';
+	if($this->success_flag == 1){
+	    $success_msg = htmlentities(stripslashes($this->success_msg),  ENT_COMPAT, 'UTF-8');
+	    echo "<success_flag>".$this->success_flag."</success_flag>";
+	    echo "<msg>".$success_msg."</msg>";
+        //echo '<next_qid>'.$this->next_qid.'</next_qid>';
+        //echo '<id>'.$this->id.'</id>';
+    }else{
+	    echo "<success_flag>".$this->success_flag."</success_flag>";
+        echo "<msg>".$this->msg."</msg>";
+    }
+	echo '</survey_response>';
+	}
+?>

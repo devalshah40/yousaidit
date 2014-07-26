@@ -1,0 +1,54 @@
+Date : 11-Sep-2012 15:52:28
+Message : UserId : 52 -- Error encountered while posting on wall : SSL certificate problem, verify that the CA cert is OK. Details:
+error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed
+Controller : topic
+Action : add
+= = = = = = = = = = = = = = = = = = = = = = = = = 
+Date : 11-Sep-2012 15:54:48
+Message : UserId : 52 -- Error encountered while posting on wall : SSL certificate problem, verify that the CA cert is OK. Details:
+error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed
+Controller : topic
+Action : add
+= = = = = = = = = = = = = = = = = = = = = = = = = 
+Date : 11-Sep-2012 15:54:56
+Message : UserId : 52 -- Error encountered while posting on wall : SSL certificate problem, verify that the CA cert is OK. Details:
+error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed
+Controller : topic
+Action : add
+= = = = = = = = = = = = = = = = = = = = = = = = = 
+Date : 11-Sep-2012 15:55:03
+Message : UserId : 52 -- Error encountered while posting on wall : SSL certificate problem, verify that the CA cert is OK. Details:
+error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed
+Controller : topic
+Action : add
+= = = = = = = = = = = = = = = = = = = = = = = = = 
+Date : 21-Sep-2012 14:16:19
+Message : 3 -- Array
+(
+    [0] => 52
+    [1] => 76
+)
+
+Controller : topic
+Action : add
+= = = = = = = = = = = = = = = = = = = = = = = = = 
+Date : 21-Sep-2012 14:16:19
+Message : iPhone : 
+Controller : topic
+Action : add
+= = = = = = = = = = = = = = = = = = = = = = = = = 
+Date : 21-Sep-2012 14:16:19
+Message : No member found matching survey criteria.
+Controller : topic
+Action : add
+= = = = = = = = = = = = = = = = = = = = = = = = = 
+Date : 18-Mar-2014 22:43:24
+Message : User.listAllActiveUsers : SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ud.notification_status' in 'field list'
+Controller : topic
+Action : add
+= = = = = = = = = = = = = = = = = = = = = = = = = 
+Date : 18-Mar-2014 22:43:24
+Message : No member found matching topic criteria.
+Controller : topic
+Action : add
+= = = = = = = = = = = = = = = = = = = = = = = = = 

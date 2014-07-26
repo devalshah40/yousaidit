@@ -1,0 +1,50 @@
+<?php	$header		= $this->layout()->header;
+		$error		= $this->layout()->error;
+		$content	= $this->layout()->content;
+		$footer		= $this->layout()->footer;		?>
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="<?php echo $this->baseUrl(); ?>/images/apple-touch-icon.png" />
+<meta http-equiv='X-UA-Compatible' content='IE=8'>
+<title><?php echo $this->siteTitle; ?><?php echo $this->pageTitle; ?></title>
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery-1.7.2.min.js"></script>
+<link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->baseUrl(); ?>/images/favicon.ico">
+<link href="<?php echo $this->baseUrl(); ?>/style/main.css" rel="stylesheet" type="text/css">
+<link href="<?php echo $this->baseUrl(); ?>/style/tablet.css" rel="stylesheet" type="text/css">
+<!--[if lt IE 9]>
+<script src="html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+<div id="wrapper">
+
+<?php
+	echo $header;	?>
+
+<!--<?php
+	if( !empty($error)){		?>
+		 ERROR
+<?php
+		echo $error;		?>
+		 ERROR
+<?php
+	}		?>
+
+-->
+<?php
+	echo $content;	?>
+
+<?php
+	echo $footer;	?>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<script type="text/javascript" language="javascript" src="<?php echo $this->baseUrl(); ?>/js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl(); ?>/js/fancybox/jquery.fancybox-1.3.4.css" />
+
+<style type="text/css">
+.yes {
+	background:url(<?php echo $this->baseUrl(); ?>/images/admin/yes.png) no-repeat;
+	height: 24px; text-align:right; padding-right:15px;
+}
+.no {
+	background:url(<?php echo $this->baseUrl(); ?>/images/admin/no.png) no-repeat;
+	height: 24px; text-align:right; padding-right:15px;
+}
+</style>
+<script type="text/javascript" src="<?php echo $this->baseUrl (); ?>/js/jquery/jquery.tablednd.js">
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$('[id^=sq_id]').fancybox({
+		'opacity'       :   true,
+		'overlayShow'	:	true,
+		'overlayColor'  :   '#525252',
+		'width'         :   900,
+		'height'        :   550
+	});
+	
+	$("table tr#tdata").mouseout(
+		function () {
+			$(this).removeClass('active_row');
+			$(this).addClass('nonactive_row');
+		}
+	);
+
+	$('table.data tbody tr:odd').addClass('odd');
+	$('table.data tbody tr:even').addClass('even');
+
+	$("table tr#tdata").mouseover(
+		function () {
+			$(this).removeClass('nonactive_row');
+			$(this).addClass('active_row');
+		}
+	);
+
+	   $(".paginationControl").change(
+		    	function() {
+		        	var page_index = null;
+		        	page_index = $(this).val();
+		        	window.location = page_index;
+		    	}
+		    );
+
+    $("#chkAll").click(
+    	function() {
+    		var checked_status = this.checked;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					this.checked = checked_status;
+				}
+			);
+    	}
+    );
+
+	$(".cmdDelete").click(
+		function() {
+			var cnt = 0;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					if( this.checked == true){
+						cnt++;
+					}
+				}
+			);
+			if(cnt > 0){
+				ans = confirm("Confirm Operation on Selected Records(s) ?");
+				if(ans == false){
+					return false;
+				}
+			}else{
+				alert('No Records Selected.');
+				return false;
+			}
+		}
+	);
+
+	$("#dragrow").tableDnD({
+		onDrop:function(table, row) {
+	           	var rows = table.tBodies[0].rows;
+	           	var arr;
+	           	for (var i=0; i < rows.length; i++) {
+					arr = rows[i].id.split(' ');
+	               	$("#srt-order" + arr[1]).val(i+1);
+	           	}
+	    }
+	});
+
+	$('.data #sstatus a').click(
+            function(e){
+            	var id = $(this).attr('id');
+
+                if( id != 0 ){
+
+                 $.ajax({    type    : "GET",
+                 url     : '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/survey/updatequeresponsestatus/id/' + $(this).attr('id'),
+                 success : function(data) {
+                	 if( data != ''){
+                        if( data == 'y'){
+                        	$('#status_icon' +  id).removeClass('no');
+                        	$('#status_icon' +  id).addClass('yes');
+                        }else{
+                        	$('#status_icon' +  id).removeClass('yes');
+                        	$('#status_icon' +  id).addClass('no');
+                        }
+                     }
+                     //e.preventDefault();
+                 },
+				    error	: function(data) {
+                  		alert('Error encountered Question Response Status not changed, ');
+				    }
+                 });
+
+                }
+                return false;
+         }
+       );
+});
+</script>
+
+<form name='frmSurveyQuestion' id='frmSurveyQuestion' method="POST" action="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/survey/questions/">
+  <input type="hidden" name="sid" value="<?php echo $this->sid; ?>">
+  
+  <div class="contentdetails">
+    <table width="100%" cellpadding="2" cellspacing="2" border="0">
+      <tr>
+        <td class="searchdiv"><table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td width="7%" height="30">&nbsp;Survey :</td>
+              <td width="93%" height="30">&nbsp;<?php echo stripslashes($this->surveyinfo['title']); ?></td>
+            </tr>
+          </table></td>
+      </tr>
+      <tr>
+        <td height="3"></td>
+      </tr>
+      <tr>
+        <td class="tablesyle">
+    
+
+<?php
+	if( !empty($this->paginator) ){					?>
+	    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td colspan="12"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+            <tr>
+              <td align="left" height="35" colspan="10">&nbsp;
+                <input type="submit" name="cmdDelete" class="cmdDelete" value="Delete Selected Question From Survey">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="submit" name="cmdSortOrder" id="cmdSOrder" value="Update Question Sort Order">
+              </td>
+			  <td class="yes" width="110px"><b>Compulsory</b>&nbsp;</td>
+              <td class="no" width="85px"><b>Optional</b></td>
+            </tr>
+          </table>
+	
+           <table id="dragrow" width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+            <thead>
+              <tr class="grdheader">
+                <td height="30" width="3%" align="center"><input type="checkbox" name="chkAll" id="chkAll" value="1" style="border:0px"></td>
+                <td height="30" align="left" width="67%">&nbsp;<b><font color="#ffffff">Question Description &amp; Answer Options</font></b></td>
+                <td height="30" width="12%" align="center"><b><font color="#ffffff">Response Required</font></b></td>
+                <td height="30" width="8%" align="center"><b><font color="#ffffff">Sort Order</font></b></td>
+                <td height="30" width="10%" align="center"><b><font color="#ffffff">Status</font></b></td>
+              </tr>
+            </thead>
+			<tbody>
+<?php	    $row_id = 0;
+            foreach($this->paginator as $v){	?>
+               <tr id="tdata <?php echo $row_id; ?>">
+                <td height="30" valign="top" align="center"><input type="checkbox" name="chk[]" id="chk" value="<?php echo $v['que_info']["question_id"]; ?>" style="border:0px">
+                <input type="hidden" name="h_sq_id[]" value="<?php echo $v['que_info']["sq_id"]; ?>">
+                </td>
+                <td align="left" height="30"><?php echo nl2br(stripslashes($v['que_info']['description']));	?>
+                <?php $smart_rule_flag = true;
+                      if($v['answers']){
+                    	  foreach($v['answers'] as $av){
+                    	      if($av['answer_type'] == 'v'){
+                    	          $smart_rule_flag = false;
+                    	      }
+                    	  }
+                      }
+                      if($smart_rule_flag == true){    ?>
+		                	&nbsp;<strong>(&nbsp;<a id='sq_id<?php echo $v['que_info']["sq_id"]; ?>' class="iframe" href='<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/survey/querules/sid/<?php echo $this->sid; ?>/qid/<?php echo $v['que_info']["question_id"]; ?>/sqid/<?php echo $v['que_info']["sq_id"]; ?>'><font color='#ED0A0A'>View / Add Smart Rule</font></a>&nbsp;)</strong>
+			    <?php } ?>
+                	
+                    <?php if($v['answers']){ echo '<ul>'; }
+                    	  foreach($v['answers'] as $av){	?>
+                    <li>
+                      <?php echo $av['weightage']; ?>&nbsp;-&nbsp;<?php echo stripslashes($av['answer_text']); ?>
+                        <?php if($av['free_text'] == 'y' && !empty($av['free_text_caption']) ){  echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;' . stripslashes($av['free_text_caption']) . "&nbsp;)"; } ?>
+                    </li>
+                    <?php  }
+            			if($v['answers']){ echo '</ul>'; }		?>
+                 </td>
+                 <td height="30" valign="top"  align="center" id='sstatus'>
+  					<a title="Click To Change Question Response Status To <?php echo ($v['que_info']["response_required"] == 'y')?'Compulsory':'Optional'; ?>" href="#" id="<?php  echo $v['que_info']['sq_id']; ?>" >
+  					<span style="border:0px solid #FF0000; background-position:center center; display:block;" id='status_icon<?php echo $v['que_info']["sq_id"]; ?>' class='<?php echo ($v['que_info']["response_required"] == 'y')?'yes':'no'; ?>'></span>
+					</a>
+                 </td>
+                <td height="30" valign="top" align="center"><input type='text' name='txtSortOrder[]' id='srt-order<?php echo $row_id; ?>' value='<?php echo $v['que_info']["sort_order"]; ?>' size="3" maxlength="3"></td>
+                <td height="30" valign="top" align="center"><?php echo $v['que_info']["status"]; ?></td>
+              </tr>
+                  <?php	   $row_id++;  }		?>
+            </tbody>
+          </table>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0" >
+            <tr>
+              <td align="left" height="35" colspan="10">&nbsp;
+                <input type="submit" name="cmdDelete" class="cmdDelete" value="Delete Selected Question From Survey">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="submit" name="cmdSortOrder" id="cmdSOrder" value="Update Question Sort Order">
+              </td>
+			  <td class="yes" width="110px"><b>Compulsory</b>&nbsp;</td>
+              <td class="no" width="85px"><b>Optional</b></td>
+            </tr>
+             <tr>
+              <td colspan="12"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+          </table>
+          <?php
+	 } else{											?>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td height="50" valign="middle" align="center">No Survey Questions Found</td>
+            </tr>
+          </table>
+          <?php
+	}		?></td>
+      </tr>
+    </table>
+  </div>
+</form>

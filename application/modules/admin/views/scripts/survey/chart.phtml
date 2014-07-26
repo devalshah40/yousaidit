@@ -1,0 +1,85 @@
+<html>
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/highcharts/modules/exporting.js"> </script>
+<head>
+<script type="text/javascript">
+var chart;
+$(document).ready(function() {
+	chart = new Highcharts.Chart({
+		chart: {
+			renderTo: 'container',
+			plotBackgroundColor: null,
+			plotBorderWidth: null,
+			borderWidth: 1,
+			marginTop: 75,
+	    	plotShadow: false
+		},
+		title: {
+			text: "<?php echo str_replace(PHP_EOL," ",preg_replace('/\&#x([0-9a-fA-F]{1,4});/', '\u$1',$this->title)); ?>",
+			
+	        style: {
+	            width: '600px'
+	        }
+		},
+		tooltip: {
+			formatter: function() {
+				return '<b>'+ this.point.name +'</b>: '+ this.percentage.toFixed(2) + ' %';
+			}
+		},
+		credits: {
+        			text: 'Nintendo Admin Survey Results',
+        			href: 'http://nintendo.mymcubed.com/'
+    	},
+	 plotOptions: {
+        pie: {
+		
+		allowPointSelect: true,
+		dataLabels: {
+			enabled: true,
+			color: '#000000',
+			connectorColor: '#000000',
+			formatter: function() {
+				return '<b>'+ this.point.name +'</b>: '+ this.percentage.toFixed(2) +' %';
+			}
+		},
+            point: {
+                events: {
+                    legendItemClick: function () {
+                        return false; // <== returning false will cancel the default action
+                    }
+                }
+            },
+            showInLegend: true
+        }
+    },
+            series: [{
+
+                type: 'pie',
+
+                name: 'Browser share',
+
+                data: [
+
+				    <?php echo $this->data; ?>
+                ]
+
+            }]
+
+        });
+
+    });
+		</script>
+	</head>
+	<body>
+	<div align="center">
+		<h2><?php echo $this->cdata[0]; ?></h2>
+		<b>Respondents Count :</b> <?php echo $this->cdata[3]; ?> <br/>
+		<b>Date Range :</b> <?php echo $this->cdata[1]; ?>&nbsp;To&nbsp;<?php echo $this->cdata[2]; ?> <br/>
+	<?php if ($this->cdata[4] != 'None' && $this->cdata[5] != '' ) { ?>
+	    	<b>Filtered Responses By  :</b> <?php echo $this->cdata[4]; ?> (<?php echo $this->cdata[5]; ?>)
+	<?php } ?>
+		<br/><br/>
+	</div>
+	<div id="container" style="width: 850px; height: 470px; margin: 0 auto"></div>
+	</body>
+	</html>

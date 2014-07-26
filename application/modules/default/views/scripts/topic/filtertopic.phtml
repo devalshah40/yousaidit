@@ -1,0 +1,73 @@
+<script type="text/javascript">
+$(document).ready(function() {
+$('#default_user_country').click(
+		function(){
+				var id_country = $("input[name='default_user_contry_id']").val();
+		      $("#country1").find("option[value=" + id_country + "]").attr("selected", true);
+		            
+		 
+			
+		});
+});
+</script>
+<div id="contentarea">
+    <?php echo $this->leftmenu; ?>
+    <div id="right-content">
+      <div class="pgheader">
+        <h2>Filter Topics</h2>
+      </div>
+      <div class="area">
+            <?php if( !empty($this->errorMsg)){   ?>
+            	<div class="error_msg">
+            	    <?php echo $this->errorMsg; ?>
+            	</div>
+            <?php  }    ?>
+
+<form id='frmFilterTopic' method="post"  action='<?php echo $this->baseUrl(); ?>/filter-topics.html'>
+<input type="hidden" name="default_user_contry_id" id="default_user_contry_id" value="<?php echo $this->user_country_id; ?>"/>
+<ul>
+	<li>Country :</li>
+	<li class="control">
+		<select name="country1" id="country1" class="listmenu">
+				<option value='-1'>All Countries</option>
+<?php
+        foreach($this->countryList as $k => $v){  ?>
+				<option <?php echo ($this->country_id == $v['country_id']) ? 'selected' : ''; ?> value="<?php echo $v['country_id']; ?>"><?php echo $v['country_name']; ?></option>
+<?php    }            ?>
+		</select> &nbsp;
+		<a href="#" id="default_user_country" title="Reset to home country"><img src="<?php echo $this->baseUrl(); ?>/images/reset.png" width="25px" height="25px" title="Reset to home country" /></a>
+	</li>
+	<li>&nbsp;</li>
+	<li>Category :</li>
+	<li class="control">
+		<select id="cid[]" multiple="multiple" name="cid[]" style="width: 250px;">
+<?php
+        foreach($this->catInfo as $k => $v){
+            $selected_flag = false;
+                if (! empty($this->tccategory)){
+                    foreach($this->tccategory as $k => $ms){
+                        if ($v["categories_id"] == $ms){
+                            $selected_flag = true;
+                            break;
+                        }
+                    }
+                }else{  $selected_flag = true;  }        ?>
+         <option <?php echo ($selected_flag == true) ? 'selected="selected"' : ''; ?> value="<?php echo $v["categories_id"]; ?>">  <?php echo $v["categories_name"]; ?></option>
+   <?php
+        }
+            ?>
+		</select>
+	</li>
+	<li>&nbsp;</li>
+	<li>
+		<input type="submit" name='cmdSubmit' value='Filter'>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="submit" name='cmdCancel' value='Cancel'>
+	</li>
+</ul>
+</form>
+      
+      </div>
+    </div>
+  </div>
+  <!-- #content -->

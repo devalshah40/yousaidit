@@ -1,0 +1,649 @@
+<style>
+	div #pg_meter {position:fixed; margin-left:72%; margin-top:4.5%; background:#414141;border:1px solid #efefef;width:150px;z-index:100; font-weight: bold; padding: 3px;}
+	div #pg_meter a, div.pg_meter h3 {display:block;margin:0 0.5em;}
+</style>
+<div id="pg_meter">0% Completed</div>
+
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/js/jquery.raty.min.js"></script>
+<?php //echo '<pre>';print_r($this->questions);echo '</pre>'; exit; ?>
+<script type="text/javascript">
+$(document).ready(
+	function(){
+		$('#cmdCancel').click(
+			function(){
+				location.href = "<?php echo $this->baseUrl(). "/user-home.html" ?>";
+			}
+		);
+
+<?php foreach($this->questions as $k => $v){
+
+        if(  $v['que_info']['answer_type'] == 'r' ){
+            $hintStr = '';
+            foreach($v['answers'] as $ak => $av){   ?>
+
+  				$('#star<?php echo $v['que_info']['sq_id']; ?>-<?php echo $av['answer_id']; ?>').raty({
+        			half : false,
+        			path : '<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img',
+					size : 66,
+					space :true,
+        			single : true,
+        			hintList:  ['Very Bad', 'Bad', 'Neutral', 'Good', 'Excellent'],
+					iconRange: [
+						{ range: 1, on: 'face-1.png', off: 'face-1-off.png' },
+						{ range: 2, on: 'face-2.png', off: 'face-2-off.png' },
+						{ range: 3, on: 'face-3.png', off: 'face-3-off.png' },
+						{ range: 4, on: 'face-4.png', off: 'face-4-off.png' },
+						{ range: 5, on: 'face-5.png', off: 'face-5-off.png' }
+					  ],
+                	scoreName : 'txt<?php echo $av['answer_id']; ?>_<?php echo $v['que_info']['sq_id']; ?>',
+        			click: function(score, evt) {
+        			    //alert('ID: ' + $(this).attr('id') + '\nscore: ' + score + '\nevent: ' + evt);
+        				$('#descque' + <?php echo $v['que_info']['sq_id']; ?>).css("color", "#EFEFEF");
+        			}
+    			});
+
+<?php       }
+        }
+
+        if(  $v['que_info']['answer_type'] == 's' ){        ?>
+        $("form input:radio[name='ans<?php echo $v['que_info']['sq_id']; ?>']").change(
+			function(){
+				$("#descque<?php echo $v['que_info']['sq_id']; ?>").css("color", "#EFEFEF");
+				// FOLLOWING code take care of showing / hiding 'free text' textbox for a given response if it exists ... START
+				var ft = '';
+				ft = '#ft' + $(this).val() + '_<?php echo $v['que_info']['sq_id']; ?>';
+				if( $(ft).length > 0 ){
+					if( $(this).attr('checked') == 'checked'){
+						$(ft).css('display', 'block');
+					}else{
+						$(ft).css('display', 'none');
+						ft = 'txt' + $(this).val() + '_<?php echo $v['que_info']['sq_id']; ?>';
+						$("form [name=" + ft + "]").val('');
+					}
+				}
+				// ABOVE code take care of showing / hiding 'free text' textbox for a given response if it exists ... END
+			}
+        );
+<?php
+        }    ?>
+
+<?php
+		if(  $v['que_info']['answer_type'] == 'm' ){    ?>
+
+	$("form input:checkbox[id='ans<?php echo $v['que_info']['sq_id']; ?>[]']").change(
+		function(){
+			$("#descque<?php echo $v['que_info']['sq_id']; ?>").css("color", "#EFEFEF");
+			// FOLLOWING code take care of showing / hiding 'free text' textbox for a given response if it exists ... START
+			var ft = '';
+			ft = '#ft' + $(this).val() + '_<?php echo $v['que_info']['sq_id']; ?>';
+			if( $(ft).length > 0 ){
+				if( $(this).attr('checked') == 'checked'){
+					$(ft).css('display', 'block');
+				}else{
+					$(ft).css('display', 'none');
+					ft = 'txt' + $(this).val() + '_<?php echo $v['que_info']['sq_id']; ?>';
+					$("form [name=" + ft + "]").val('');
+				}
+			}
+			// ABOVE code take care of showing / hiding 'free text' textbox for a given response if it exists ... END
+
+			// FOLLOWING code take care validating number of responses per questions ... START
+			var a = <?php echo !empty($v['que_info']['max_answer'])?(int)$v['que_info']['max_answer']:0; ?>;
+			var b = $("form input:checkbox[id='ans<?php echo $v['que_info']['sq_id']; ?>[]']:checked").length;
+			var x = $("form input:checkbox[id='ans<?php echo $v['que_info']['sq_id']; ?>[]']").index($(this));
+			if(a > 0 && b > a){
+				alert("Maximum " + a + " responses are allowed for this question.");
+				var c = 0;
+				$("form input:checkbox[id='ans<?php echo $v['que_info']['sq_id']; ?>[]']").each(
+					function(){
+						if( c == x){
+							this.checked = false;
+							$('[id^=que]').trigger('click'); // to hide the question associated with the selected option
+						}
+						c++;
+					}
+				);
+			}
+			// ABOVE code take care validating number of responses per questions ... START
+		}
+	);
+<?php
+        }    ?>
+<?php
+    }    ?>
+
+	$('#frmTakeSurvey').submit(
+		function(){
+
+		var c; var is_error = false; var ft = '';  var av_result = '';
+		
+<?php    foreach($this->questions as $k => $v){
+            if( $v['que_info']['response_required'] == 'y'){
+                    if( $v['que_info']['answer_type'] == 's'){
+                        if( $v['answers'][0]['answer_type'] == 'v'){        ?>
+	                		c = $("form [name='txt<?php echo $v['answers'][0]['answer_id']; ?>_<?php echo $v['que_info']['sq_id']; ?>']").val();
+	                		if(c == ''){
+		                		is_error = true;
+		                	}
+<?php                   }else{    ?>
+                    		c = $("form input:radio[name='ans<?php echo $v['que_info']['sq_id']; ?>']:checked").length;
+                    		if(c == 0){
+                        		is_error = true;
+                        		$("#descque<?php echo $v['que_info']['sq_id']; ?>").css("color","#FEFD53");
+                        	}else{
+                        		<?php if( empty($v['answers'][0]['rules']) ){         ?>
+                        		
+      							 $("form input:radio[name='ans<?php echo $v['que_info']['sq_id']; ?>']:checked").each(
+        								function(){
+        									 ft = 'txt' + $(this).val() + '_<?php echo $v['que_info']['sq_id']; ?>';
+        									 vl = $("form [name=" + ft + "]").val();
+        									 if( vl != 'undefined' && vl == ''){
+        										 is_error = true;
+        									 }
+        							    });
+
+       							<?php }else{    ?>
+      					    	 
+    					    	   <?php   foreach($v['answers'] as $ak => $av){
+    					    	               if( !empty($av['rules']) ) {    ?>
+      					    	             	av_result = true;
+      					    	             	$("form input:radio[name='ans<?php echo $v['que_info']['sq_id']; ?>']:checked").each(
+      	  	        								function(){
+          	  	        								<?php foreach($av['rules'] as $akx => $avx){  ?>
+      					    	             			if( <?php echo $avx['answer_id']; ?> == $(this).val() && av_result == true ){
+      					    	             				av_result = alternate_validation(<?php echo $avx['target_sq_id']; ?>);
+      					    	             				if(av_result == false){
+   					  	  					    	           is_error = true;
+   					  					    	           }
+      					    	             			}
+      					    	             			<?php } ?>
+      	  	        								});
+      					    <?php              }
+    					    	           }     ?>
+      					    <?php   }      ?>
+                    		}
+<?php                   }
+                    }elseif ($v['que_info']['answer_type'] == 'r') {
+                        foreach($v['answers'] as $ak => $av){        ?>
+                           ft =  'txt<?php echo $av['answer_id']; ?>_<?php echo $v['que_info']['sq_id']; ?>';
+                           vl = $("form [name=" + ft + "]").val();
+						   if( vl != 'undefined' && vl == ''){
+								is_error = true;
+						   }
+						   if(is_error == true){
+							   $("#descque<?php echo $v['que_info']['sq_id']; ?>").css("color","#FEFD53");
+						   }else{
+
+							   
+						   }
+<?php                   }
+                   }else{    ?>
+						c = $("form input:checkbox[id='ans<?php echo $v['que_info']['sq_id']; ?>[]']:checked").length;
+
+						if(c == 0){
+							is_error = true;
+							$("#descque<?php echo $v['que_info']['sq_id']; ?>").css("color","#FEFD53");
+						}else{
+							<?php if( empty($v['answers'][0]['rules']) ){         ?>
+
+    							 $("form input:checkbox[id='ans<?php echo $v['que_info']['sq_id']; ?>[]']:checked").each(
+    								function(){
+    									 ft = 'txt' + $(this).val() + '_<?php echo $v['que_info']['sq_id']; ?>';
+    									 vl = $("form [name=" + ft + "]").val();
+    									 if( vl != 'undefined' && vl == ''){
+    										 is_error = true;
+    									 }
+    						        });
+
+							<?php }else{    ?>
+
+							   <?php   foreach($v['answers'] as $ak => $av){
+							       
+			    	               if( !empty($av['rules']) ) {    ?>
+				    	             	av_result = true;
+				    	             	$("form input:checkbox[name='ans<?php echo $v['que_info']['sq_id']; ?>']:checked").each(
+	        								function(){
+	  	        								<?php foreach($av['rules'] as $akx => $avx){  ?>
+				    	             			if( <?php echo $avx['answer_id']; ?> == $(this).val() && av_result == true ){
+				    	             				av_result = alternate_validation(<?php echo $avx['target_sq_id']; ?>);
+				    	             				if(av_result == false){
+			  	  					    	           is_error = true;
+			  					    	           }
+				    	             			}
+				    	             			<?php } ?>
+	        								});
+				    <?php              }
+			    	           }     ?>
+							
+
+							 <?php }   ?>
+
+						        
+						}
+<?php               }
+            }
+         }   // end ... foreach($this->questions as $k => $v){     ?>
+
+         	if(is_error == true){
+             	alert("Cannot continue. Please respond to all questions / options");
+             	return false;
+         	}else{
+         		var cn = confirm("Submit survey responses ? ");
+         		if(cn == false){
+         			return false;
+         		}else{
+             		return true;
+         		}
+         	}
+		}
+	);
+
+	var qArr = new Array(<?php echo count($this->questions); ?>);
+	var sqIdArr = new Array(<?php echo count($this->questions); ?>);
+
+<?php
+    foreach($this->questions as $k => $v){    ?>
+		qArr[<?php echo $v['que_info']['sq_id']; ?>] = 'n';
+
+<?php   $ai = 0;
+        foreach($v['answers'] as $ak => $av){
+            if( !empty($av['rules']) ){
+                foreach($av['rules'] as $xak => $xav){ ?>
+                    <?php $ai++; ?>
+                    <?php $ai++; ?>
+                <?php } ?>
+<?php       }
+        }            ?>
+		
+		sqIdArr[<?php echo $k; ?>] = new Array(<?php echo ($ai+1); ?>);
+		
+		sqIdArr[<?php echo $k; ?>][0] = <?php echo $v['que_info']['sq_id']; ?>;
+<?php
+        $ai = 1;
+        foreach($v['answers'] as $ak => $av){
+            if( !empty($av['rules']) ){
+                foreach($av['rules'] as $xak => $xav){    ?>
+                	sqIdArr[<?php echo $k; ?>][<?php echo $ai; ?>] = <?php echo $xav['answer_id']; ?>;
+
+                    <?php $ai++; ?>
+                
+                	sqIdArr[<?php echo $k; ?>][<?php echo $ai; ?>] = <?php echo $xav['target_sq_id']; ?>;
+                
+<?php               $ai++;
+                }
+            }
+        }
+    }            ?>
+
+	function alternate_validation(xid){
+		var vval = null;
+		
+		$("#que" + xid + " input:checkbox[name^='ans']:checked").each(
+			function(){
+				vval = $(this).val();
+			});
+	        
+		if(vval == null){
+			$("#que" + xid + " input:radio[name^='ans']:checked").each(
+				function(){
+					vval = $(this).val();
+		    });
+		}
+
+		// added following piece of code
+		// to take care of rating question options
+		// all options needs to be selected before
+		// user can submit survey response
+		// dt : 30-07-2012
+		// upload status : pending as on 30-07-2012
+		if(vval == null){
+			$("#que" + xid + " [name^='txt']").each(
+				function(){
+					vval = $(this).val();
+		}
+			);
+		}
+
+		// following code commented on 30-07-2012
+		// in reference to above new code
+		// implementation
+		//if(vval == null){
+			//vval = $("#que" + xid + " [name^='txt']").val();
+		//}
+
+		if( vval == null || vval == '' || typeof vval == 'undefined'){
+			$('#descque'+xid).css("color","#FEFD53");
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	$('[class^=newtextarea]').keyup(
+   		function(){
+   			var txtnm = $(this).attr('name').split("_");
+   			var xid = txtnm[1];
+   			qArr[xid] = 'n';
+			var vval = $("#que" + xid + " [name^='txt']").val();
+    		if(typeof vval != 'undefined' && vval != ''){
+    			$('#descque'+xid).css("color", "#EFEFEF");
+        	}
+   			$('[id^=que]').trigger('click');
+   		}
+   	);
+
+	$('[id^=que]').click(
+		function(){
+
+			var xid = $(this).attr('id').substr(3);
+			var chk = false; var opt = false;
+			var vval = ''; var xvval = '';
+
+			$("#que" + xid + " input:checkbox[name^='ans']").each(
+				function(){
+					chk = true;
+					if( $(this).attr('checked') == 'checked' ){
+						vval += $(this).val() + ",";
+					}else{
+						xvval += $(this).val() + ",";
+					}
+			});
+			
+			var xz = xvval.split(',');
+
+			if(vval == ''){
+				$("#que" + xid + " input:radio[name^='ans']:checked").each(
+					function(){
+						opt = true;
+						vval += $(this).val() + ',';
+		        	}
+		        );
+			}
+			
+	        var xv = vval.split(',');
+	        var sh = 0;
+
+	        for(sq=0;sq < sqIdArr.length; sq++){
+
+				if( sqIdArr[sq][0] == xid ){
+					
+					for(xq=1; xq < sqIdArr[sq].length; xq+=2){
+						yq = xq+1;
+
+				        for(xi=0; xi < xv.length-1; xi++){
+					        vval = xv[xi];
+							if( vval == sqIdArr[sq][xq] && typeof sqIdArr[sq][xq] != 'undefined' && typeof sqIdArr[sq][yq] != 'undefined'){
+								$('#que' + sqIdArr[sq][yq]).show();
+								sh = sqIdArr[sq][yq];
+							}else{
+								if(opt == true){
+
+									// following code written to take care of a special scenario where in
+									// case of radio buttons option 1, 2 & 3 are associated with
+									// same set of questions ..
+									// associated questions should be visible when any one option is selected
+									// start
+									var hd = true;
+									for(q1=0; q1 < sqIdArr.length; q1++){
+										for(q2=1; q2 < sqIdArr[q1].length; q2+=2){
+											if( sqIdArr[q1][q2] == vval && sqIdArr[q1][q2+1] == sqIdArr[sq][yq] ){
+												hd = false;
+											}
+										}
+									}
+									if(hd == true){
+										$('#que' + sqIdArr[sq][yq]).hide();
+									}
+									// end
+								}
+							}
+				        }
+
+				        for(xi=0; xi < xz.length-1; xi++){
+					        xvval = xz[xi];
+							if( xvval == sqIdArr[sq][xq] ){
+								
+								if( sh != sqIdArr[sq][yq]) {
+									$('#que' + sqIdArr[sq][yq]).hide();
+								}
+								
+								// if option being unchecked .. is associated with a target question
+								// un check all checkbox in target question
+								// and if check boxex being unchecked are in further related to a target question
+								// hide that target question also
+								$("#que" + sqIdArr[sq][yq] + " input:checkbox[name^='ans']:checked").each(
+									function(){
+										$(this).attr('checked', false);
+										
+										var q3 = $(this).val();
+										for(q1=0; q1 < sqIdArr.length; q1++){
+											for(q2=1; q2 < sqIdArr[q1].length; q2+=2){
+												if( sqIdArr[q1][q2] == q3 ){
+													$('#que' + sqIdArr[q1][q2+1]).hide();
+													
+													// for all dependent question .. uncheck any radio / checkbox
+													// that are checked earlier but now as the question is being hidden
+													// they are required to be unchecked ..
+
+													$("#que" + sqIdArr[q1][q2+1] + " input[name^='ans']:checked").each(
+														function(){
+															$(this).attr('checked', false);
+														}
+													);
+												}
+											}
+										}
+								});
+
+
+
+
+								
+							}
+				        }
+
+					}
+				}
+			}
+			
+			if(vval == null || vval == ''){
+				vval = $("#que" + xid + " [name^='txt']").val();
+			}
+			
+    		if(typeof vval != 'undefined' && vval != ''){
+    			if(qArr[xid] == 'n'){
+    				qArr[xid] = 'y';
+    			}
+        	}
+
+    		// following if condition written to re-calculate progress meter
+    		// when user unchecks all checkboxs in a given question
+        	if(chk == true){
+            	if(vval == '' || typeof vval == 'undefined'){
+            		var checked_length = $("#que" + xid + " input:checkbox[name^='ans']:checked").length;
+            		if(checked_length == 0){
+            			qArr[xid] = 'n';
+            		}
+            	}
+        	}
+
+			var completed = 0;
+			$.each(qArr, function(intIndex, objValue){
+				if(typeof objValue != 'undefined'){
+					if(objValue == 'y' && $('#que' + intIndex).css('display') == 'list-item' ){
+						completed++;
+					}
+				}
+			});
+
+			var qdispcnt = 0;
+			$('[id^=que]').each(
+				function(){
+					if( $(this).css('display') == 'list-item' ){
+						qdispcnt++;
+					}
+				}
+			);
+
+			var pgstr = parseInt((completed * 100) / qdispcnt );
+
+			pgstr = pgstr + '% Completed';
+
+			$('#pg_meter').html(pgstr);
+		}
+	);
+
+	
+}
+);
+</script>
+<?php
+    if( !empty($this->questions) ){                     ?>
+<form id="frmTakeSurvey" method="POST" action="<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/survey/surveyresponse">
+<input type="hidden" name="sid" value="<?php echo $this->surveyinfo['survey_id']; ?>">
+
+<div id="contentarea" style="border:5px solid #fff; border-radius:15px; padding:1%; width:83%; margin-top:1%;  ">
+<h2>Take Survey</h2>
+
+<div style="padding:.5%; background: rgb(217, 217, 217); margin:.5%; color: #414141; border-radius:5px;">
+<h4><?php echo stripslashes($this->surveyinfo['title']); ?></h4></div>
+
+<!--
+	<ul style="list-style:inside decimal; padding:0; margin:0; margin-left: 2%;">
+		<li> one </li>
+	</ul>
+-->
+	<ul style="list-style:inside decimal; padding:0; margin:0; margin-left:1%;">
+  <?php
+        $i = 1;
+        foreach($this->questions as $k => $v){
+        
+            foreach($this->questions as $qk => $qv){
+                $hide = false;
+                foreach($qv['answers'] as $xak => $xav){
+                    if( !empty($xav['rules']) ){
+                        foreach($xav['rules'] as $rak => $rav){
+                            //echo 'target_sq_id : ' . $rav['target_sq_id'] . '                  -- sq_id : ' . $v['que_info']['sq_id'] . '<br><br>';
+                            if( $rav['target_sq_id'] == $v['que_info']['sq_id'] ){
+                                $hide = true;
+                                //echo 'hide true <br/><br/>';
+                                break;
+                            }
+                        }
+                    }
+                }
+                if($hide == true){    break;    }
+            }
+   ?>
+   
+   <?php //if($hide == true){ $h = "display: none;"; }else{ $h = ""; }  ?>
+   
+	<!-- <div id='que<?php //echo $v['que_info']['sq_id']; ?>' style="border: 0px solid red; <?php //echo $h; ?> "> -->
+	
+    <li id='que<?php echo $v['que_info']['sq_id']; ?>' style="margin:1% 2%; border-bottom:2px dashed #fff; <?php echo ($hide == true)?"display: none;":""; ?>">
+	
+  	<!-- <li> -->
+	
+  			<span id="descque<?php echo $v['que_info']['sq_id']; ?>" >
+  	           <?php echo stripslashes($v['que_info']['description']); ?><?php //echo ' -- ' . $v['que_info']['sq_id']; ?>
+		    <?php if($v['que_info']['answer_type'] == 'm' && !empty($v['que_info']['max_answer'])){ ?>
+  			         <font size="1">&nbsp;&nbsp;(Max responses : <?php echo $v['que_info']['max_answer']; ?>)</font>
+		    <?php }  ?>
+		    </span>
+
+  			<input type="hidden" name="qid[]" value="<?php echo $v['que_info']['sq_id']; ?>">
+  			<input type="hidden" name="resid<?php echo $v['que_info']['sq_id']; ?>" value="<?php echo (int)$v['que_info'];//['response_id']; ?>">
+    
+    		<!--  Start -->
+<?php
+            if($v['que_info']['answer_type'] == 'r' ){
+                
+                if( !empty($v['que_info']['negative_text'])){     ?>
+  				<div style="border:0px solid #000; width:26%; text-align:right; display:inline-block; padding: 2px 10px 2px 2px;"> <?php echo $v['que_info']['negative_text']; ?> </div> -
+       <?php    }
+                if( !empty($v['que_info']['positive_text'])){     ?>
+  				<div style="border:0px solid #000; width:20%; text-align:left; display:inline-block;  padding: 2px 10px;"> <?php echo $v['que_info']['positive_text']; ?> </div>
+       <?php    }     ?>
+  				
+				<div style="border: 0px solid #000FFF; margin:7px auto; ">
+  
+               <?php foreach($v['answers'] as $ak => $av){    ?>
+  					<input type="hidden" name="ans<?php echo $v['que_info']['sq_id']; ?>[]" value="<?php echo $av['answer_id']; ?>">
+  					<div style="display:block; ">
+  						<div style="margin:0; border:0px solid #FF0000; display:inline-block; width:20%; padding:5px 0;"><?php echo $av['answer_text']; ?></div>
+  						<div style="margin:0; border:0px solid #FF0000; display:inline-block; width:20%; padding:5px 0;" id="star<?php echo $v['que_info']['sq_id']; ?><?php echo '-' . $av['answer_id']; ?>"></div>
+        			</div>
+              <?php  }    ?>
+
+  				</div>
+ 
+   <?php    }    // end of  ..... if($v['que_info']['answer_type'] == 'r' ){  ?>
+   
+    <!--  end -->
+    
+   <?php     if($v['que_info']['answer_type'] == 's' || $v['que_info']['answer_type'] == 'm' ){ ?>
+              
+   <?php         foreach($v['answers'] as $ak => $av){
+       
+                    if($av['answer_type'] == 'nv'){
+                        
+                        if( $v['que_info']['answer_type'] == 's'){        ?>
+                        
+                            <input type="radio" <?php echo ($av['selected_flag'] == true)?'checked="checked"':''; ?> name="ans<?php echo $v['que_info']['sq_id']; ?>" value="<?php echo $av['answer_id']; ?>">
+                            
+              <?php     }else{    ?>
+              
+							<input type="checkbox" <?php echo ($av['selected_flag'] == true)?'checked="checked"':''; ?> id="ans<?php echo $v['que_info']['sq_id']; ?>[]" name="ans<?php echo $v['que_info']['sq_id']; ?>[]" value="<?php echo $av['answer_id']; ?>">
+							
+              <?php     }    ?>
+              
+  						&nbsp;<?php echo stripslashes($av['answer_text']); ?><?php //echo ' -- ' . $av['answer_id']; ?>
+  				
+              <?php     if($av['free_text'] == 'y'){    ?>
+							<div style="display: none;" id='ft<?php echo $av['answer_id']; ?>_<?php echo $v['que_info']['sq_id']; ?>'><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <?php             echo stripslashes($av['free_text_caption']);
+                                echo '<br><br>';            ?>
+  								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  								<input class="default" type="text" name="txt<?php echo $av['answer_id']; ?>_<?php echo $v['que_info']['sq_id']; ?>" value="<?php echo stripslashes(htmlspecialchars($av['user_ans_text'])); ?>" maxlength="150">
+  							</div>
+              <?php     }     ?>
+
+          <?php  } else{        ?>
+
+  						<input type="hidden" name="ans<?php echo $v['que_info']['sq_id']; ?>" value="<?php echo $av['answer_id']; ?>">
+  						
+  						<textarea class="newtextarea"  rows="3" cols="45" name="txt<?php echo $av['answer_id']; ?>_<?php echo $v['que_info']['sq_id']; ?>"><?php echo stripslashes(htmlspecialchars($av['user_ans_text'])); ?></textarea>
+
+          <?php  }             ?>
+  					<br/>
+  					
+          <?php
+                 }           // end of foreach($v['answers'] as $ak => $av){ .... ?>
+  
+  			<br/>
+ 
+ <?php       } // end of .. if($v['que_info']['answer_type'] == 's' || $v['que_info']['answer_type'] == 'm' ){ ?>
+ 
+  <?php       $i++;        ?>
+  
+   			</li>
+   			
+         <!--   </div>   -->
+<?php
+        }
+        
+?>
+              
+              
+  <?php //}    // end of  ..... if($v['que_info']['answer_type'] == 's' || $v['que_info']['answer_type'] == 'm' ){  ?>
+           
+</ul>
+</div>
+		<div align="center">
+            <input type="submit" name="cmdSubmit" value="Submit Survey Responses">
+        	    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="button" name="cmdCancel" id="cmdCancel" value="Cancel">
+        </div>
+</form>
+<?php
+    }        ?>

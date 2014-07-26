@@ -1,0 +1,186 @@
+<script type="text/javascript" src="<?php echo $this->baseUrl (); ?>/js/jquery/jquery.tablednd.js">
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("table tr#tdata").mouseout(
+		function () {
+			$(this).removeClass('active_row');
+			$(this).addClass('nonactive_row');
+		}
+	);
+
+	$('table.data tbody tr:odd').addClass('odd');
+	$('table.data tbody tr:even').addClass('even');
+
+	$("table tr#tdata").mouseover(
+		function () {
+			$(this).removeClass('nonactive_row');
+			$(this).addClass('active_row');
+		}
+	);
+
+	  $(".paginationControl").change(
+		    	function() {
+		        	var page_index = null;
+		        	page_index = $(this).val();
+		        	window.location = page_index;
+		    	}
+		    );
+
+    $("#chkAll").click(
+    	function() {
+    		var checked_status = this.checked;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					this.checked = checked_status;
+				}
+			);
+    	}
+    );
+
+	$(".cmdDelete").click(
+		function() {
+			var cnt = 0;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					if( this.checked == true){
+						cnt++;
+					}
+				}
+			);
+			if(cnt > 0){
+				ans = confirm("Confirm Operation on Selected Records(s) ?");
+				if(ans == false){
+					return false;
+				}
+			}else{
+				alert('No Records Selected.');
+				return false;
+			}
+		}
+	);
+	$(".cmdBack").click(
+			function() {
+				location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/index/page/1';
+			}
+		);
+
+	$("#dragrow").tableDnD({
+		onDrop:function(table, row) {
+	           	var rows = table.tBodies[0].rows;
+	           	var arr;
+	           	for (var i=0; i < rows.length; i++) {
+					arr = rows[i].id.split(' ');
+	               	$("#srt-order" + arr[1]).val(i+1);
+	           	}
+	    }
+	});
+
+});
+</script>
+
+<form name='frmQuestion' id='frmQuestion' method="POST" action="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/question/answers">
+  <input type="hidden" name="question_id" value="<?php echo $this->qid; ?>">
+  <div class="contentdetails">
+    <table  width="100%" cellpadding="2" cellspacing="2" border="0">
+      <tr >
+        <td class="searchdiv"><table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td width="10%" align="left" height="30">&nbsp;<b>Question :</b></td>
+              <td width="90%" align="left" height="30">&nbsp;<?php echo stripslashes($this->queinfo['description']); ?></td>
+            </tr>
+          </table></td>
+      </tr>
+      <tr >
+        <td height="3"></td>
+      </tr>
+      <tr>
+        <td class="tablesyle"><?php
+	if( !empty($this->paginator) ){					?>
+	 <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td colspan="10"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+              <tr>
+              <td align="left" height="35" colspan="10">&nbsp;
+                <input type="submit" name="cmdDelete" class="cmdDelete" value="Delete Selected Answer">
+                &nbsp;&nbsp;
+				<input type="submit" name="cmdUpdateSortOrder" id="cmdUpdateSortOrder" value="Update Free Text Caption, Answer Value, Sort Order">
+				&nbsp;&nbsp;
+				<input type="button" name="cmdBack" class="cmdBack" value="Back To Question Listing">
+			  </td>
+            </tr>
+          </table>
+          <table id="dragrow" width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+            <thead>
+              <tr class="grdheader">
+                <td width="3%" align="center"><input type="checkbox" name="chkAll" id="chkAll" value="1" style="border:0px"></td>
+                <td align="left" width="37%">&nbsp;Answer Text</td>
+                <td width="8%" align="center">Type</td>
+                <td width="23%" align="center">Free Text</td>
+                <td width="7%" align="center">Answer Value</td>
+                <td width="7%" align="center">Sort Order</td>
+                <td width="7%" align="center">Weighting</td>
+                <td width="8%" align="center">Status</td>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              	$row_id = 0;
+              	foreach($this->paginator as $v){
+                  if($v['free_text'] == 'y'){
+                      $free_text = stripslashes($v['custom_free_text_caption']);
+                      if( empty($free_text)){
+                          $free_text = stripslashes($v['free_text_caption']);
+                      }
+                      if( empty($free_text)){
+                          $free_text = '--';
+                      }
+                  }else{
+                      $free_text = '';
+                  }                            ?>
+              <tr id="tdata <?php echo $row_id; ?>">
+                <td height="30" align="center"><input type="checkbox" name="chk[]" id="chk" value="<?php echo $v["qa_id"]; ?>" style="border:0px">
+                	<input type="hidden" name="h_qa_id[]" value="<?php echo $v["qa_id"]; ?>">
+                </td>
+               <td align="left">&nbsp;<b><a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/answer/edit/aid/<?php	echo $v['answer_id']; ?>/page/<?php echo $this->pg; ?>/qset/1"><?php	echo stripslashes($v['answer_text']);	?></a></b></td>
+				<td align="center"><?php echo ($v["answer_type"] == 'v')?'Verbatim':'Non Verbatim'; ?></td>
+				<td align="left">&nbsp;<?php    if($v['free_text'] == 'y'){        ?>
+                     <input type='text' name='txtFreeText<?php echo $v["qa_id"]; ?>' value='<?php echo $free_text; ?>' size="30" maxlength="200">
+                      <?php }else{ echo '&nbsp;N/A';   }    ?></td>
+                <td align="center"><input type="text" name="txtAnswerValue[]" value='<?php echo $v['answer_value']; ?>' maxlength="3" size="3" > </td>
+                <td align="center"><input type="text" name="txtSortOrder[]" id='srt-order<?php echo $row_id; ?>' value='<?php echo $v['sort_order']; ?>' maxlength="3" size="3" > </td>
+                <td align="center"><?php echo $v['weightage']; ?></td>
+                <td align="center"><?php echo $v["status"]; ?></td>
+              </tr>
+              <?php	$row_id++;
+              	}											?>
+            </tbody>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td align="left" height="35" colspan="10">&nbsp;
+                <input type="submit" name="cmdDelete" class="cmdDelete" value="Delete Selected Answer">
+                &nbsp;&nbsp;
+				<input type="submit" name="cmdUpdateSortOrder" id="cmdUpdateSortOrder" value="Update Free Text Caption, Answer Value, Sort Order">
+				&nbsp;&nbsp;
+				<input type="button" name="cmdBack" class="cmdBack" value="Back To Question Listing">
+			  </td>
+            </tr>
+            <tr>
+              <td colspan="10"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+          </table>
+          <?php
+	}else{											?>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td height="50" valign="middle" align="center">No answers found</td>
+            </tr>
+          </table>
+          <?php
+	}												?></td>
+      </tr>
+    </table>
+  </div>
+</form>

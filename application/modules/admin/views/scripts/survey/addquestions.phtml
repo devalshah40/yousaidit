@@ -1,0 +1,140 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$("table tr#tdata").mouseout(
+		function () {
+			$(this).removeClass('active_row');
+			$(this).addClass('nonactive_row');
+		}
+	);
+
+	$('table.data tbody tr:odd').addClass('odd');
+	$('table.data tbody tr:even').addClass('even');
+
+	$("table tr#tdata").mouseover(
+		function () {
+			$(this).removeClass('nonactive_row');
+			$(this).addClass('active_row');
+		}
+	);
+
+	   $(".paginationControl").change(
+		    	function() {
+		        	var page_index = null;
+		        	page_index = $(this).val();
+		        	window.location = page_index;
+		    	}
+		    );
+	    
+    $("#chkAll").click(
+    	function() {
+    		var checked_status = this.checked;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					this.checked = checked_status;
+				}
+			);
+    	}
+    );
+
+	$("#cmdDelete").click(
+		function() {
+			var cnt = 0;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					if( this.checked == true){
+						cnt++;
+					}
+				}
+			);
+			if(cnt > 0){
+				ans = confirm("Confirm Operation on Selected Records(s) ?");
+				if(ans == false){
+					return false;
+				}
+			}else{
+				alert('No Records Selected.');
+				return false;
+			}
+		}
+	);
+});
+</script>
+
+<form name='frmSurveyAddQuestion' id='frmSurveyAddQuestion' method="POST" action="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/survey/addquestions/">
+  <input type="hidden" name="sid" value="<?php echo $this->sid; ?>">
+  <input type="hidden" name="cid" id="cid" value="<?php echo $this->cid; ?>">
+  <div class="contentdetails">
+    <table width="100%" cellpadding="2" cellspacing="2" border="0">
+      <tr>
+        <td class="searchdiv"><table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td width="7%" height="30">Survey :</td>
+              <td width="93%" align="left" height="30">&nbsp;<?php echo stripslashes($this->surveyinfo['title']); ?></td>
+            </tr>
+          </table></td>
+      </tr>
+      <tr>
+        <td height="3"></td>
+      </tr>
+      <tr>
+        <td class="tablesyle"><?php
+	if( !empty($this->paginator) ){					?>
+		    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td colspan="10"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+              <tr>
+              <td align="left" height="35" colspan="10">&nbsp;
+                <input type="submit" name="cmdDelete" id="cmdDelete" value="Add Selected Questions To Survey"></td>
+            </tr>
+          </table>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+            <thead>
+              <tr class="grdheader">
+                <td height="30" width="3%" align="center"><input type="checkbox" name="chkAll" id="chkAll" value="1" style="border:0px"></td>
+                <td height="30" align="left" width="87%">&nbsp;<b><font color="#ffffff">Question Description &amp; Answer Options</font></b></td>
+                <td height="30" width="10%" align="center"><b><font color="#ffffff">Status</font></b></td>
+              </tr>
+            </thead>
+            <?php	foreach($this->paginator as $v){	?>
+            <tbody>
+              <tr id="tdata">
+                <td height="30" valign="top" align="center"><input type="checkbox" name="chk[]" id="chk" value="<?php echo $v['que_info']["question_id"]; ?>" style="border:0px solid red;">
+                <td valign="top" align="left" height="30"><table width="100%" cellpadding="1" cellspacing="1" border="0">
+                    <tr style="background:none;">
+                      <td height="30" valign="middle">&nbsp;<?php echo stripslashes(nl2br($v['que_info']['description']));	?></td>
+                    </tr>
+                    <?php   foreach($v['answers'] as $av){	?>
+                    <tr style="background:none;">
+                      <td>&nbsp;<?php echo $av['weightage']; ?>&nbsp;-&nbsp;<?php echo stripslashes($av['answer_text']); ?>
+                        <?php if($av['free_text'] == 'y' && !empty($av['free_text_caption']) ){  echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;' . stripslashes($av['free_text_caption']) . "&nbsp;)"; } ?></td>
+                    </tr>
+                    <?php	}											?>
+                  </table></td>
+                <td height="30" valign="top" align="center"><?php echo $v['que_info']["status"]; ?></td>
+              </tr>
+            </tbody>
+            <?php	}											?>
+          </table>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td align="left" height="35" colspan="10">&nbsp;
+                <input type="submit" name="cmdDelete" id="cmdDelete" value="Add Selected Questions To Survey"></td>
+            </tr>
+             <tr>
+              <td colspan="10"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+          </table>
+          <?php
+	}else{											?>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td height="50" valign="middle" align="center">No Questions Found For Selection</td>
+            </tr>
+          </table>
+          <?php
+	}												?></td>
+      </tr>
+    </table>
+  </div>
+</form>

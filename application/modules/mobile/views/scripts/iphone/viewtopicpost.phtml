@@ -1,0 +1,122 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	
+		if(!empty($this->expired_flag)){
+		
+		 echo '<session_expired>'.$this->expired_flag.'</session_expired>';
+		
+		
+	} else {
+	echo '<viewtopicpost>';
+//	if($this->success_flag == 1){
+	//	echo "<success_flag>".$this->success_flag."</success_flag>";
+	//	echo "<msg>".$this->msg."</msg>";
+		
+			if(!empty($this->lastresponse)){
+	
+		echo "<last_topic_id>".$this->lastresponse['topic_id']."</last_topic_id>";
+        echo '<last_topic_title><![CDATA['.stripslashes($this->lastresponse['name']).']]></last_topic_title>';
+    //	echo "<last_topic_title>".$this->lastresponse['name']."</last_topic_title>";
+	//	echo "<user_id>".$this->lastresponse['user_id']."</user_id>";
+		echo "<user_response>".$this->lastresponse['response']."</user_response>";
+	//	echo "<description>".$v['description']."</description>";
+	
+	
+			if(!empty($this->Topic_votes)){
+				
+		
+				
+	//echo "<topic_rating>";
+	$p1 = 0; $p2 = 0; $p3 = 0; $p4 = 0; $p5 = 0;
+				foreach ($this->Topic_votes as $v){
+					extract($v);
+					SWITCH ($response){
+					    case 1:
+					    	$p1 = $percent;
+					        break;
+					    case 2:
+					    	$p2 = $percent;
+					        break;
+					    case 3:
+					    	$p3 = $percent;
+					        break;
+					    case 4:
+					    	$p4 = $percent;
+					        break;
+					    case 5:
+					    	$p5 = $percent;
+					        break;
+					}
+				}
+	//	echo "<star".$v['response'].">";
+    	echo "<percent1>".$p1."</percent1>";
+    	echo "<percent2>".$p2."</percent2>";
+    	echo "<percent3>".$p3."</percent3>";
+    	echo "<percent4>".$p4."</percent4>";
+    	echo "<percent5>".$p5."</percent5>";
+		//echo "<votes>".$v['votes']."</votes>";
+//		echo "<response>".$v['response']."</response>";
+ // echo "</star".$v['response'].">";
+					
+			
+		//	echo "</topic_rating>";
+			
+			}
+	
+		//	}
+		}
+		else {
+			
+			echo "<last_topic_id/>
+			<last_topic_title/>
+			<user_response/>
+		    <percent1>0</percent1>
+			<percent2>0</percent2>
+			<percent3>0</percent3>
+			<percent4>0</percent4>
+			<percent5>0</percent5>";
+			
+			
+		}
+
+	
+
+	
+		
+//	}//elseif($this->success_flag == 0){
+//		echo "<success_flag>".$this->success_flag."</success_flag>";
+//		echo "<msg>".$this->msg."</msg>";
+//
+//	}
+	
+	
+		if($this->success_flag == -1){
+			
+		echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<msg>".$this->msg."</msg>";
+			
+			
+		}else{
+				if(!empty($this->topicList)){
+		
+			
+		foreach ($this->topicList as $v){
+	
+		echo "<topic_id>".$v['topic_id']."</topic_id>";
+	//	echo "<topic_title>".$v['name']."</topic_title>";
+	    echo    '<topic_title><![CDATA['.stripslashes($v['name']).']]></topic_title>';
+		
+			}
+		}
+		
+		echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<msg>".$this->msg."</msg>";
+			
+		}
+	
+	echo '</viewtopicpost>';
+	
+	}
+?>

@@ -1,0 +1,74 @@
+<!-- <link type="text/css" rel="stylesheet" href="<?php echo $this->baseUrl(); ?>/style/pagination.css" /> -->
+<?php if ($this->pageCount): ?>
+<ul class="main-pagination">
+	<li class="pgno"> <?php echo $this->firstItemNumber; ?> - <?php echo $this->lastItemNumber; ?> of <?php echo $this->totalItemCount; ?> </li>
+	<li class="pagination-nos">
+	
+	<!-- pagination start -->
+		<div class="div-center">
+			<div align="center" class="page_no_div">
+				<ul class="pagination paginationI1">
+					<li>
+					<?php if (isset($this->previous)): ?>
+						<a href="<?php echo $this->baseUrl(); ?>/<?php echo $this->userpagination; ?>/id/1/<?php echo !empty($this->tab) ? 'tab/'.$this->tab.'/' : '';?>page<?php echo $this->tab; ?>/<?php echo $this->first ?>" class="first"><b>First</b></a>
+					<?php else: ?>
+						<a class="first"><b>First</b></a> 
+					<?php endif; ?>
+					</li>
+				
+					<li>
+					<?php if (isset($this->previous)): ?>
+					<a href="<?php echo $this->baseUrl(); ?>/<?php echo $this->userpagination; ?>/id/1/<?php echo !empty($this->tab) ? 'tab/'.$this->tab.'/' : '';?>page<?php echo $this->tab; ?>/<?php echo $this->previous; ?>" class="previous">
+					<img title="Previous Page" border="0" src="<?php echo $this->baseUrl(); ?>/images/white_arrow_left.png" alt=""/></a>
+					<?php else: ?>
+					<a class="previous"><img src="<?php echo $this->baseUrl(); ?>/images/white_arrow_left.png" alt=""/></a>
+					<?php endif; ?>
+					</li>
+
+					<!-- Numbered page links -->
+					<?php foreach ($this->pagesInRange as $page): ?>
+						<?php if ($page != $this->current): ?>
+							<li><a href="<?php echo $this->baseUrl(); ?>/<?php echo $this->userpagination; ?>/id/1/<?php echo !empty($this->tab) ? 'tab/'.$this->tab.'/' : '';?>page<?php echo $this->tab; ?>/<?php echo $page; ?>"><?php echo $page; ?></a></li>
+					<?php else: ?>
+							<li><a href="#" class="current"><?php echo $page; ?></a></li>
+					<?php endif;
+							$lastPageInRange = $page;
+						?>
+					<?php endforeach; ?>
+					
+					<li>					
+					<?php if (isset($this->next)): ?>
+					<a href="<?php echo $this->baseUrl(); ?>/<?php echo $this->userpagination; ?>/id/1/<?php echo !empty($this->tab) ? 'tab/'.$this->tab.'/' : '';?>page<?php echo $this->tab; ?>/<?php echo $this->next; ?>" class="next">
+					<img title="Next Page" border="0" src="<?php echo $this->baseUrl(); ?>/images/white_arrow_right.png"/></a>
+					<?php else: ?>
+					<a class="next"><img src="<?php echo $this->baseUrl(); ?>/images/white_arrow_right.png" alt="Next Page"/></a>
+					<?php endif; ?>
+					</li>
+					
+					<li>
+					<?php if (isset($this->next)): ?>
+					<a href="<?php echo $this->baseUrl(); ?>/<?php echo $this->userpagination; ?>/id/1/<?php echo !empty($this->tab) ? 'tab/'.$this->tab.'/' : '';?>page<?php echo $this->tab; ?>/<?php echo $this->last; ?>" class="last"><b>Last</b></a>
+					<?php else: ?>
+					<a class="last"><b>Last</b></a>
+					<?php endif; ?>
+					</li>
+					
+				</ul>						
+			</div>
+			</div>
+		<!-- pagination end -->
+	</li>
+	<li class="jump-pgno">
+		Jump To Page No :
+			<select id="paginationControl" class="paginationControl" size="1" style="width: 50px;" >
+<?php 	for($i = 1; $i <= $this->last; $i++):
+			$selected = ($i == $this->current) ? ' selected="selected"' : ''; 		?>
+			<option value="<?php echo $this->baseUrl(); ?>/<?php echo $this->userpagination; ?>/id/1/<?php echo !empty($this->tab) ? 'tab/'.$this->tab.'/' : '';?>page<?php echo $this->tab; ?>/<?php echo $i; ?>"<?php echo $selected ?>>
+				<?php echo $i; 	?>
+			</option>
+<?php 	endfor; 				?>
+			</select>
+	</li>
+</ul>
+<?php endif; ?>
+

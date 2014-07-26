@@ -1,0 +1,57 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	echo '<topicresponse>';
+	if($this->success_flag == 1){
+		echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<msg>".$this->msg."</msg>";
+		
+		
+		
+	
+		
+		
+		
+		echo "<topic_info>";
+		
+		echo "<id>".$this->lastresponse['topic_id']."</id>";
+		
+	    echo    '<title><![CDATA['.stripslashes($this->lastresponse['name']).']]></title>';
+		
+		echo "<user_id>".$this->lastresponse['user_id']."</user_id>";
+		echo "<user_response>".$this->lastresponse['response']."</user_response>";
+	//	echo "<description>".$v['description']."</description>";
+	
+	echo "</topic_info>";
+			if(!empty($this->Topic_votes)){
+				
+	echo "<topic_rating>";			
+				foreach ($this->Topic_votes as $v){
+		echo "<star".$v['response'].">";	
+		echo "<response>".$v['response']."</response>";
+    	echo "<percent>".$v['percent']."</percent>";
+		echo "<votes>".$v['votes']."</votes>";
+//		echo "<response>".$v['response']."</response>";
+echo "</star".$v['response'].">";		
+					
+			}
+			echo "</topic_rating>";		
+			}
+
+		//	}
+		
+
+	
+
+	
+		
+	}elseif($this->success_flag == 0){
+		
+		echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<msg>".$this->msg."</msg>";
+        
+	}
+	
+	echo '</topicresponse>';
+?>

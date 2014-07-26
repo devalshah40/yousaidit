@@ -1,0 +1,183 @@
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		
+		$('#cmdCancel').click(
+			function(){
+
+           location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/topic/index/page/<?php echo $this->pg; ?>';
+
+			});
+
+	}
+)
+</script>
+
+<form name='frmtpc' id='frmtpc' method="POST" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/topic/<?php echo strtolower($this->action); ?>">
+<?php	if(!empty($this->flag)){?>
+<input type="hidden" id="flag" name="flag" value="1" />
+<?php }?>
+  <input type="hidden" name="topic_id" id="topic_id" value="<?php echo $this->topicInfo['topic_id']; ?>">
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+      <td height="3"></td>
+    </tr>
+    <tr>
+      <td width="100%"><!---->
+        <table width="100%" cellpadding="2" cellspacing="2" border="0" align="center" bordercolor="#a2a2a2" >
+         <tr id="caption">
+            <td height="30" width="30%" align="right"><label>Topic Name : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="name" maxlength = "250"  id="name" value="<?php echo stripslashes($this->topicInfo['name']); ?>" size="50" maxlength="200"><font class="compulsory">*</font>
+            </td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Select Category : </label></td>
+           	<td>&nbsp;<select  class="username" name="categories_id"  style="width: 250px;">
+<?php
+          foreach($this->catInfo as $k => $v){
+              $selected_flag = false;        ?>
+<?php
+            foreach($this->multiple_select as $k => $ms){
+           	if($v["categories_id"]== $ms["categories_id"]) {
+           	   $selected_flag = true;
+           	   break;
+           }
+            
+           	?>
+   
+         <?php	} ?>
+        
+         <option  <?php echo ($selected_flag == true)?'selected="selected"':''; ?> value="<?php echo $v["categories_id"]; ?>" >  <?php echo $v["categories_name"]; ?></option>
+           
+   <?php        }	?>
+         		</select>
+         	</td>
+          </tr>
+        
+  
+          <tr>
+            <td height="30" align="right"><label>Country : </label></td>
+            <td height="30" width="70%"  align="left">&nbsp;
+                 <select name="country_id" id="country_id" class="select">
+		            <option value='-1'>Select Country</option>
+		            <?php 
+						  foreach($this->countryList as $k => $v){?>
+		            <option <?php echo ($this->topicInfo['country_id'] == $v['country_id']) ? 'selected' : ''; ?> value="<?php echo $v['country_id']; ?>"><?php echo $v['country_name']; ?></option>
+            <?php    }            ?>
+         		 </select><font class="compulsory">*</font></td>
+          </tr>
+          
+               
+      
+          <?php   if($this->action != 'Add'){     ?>
+     
+          <tr>
+            <td height="30" width="30%" align="right"><label>Add Date : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->topicInfo['add_date'], false, 'jS M Y'); ?></b></td>
+          </tr>
+
+          <tr>
+            <td height="30" width="30%" align="right"><label>Last Update Date Time : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->topicInfo['updated_datetime'], 'dt'); ?></b></td>
+          </tr>
+          <?php   }     ?>
+          
+          <tr>
+            <td height="30" align="right"><label>Status : </label></td>
+            <td height="30" align="left">&nbsp;
+              <select class="select" name="status" id="status">
+                <option <?php echo ($this->topicInfo['status'] == 'Active')?'Selected':''; ?> value="Active">Active</option>
+                <option <?php echo ($this->topicInfo['status'] == 'Inactive')?'Selected':''; ?> value="Inactive">InActive</option>
+              </select></td>
+          </tr>
+        </table>
+
+        <!----></td>
+        
+    </tr>
+    <tr>
+    <td>
+        
+	        <table width="100%" cellpadding="2" cellspacing="2" border="0">
+				<tr>
+					<td align="left" width="50%"><h2>Topic Responses</h2></td>
+				</tr>
+			</table>
+        
+           <table width="100%" cellpadding="2" cellspacing="2" border="0">
+				<tr>
+					<td width="100%" align="center">
+<?php
+        if(!empty($this->arrTopic)){                ?>
+     <?php
+	$percent1 = "0";$percent2 ="0";$percent3 = "0";$percent4 = "0";$percent5 = "0";
+	$votes1 = "0";$votes2 ="0";$votes3 = "0";$votes4 = "0";$votes5 = "0";
+ 		  foreach($this->arrTopic as $k=>$v)
+          {
+				extract($v);
+
+				if($response == 1) {
+					$percent1 = $percent ;
+					$votes1 = $votes;
+				}else if($response == 2){
+					$percent2 = $percent ;
+					$votes2 = $votes;
+				}else if($response == 3){
+					$percent3 = $percent ;
+					$votes3 = $votes;
+				}else if($response == 4){
+					$percent4 = $percent ;
+					$votes4 = $votes;
+				}else if($response == 5){
+					$percent5 = $percent ;
+					$votes5 = $votes;
+				}
+
+     }      ?>
+
+	<table width="80%" border="0" cellpadding="2" cellspacing="2" align="center">
+	<tr>
+		<td align="center">
+			<img src='<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/face-1-response.png'/><br/>
+     		<font color='#99cc33' size="4%">&nbsp;<?php echo $percent1; ?>%,&nbsp;<?php echo $votes1; ?>&nbsp;Votes</font>
+     	</td>
+		<td align="center">
+			<img src='<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/face-2-response.png'/><br/>
+			<font color='#0099cc' size="4%">&nbsp;<?php echo $percent2; ?>%,&nbsp;<?php echo $votes2; ?>&nbsp;Votes</font>
+		</td>
+		<td align="center">
+			<img src='<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/face-3-response.png'/><br/>
+			<font  color='#ff3333' size="4%">&nbsp;<?php echo $percent3; ?>%,&nbsp;<?php echo $votes3; ?>&nbsp;Votes</font>
+		</td>
+		<td align="center">
+			<img src='<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/face-4-response.png'/><br/>
+			<font color='#ffdc00' size="4%">&nbsp;<?php echo $percent4; ?>%,&nbsp;<?php echo $votes4; ?>&nbsp;Votes</font>
+		</td>
+		<td align="center">
+			<img src='<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/face-5-response.png'/><br/>
+			<font color='#ff9933' size="4%">&nbsp;<?php echo $percent5; ?>%,&nbsp;<?php echo $votes5; ?>&nbsp;Votes</strong></font>
+		</td>
+	</tr>
+	</table>
+<?php
+        }else {
+            echo "No responses found";
+        }         ?>
+		           </td>
+				</tr>
+			</table>
+			
+			</td>
+		</tr>
+    <tr>
+      <td height="30" colspan="3" align="right"><font class="compulsory">*</font>&nbsp;Indicates Compulsory Fields </td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="center"><input type="submit" name="cmdSubmit" id="cmdSubmit" value="<?php echo ($this->action == 'Edit')?'Save':$this->action; ?>">
+        &nbsp;&nbsp;&nbsp;
+        <input type="button" name="cmdCancel" id="cmdCancel" value="Cancel"></td>
+    </tr>
+  </table>
+  
+</form>

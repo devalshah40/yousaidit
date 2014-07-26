@@ -1,0 +1,55 @@
+<script type="text/javascript">
+$(document).ready(
+	function(){
+
+		$('#frmCategoryOfInterest').submit(
+			function(){
+				var count = $("#cmbCatId :selected").length;
+				if( count > <?php echo $this->max_categ; ?> ){
+					alert('Error(s) encountered cannot continue.' + "\n\n" + 'A maximum of <?php echo $this->max_categ; ?> category selection is allowed.');
+					return false;
+				}
+			}
+		);
+	}
+);
+
+</script>
+<div id="contentarea">
+    <?php echo $this->leftmenu; ?>
+    <div id="right-content">
+      <div class="pgheader">
+        <h2>Categories of Interest</h2>
+      </div>
+      <div class="area">
+      	<form id='frmCategoryOfInterest' method="post" action=''>
+          <?php if( !empty($this->errorMsg)){   ?>
+      		<div class="error_msg"> <?php echo $this->errorMsg; ?> </div>
+          <?php  }    ?>
+          <br/>
+          <select name='cmbCatId[]' multiple="multiple" id='cmbCatId' size="10" style="width: 500px;" >
+          <?php foreach($this->catinfo as $ck => $cv){
+                  $selected_flag = false;
+                  foreach($this->categories_of_interest as $k => $v){
+                      if($v == $cv['categories_id']){
+                          $selected_flag = true;
+                          break;
+                      }
+                  }
+              ?>
+          	<option <?php echo ($selected_flag == true)?'selected="selected"':''; ?> value='<?php echo $cv['categories_id']; ?>'><?php echo $cv['categories_name']; ?></option>
+          <?php } ?>
+          </select>
+          <br/>
+          &nbsp;Maximum of <strong><?php echo $this->max_categ; ?></strong> category selection allowed
+          <br/>
+          <br/><br/>
+		  <div>
+             <input type="submit" name="cmdSubmit" id="cmdSubmit" value="Update">
+          </div>
+          <br/>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- #content -->

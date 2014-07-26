@@ -1,0 +1,15 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	echo '<logout>';
+	if($this->success_flag == 1){
+		echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<msg>".$this->msg."</msg>";
+	}else{
+		echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<msg>".$this->msg."</msg>";
+  
+	}
+	echo '</logout>';
+?>

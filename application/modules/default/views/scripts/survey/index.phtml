@@ -1,0 +1,78 @@
+<div class="userbgcontent">
+  <div class="usercontainer">
+    <div class="page-title-div">
+      <h2>Survey Listing</h2>
+    </div>
+    <div>
+      <div class="create-survey"><a title="Create Survey" href="<?php echo $this->baseUrl(); ?>/create-survey.html">Create Survey</a> </div>
+      <?php
+    if( !empty($this->surveylisting) ){
+        $i = 1; ?>
+      <div class="maingrid">
+        <div class="surveytitle">
+          <label>Survey Title</label>
+        </div>
+        <div class="questions">
+          <label>Survey Questions</label>
+        </div>
+        <div class="selection">
+          <label>Sel. Criteria</label>
+        </div>
+        <div class="date">
+          <label>Start, End Date Time</label>
+        </div>
+        <div class="responses">
+          <label>Responses</label>
+        </div>
+        <div class="value">
+          <label>Reward Type</label>
+        </div>
+        <div class="notification">
+          <label>Notification</label>
+        </div>
+        <?php
+        foreach($this->surveylisting as $k => $v){      ?>
+        <div class="maingridTR">
+          <div class="survey-column"><?php echo $i; ?>: <a href="<?php echo $this->baseUrl(); ?>/survey-info/<?php echo $v['sinfo']['survey_id']; ?>/<?php echo $this->FilterChars(stripslashes($v['sinfo']['title'])); ?>.html"><?php echo stripslashes($v['sinfo']['title']); ?></a>
+          	<br/><span style="font-weight: normal;"><?php echo ($v['sinfo']['type'] == 'NS')?'Normal':'Profile'; ?> Survey - <?php echo $v['sinfo']['status']; ?></span>
+          </div>
+          <div class="questions-column"><a href="<?php echo $this->baseUrl(); ?>/view-select-questions/<?php echo $v['sinfo']['survey_id']; ?>/<?php echo $this->FilterChars($v['sinfo']['title']); ?>.html">View / Select</a> </div>
+          <div class="selection-column">
+			 <a href="<?php echo $this->baseUrl(); ?>/selection-criteria/<?php echo $v['sinfo']['survey_id']; ?>/<?php echo $this->FilterChars(stripslashes($v['sinfo']['title'])); ?>.html">View / Edit</a>
+          </div>
+          <div class="date-column"><?php echo $this->dateFormat($v['sinfo']['start_date'], null, 'jS M Y'); ?><br/><?php echo $this->dateFormat($v['sinfo']['end_date'], null, 'jS M Y h:i A'); ?></div>
+          <div class="responses-column">
+            <?php if( $v['resinfo']['response_flag'] == true) { ?>
+            <a href="<?php echo $this->baseUrl(); ?>/view-survey-response/<?php echo $v['sinfo']['survey_id']; ?>/<?php echo $this->FilterChars($v['sinfo']['title']); ?>.html">View</a>
+            <?php }else{ ?>
+            &nbsp;
+            <?php } ?>
+          </div>
+          <div class="value-column ">&nbsp;<?php echo $v['reward']; ?></div>
+          <div class="notification-column">
+            <?php if( $v['resinfo']['response_flag'] == true) { ?>
+            <?php if( $v['sinfo']['notification'] == 'n') { ?>
+            <a href="<?php echo $this->baseUrl(); ?>/send-survey-notification/<?php echo $v['sinfo']['survey_id']; ?>/<?php echo $this->FilterChars($v['sinfo']['title']); ?>.html"><strong>Send Now</strong></a>
+            <?php }else{ ?>
+            Already Sent
+            <?php } ?>
+            <?php }else{ ?>
+            <a title="Add Question To Survey In Order To Send Notification" href="<?php echo $this->baseUrl(); ?>/view-select-questions/<?php echo $v['sinfo']['survey_id']; ?>/<?php echo $this->FilterChars($v['sinfo']['title']); ?>.html">Add Question</a>
+            <?php } ?>
+          </div>
+        </div>
+        <?php       $i++;
+        }		 ?>
+      </div>
+      <?php
+    }else{       ?>
+      <br/>
+      <br/>
+      <div align="center">No Survey Found</div>
+      <br/>
+      <br/>
+      <?php
+    }            ?>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<script type="text/javascript">
+$(document).ready(
+		function() {
+			$('#cmdCancel').click(
+				function(){
+					location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/userinterest/index/page/' +  $("#pg").val();
+				}
+			);
+		}
+)
+</script>
+
+<form name='frmUserinterestadd' id='frmUserinterestadd' method="POST" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/userinterest/<?php echo strtolower($this->action); ?>">
+
+  <input type="hidden" name="intrest_id" id="intrest_id" value="<?php echo $this->UserInterestInfo['intrest_id']; ?>">
+<input type="hidden" name="pg" id="pg" value="<?php echo $this->pg; ?>">
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+      <td height="3"></td>
+    </tr>
+    <tr>
+      <td width="100%"><!---->
+        <table width="100%" cellpadding="2" cellspacing="2" border="0" align="center" bordercolor="#a2a2a2" >
+         
+         <tr id="caption">
+            <td height="30" width="30%" align="right"><label>User Interest's Name : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="name" id="name" value="<?php echo stripslashes($this->UserInterestInfo['name']); ?>" size="50" maxlength="200"></td>
+          </tr>
+        
+        </table>
+
+        <!----></td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="right"><font class="compulsory">*</font>&nbsp;Indicates Compulsory Fields </td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="center"><input type="submit" name="cmdSubmit" id="cmdSubmit" value="<?php echo ($this->action == 'Edit')?'Save':$this->action; ?>">
+        &nbsp;&nbsp;&nbsp;
+        <input type="button" name="cmdCancel" id="cmdCancel" value="Cancel"></td>
+    </tr>
+  </table>
+  
+</form>

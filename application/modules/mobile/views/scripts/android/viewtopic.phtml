@@ -1,0 +1,29 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	echo '<viewtopic>';
+	if($this->success_flag == 1){
+		echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<msg>".$this->msg."</msg>";
+		//echo "<topic>";
+		if(!empty($this->topicList)){
+		
+			
+		foreach ($this->topicList as $v){
+		
+		
+		echo "<vtid>".$v['topic_id']."</vtid>";
+		echo '<title><![CDATA['.stripslashes($v['name']).']]></title>';
+		//echo "<user_id>".$v['user_id']."</user_id>";
+		
+			}
+		}
+		//echo "</topic>";
+	}else{
+		echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<msg>".$this->msg."</msg>";
+        
+	}
+	echo '</viewtopic>';
+?>

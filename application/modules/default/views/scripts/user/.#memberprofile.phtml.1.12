@@ -1,0 +1,121 @@
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery-ui-1.8.22.custom.min.js"></script>
+<link type="text/css" href="<?php echo $this->baseUrl(); ?>/style/black-tie/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+<script type="text/javascript">
+$(document).ready(
+	function(){
+        $('#dob').datepicker({changeMonth: true, changeYear: true});
+	}
+);
+</script>
+ <form id="frmMemberProfile" method="POST" action="<?php echo $this->baseUrl(); ?>/edit-profile.html">
+ 		<?php if( !empty($this->errorMsg)){   ?>
+            	<div class="error_msg">
+            	    <?php echo $this->errorMsg; ?>
+            	</div>
+            <?php  }    ?>
+        
+		<input type="hidden" name="mid" value="mid" />
+		<input type="hidden" name="id" value="<?php echo $this->memberinfo['user_id']; ?>">
+        <input type="hidden" name="c_email" value="<?php echo $this->memberinfo['email']; ?>">
+		<div><?php //echo $this->profile_msg; ?></div>
+        <div id="profilepage">
+        <fieldset>
+        	<ul class="profiledit">
+            	<li><h3>Personal Details :</h3>
+				<dl>
+					<dt><label>First Name : <font color="#FF0000">*</font> </label></dt>
+                    <dd><input tabindex="1" type="text" name="first_name" id="first_name" value="<?php echo $this->memberinfo['firstname']; ?>"></dd>
+                    <dt><label>Last Name :  <font color="#FF0000">*</font></label></dt>
+                    <dd><input tabindex="2" type="text" name="last_name" id="last_name" value="<?php echo $this->memberinfo['lastname']; ?>" size="25" maxlength="25"></dd>
+                    
+                    <dt><label>Date of Birth : </label></dt>
+                    <dd><input readonly="readonly" type="text" disabled="disabled" value="<?php echo $this->userInfo['dob']; ?>"></dd>
+				
+				    <dt><label>Gender : </label></dt>
+                    <dd><input readonly="readonly" type="text" disabled="disabled" value="<?php echo $this->userInfo['gender']; ?>"></dd>
+				
+				   	<dt><label>E-Mail : <font color="#FF0000">*</font></label></dt>
+                    <dd><input tabindex="3" type="text" name="email" id="email" value="<?php echo $this->memberinfo['email']; ?>"></dd>
+				</dl>
+                </li>
+                <li><h3>Contact Details :</h3>
+				<dl>
+				
+				    <dt><label>Address 1 : <font color="#FF0000">*</font></label></dt>
+                    <dd><input tabindex="4" type="text" name="address1" id="address1" value="<?php echo $this->userInfo['address1']; ?>"></dd>
+                   
+                    <dt><label>Address 2 : <font color="#FF0000">*</font></label></dt>
+                    <dd><input tabindex="5" type="text" name="address2" id="address2" value="<?php echo $this->userInfo['address2']; ?>"></dd>
+				     
+				    <dt><label>Town : <font color="#FF0000">*</font></label></dt>
+                    <dd><input tabindex="6" type="text" name="town" id="town" value="<?php echo $this->userInfo['town']; ?>"></dd>
+                   
+                    <dt><label>County : <font color="#FF0000">*</font></label></dt>
+                    <dd><input tabindex="8" type="text" name="county" id="county" value="<?php echo $this->userInfo['county']; ?>"></dd>
+   
+                    <dt><label>Post Code : <font color="#FF0000">*</font></label></dt>
+                    <dd><input tabindex="9" type="text" name="postcode" id="postcode" value="<?php echo $this->userInfo['postcode']; ?>"></dd>
+				
+                    
+                    <dt><label>Country : <font color="#FF0000">*</font></label></dt>
+                    <dd><select  tabindex="10" name="country" id="country">
+		            <option value="">Select Country</option>
+		            
+		            <?php foreach($this->countryList as $k => $v){ ?>
+			      
+		            <option <?php echo ($this->userInfo['country_id'] == $v['country_id'])?'selected':''; ?> value="<?php echo $v['country_id']; ?>"><?php echo $v['country_name']; ?></option>
+		          
+			 		<?php   }   ?>
+		          </select></dd>
+                    
+<!--                    <dt><label>Username : </label></dt>-->
+<!--                    <dd><input readonly="readonly" type="text"  value="<?php echo $this->memberinfo['username']; ?>"></dd>-->
+                    
+                    <dt><label>Sign Up Date : </label></dt>
+                    <dd><input disabled="disabled" readonly="readonly" type="text"  value="<?php echo $this->dateFormat($this->memberinfo['created_date'], null, 'dS M Y'); ?>"></dd>
+                    
+                    <dt><label>Password :</label></dt>
+                    <dd><input tabindex="11" type="password" name="password" id="password" value=""></dd>
+                    
+                    <dt><label>Confirm Password:</label></dt>
+                    <dd><input tabindex="12" type="password" name="c_password" id="c_password" value="" size="20" maxlength="20"></dd>
+                                        
+				</dl>
+			 </li>
+            </ul>
+            <br/>
+            <div class="intrestdiv">
+            	<div class="maintitle"> Your Interest </div>
+            	<?php 	$exp = explode (',',$this->userInfo['interest']); ?>
+				<?php foreach ( $this->interesteList as $k => $v )
+					{ $selected_flag = false ;
+
+					foreach ( $exp as $jd  )
+						{   if($jd ==  $v['name'] ) {
+			
+						$selected_flag = true;
+
+						break;
+					} ?>
+				
+				<?php  } ?>
+          
+				<input tabindex="13" <?php echo ($selected_flag == true)?'checked="checked"':''; ?> type='checkbox' value=<?php echo $v['name'];?> name='chkInterest[]'><?php echo $v['name'];?>
+			<?php	}?>
+            <br/><br/>
+            <div>Your data will <b>NOT</b> be shared without your permission.<br/>
+            <input  tabindex="14" type='checkbox' <?php echo (($this->userInfo['data_share']) == 'Y')?'checked="checked"':''; ?> value='Y' name='chkShareData'>&nbsp;&nbsp;Tick if you wish your data to be shared.</div>
+
+            </div>
+            <div align="center">
+            	<input tabindex="15" type="submit" tabindex="15" name="cmdSubmit" id="cmdSubmit" value="Save">
+	        	&nbsp;
+    		    <input tabindex="16" type="submit" name="cmdCancel" id="cmdCancel" value="Cancel">
+              
+            </div>
+            </fieldset>
+            </div>
+        </form>
+
+
+

@@ -1,0 +1,171 @@
+<link type="text/css" href="<?php echo $this->baseUrl(); ?>/style/black-tie/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl (); ?>/js/datepicker/smoothness.datepick.css" />
+<script type="text/javascript" src="<?php	echo $this->baseUrl ();	?>/js/datepicker/jquery.datepick.js"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery-ui-1.8.22.custom.min.js"></script>
+<script type="text/javascript">
+
+	$(function(){
+		// Tabs
+		$('#tabs').tabs({
+		    select: function(event, ui) { // select event
+		           var i = ui.index;
+			    $.ajax({
+			    		 url: '<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/topic/response/tab/'+i,
+			    		 type: "post"
+				    });
+		    }
+		});
+
+		//hover states on the static widgets
+		$('#dialog_link, ul#icons li').hover(
+			function() { $(this).addClass('ui-state-hover'); },
+			function() { $(this).removeClass('ui-state-hover'); }
+		);
+
+	<?php if($this->valueerror == 1) { ?>
+		$("#tabs").tabs("select", <?php echo $this->valueerror; ?>);
+	<?php } ?>
+	<?php  if($this->tab == 1 ){ ?>
+	$("#tabs").tabs("select",1 );
+	<?php }else if($this->tab == 0 ){?>
+	$("#tabs").tabs("select", 0);
+	<?php }?>
+	
+	var url = '';
+	$('#dialog').dialog({
+		autoOpen: false,
+		position: ["center","center"],
+		width: 500,
+		height: 250,
+		modal:true,
+		buttons: {
+			"Yes": function() {
+				$(this).dialog("close");
+				window.location = url;
+			},
+			"No": function() {
+				$(this).dialog("close");
+				return false;
+			}
+		}
+	});
+
+	$('.confirmLink1').click(
+            function(){
+				url = $(this).attr('href');
+				//salert(url);
+
+			$('#dialog').dialog('open');
+            	
+				return false;
+				
+         }
+       );
+
+	$(".paginationControl").change(
+		function() {
+	    	var page_index = null;
+	    	page_index = $(this).val();
+	    	window.location = page_index;
+	}
+	);
+});
+</script>
+
+<div id="contentarea"> <?php echo $this->leftmenu; ?>
+  <div id="right-content">
+    <div class="pgheader">
+      <h2>Responses</h2>
+    </div>
+    <div id="tabs">
+      <ul>
+        <li><a href="#tabs-1"><b>My Topics</b></a></li>
+        <li><a href="#tabs-2"><b>My Responses</b></a></li>
+      </ul>
+      <div id="tabs-1">
+        <?php		if( !empty($this->paginator) ){					?>
+        <?php if( !empty($this->errorMsg)){   ?>
+        <div align="center" class="error_msg"> <?php echo $this->errorMsg; ?> </div>
+        <?php  }    ?>
+        
+        <!-- New -->
+        
+        <?php	foreach($this->paginator as $k=>$v){ ?>
+        <div id="responses-div">
+          <ul>
+            <li class="response-text"> <?php echo stripslashes($v['topic_title']); ?> </li>
+            <li class="response-icons">
+            <?php if(is_array($v['responses'])){ ?>
+            	 <a href="<?php echo $this->baseUrl(); ?>/<?php echo $v['topic_id']; ?>/topic-response.html" title="View Details"> <img src="<?php echo $this->baseUrl(); ?>/images/view.png" /></a> &nbsp; <a class="confirmLink1" href="<?php echo $this->baseUrl(); ?>/<?php echo $v['topic_id']; ?>/delete.html" title="Delete Topic"><img src="<?php echo $this->baseUrl(); ?>/images/delete.png" /></a>
+            <?php }else{?>
+                <img title="No responses found, chart cannot be displayed." src="<?php echo $this->baseUrl(); ?>/images/view.png" /> &nbsp; <a class="confirmLink1" href="<?php echo $this->baseUrl(); ?>/<?php echo $v['topic_id']; ?>/delete.html" title="Delete Topic"><img src="<?php echo $this->baseUrl(); ?>/images/delete.png" /></a>
+            <?php }?>
+            </li>
+          </ul>
+        </div>
+        <?php     }    // end of foreach  ?>
+        <!-- New -->
+        <!--
+        <ul>
+			  <li>
+		<?php
+             //for($r=1; $r <= 5; $r++){    ?>
+                 <img src='<?php //echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/face-<?php //echo $r; ?>-small.png'/>
+                 &nbsp;
+                 <?php //echo !empty($v['responses']['rper_'.$r])?$v['responses']['rper_'.$r]:0; ?>&nbsp;%
+		<?php        //}        ?>
+		<hr>
+	  	</li>
+        </ul>
+        -->
+        
+        <div>
+          <?php $params = array('userpagination' => 'topic/response' , 'tab' => 1);?>
+          <?php echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml' , $params); ?> </div>
+        <?php
+        }else {
+            echo "No topics to list";
+        }         ?>
+      </div>
+      <div id="tabs-2">
+        <?php	if( !empty($this->paginator2) ){					?>
+        <?php	foreach($this->paginator2 as $k=>$v){	?>
+        <div id="responses-div">
+          <ul>
+            <li class="my_response-text"> <?php echo stripslashes($v['topic_title']); ?> </li>
+            <li class="my_response-icons" > <a href="<?php echo $this->baseUrl(); ?>/<?php echo $v['topic_id']; ?>/topic-response.html" title="View Details"><img src="<?php echo $this->baseUrl(); ?>/images/view.png" /></a></li>
+          </ul>
+        </div>
+        <?php     }    // end of foreach  ?>
+        
+        <!--
+        <ul>
+            <li>
+ 			<?php
+             //for($r=1; $r <= 5; $r++){    ?>
+                 <img src='<?php //echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/face-<?php //echo $r; ?>-small.png'/>
+                 &nbsp;
+                 <?php //echo !empty($v['responses']['rper_'.$r])?$v['responses']['rper_'.$r]:0; ?>&nbsp;%
+			<?php       // }        ?>
+				<hr>
+
+ 			</li>
+	   </ul>
+         -->
+        <div>
+          <?php $params = array('userpagination' => 'topic/response' , 'tab' => 2);?>
+          <?php echo $this->paginationControl($this->paginator2, 'Sliding', 'my_pagination_control.phtml' , $params); ?> </div>
+        <?php
+    } else {
+        echo "No topics to list, as you have not voted on any topic";
+    }     ?>
+      </div>
+    </div>
+    <!-- #content -->
+  </div>
+</div>
+<!-- #content -->
+
+<div style="display:none" id="dialog" title="Please Confirm">
+  <p> Hi there , Are you sure you want to delete this Topic and its Responses ? </p>
+</div>

@@ -1,0 +1,36 @@
+<div id="contentarea">
+    <?php echo $this->leftmenu; ?>
+    <div id="right-content">
+      <div class="pgheader">
+        <h2>Notifications</h2>
+      </div>
+      <div class="area">
+      	<form id='frmCategoryOfInterest' method="post" action=''>
+          <?php if( !empty($this->errorMsg)){   ?>
+      		<div class="error_msg"> <?php echo $this->errorMsg; ?> </div>
+          <?php  }    ?>
+          <strong>New topic notification :</strong>
+          <br/>
+          <select name='cmbNotification' id='cmbNotification' >
+          	<option <?php echo ($this->cmbNotification == 'y')?'selected="selected"':''; ?> value='y'>&nbsp;&nbsp;&nbsp;Yes</option>
+          	<option <?php echo ($this->cmbNotification == 'n')?'selected="selected"':''; ?> value='n'>&nbsp;&nbsp;&nbsp;No</option>
+          </select>
+          <br/><br/>
+          <strong>Topic violation notification :</strong>
+          <br/>
+          <select name='cmbReportViolation' id='cmbReportViolation' >
+          	<option <?php echo ($this->cmbReportViolation == 'y')?'selected="selected"':''; ?> value='y'>&nbsp;&nbsp;&nbsp;Yes</option>
+          	<option <?php echo ($this->cmbReportViolation == 'n')?'selected="selected"':''; ?> value='n'>&nbsp;&nbsp;&nbsp;No</option>
+          </select>
+          <br/><br/>
+          
+          
+          <br/><br/>
+		  <div>
+             <input type="submit" name="cmdSubmit" id="cmdSubmit" value="Update">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- #content -->

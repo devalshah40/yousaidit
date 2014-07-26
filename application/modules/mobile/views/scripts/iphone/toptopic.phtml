@@ -1,0 +1,55 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+		if(!empty($this->expired_flag)){
+		
+		 echo '<session_expired>'.$this->expired_flag.'</session_expired>';
+		
+		
+	} else {
+	echo '<toptopic>';
+	if($this->success_flag == 1){
+		echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<topic_rank_limit>" . $this->topic_rank_limit . "</topic_rank_limit>";
+		echo "<msg>".$this->msg."</msg>";
+		
+		if (! empty ( $this->limit )) {
+		    echo "<topic_limit>".$this->limit."</topic_limit>";
+		}
+		
+		foreach ( $this->ranking as $v ) {
+			echo '<topic>';
+			echo '<topic_id>' . $v ['topic_id'] . '</topic_id>';
+			echo '<topic_title><![CDATA['.stripslashes($v ['topic_title']).']]></topic_title>';
+			echo '<total_responses>' . $v ['response_count'] . '</total_responses>';
+			echo '<topic_taken>' . $v ['taken']. '</topic_taken>';
+//			if (! empty ( $this->ranking )) {
+//				for($t = 0; $t < count ( $this->ranking ); $t ++) {
+//					if ($v ['topic_id'] == $this->ranking [$t] ['topic_id']) {
+//						for($r = 1; $r <= 5; $r ++) {
+//							echo '<percent' . $r . '>';
+//							echo ! empty ( $this->ranking [$t] ['responses'] ['rper_' . $r] ) ? $this->ranking [$t] ['responses'] ['rper_' . $r] : 0;
+//							echo '</percent' . $r . '>';
+//						}
+//					}
+//				}
+//			}
+			if (! empty ( $v ['responses'] )) {
+					for($t = 1; $t <= 5; $t ++) {
+						echo '<percent' . $t . '>';
+						echo ! empty ( $v ['responses'] ['rper_' . $t] ) ? $v ['responses'] ['rper_' . $t] : 0;
+						echo '</percent' . $t . '>';
+					}
+				
+				}
+			echo '</topic>';
+		}
+	}else{
+		echo "<success_flag>".$this->success_flag."</success_flag>";
+		echo "<msg>".$this->msg."</msg>";
+        
+	}
+	echo '</toptopic>';
+	}
+?>

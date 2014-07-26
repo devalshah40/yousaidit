@@ -1,0 +1,390 @@
+<script type="text/javascript" language="javascript" src="<?php echo $this->baseUrl(); ?>/js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl(); ?>/js/fancybox/jquery.fancybox-1.3.4.css" />
+
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		$('.iframe').fancybox({
+			'opacity'       :   true,
+			'overlayShow'	:	true,
+			'overlayColor'  :   '#525252',
+			'width'         :   700,
+			'height'        :   350,
+			'titleShow'     :   false
+		});
+
+		$('table.data tbody tr:odd').addClass('odd');
+		$('table.data tbody tr:even').addClass('even');
+
+	    $(".chkAllRS").click(
+	        	function() {
+	        		var checked_status = this.checked;
+	        		$(".rsetans" + $(this).val() + " input[type='checkbox']").each(
+	    				function(){
+	    					this.checked = checked_status;
+	    				}
+	    			);
+	        	}
+		);
+	    $("#chkAllAns").click(
+	        	function() {
+	        		var checked_status = this.checked;
+	    			$("input[id=chkAns][type='checkbox']").each(
+	    				function(){
+	    					this.checked = checked_status;
+	    				}
+	    			);
+	        	}
+		);
+	    $("#chkAll").click(
+	        	function() {
+	        		var checked_status = this.checked;
+	    			$("input[id=chk][type='checkbox']").each(
+	    				function(){
+	    					this.checked = checked_status;
+	    				}
+	    			);
+	        	}
+		);
+
+		$('#frmAnsImport').submit(
+			function(){
+				var is_error = false;
+				var error_text = 'Cannot Continue. Please verify the following in order to continue.' + "\n\n";
+
+				if($('#client_id').val() == ''){
+					error_text = error_text + 'Client selection is required for client - question association';
+					is_error = true;
+				}
+
+				if(is_error == true){
+					alert(error_text);
+					return false;
+				}else{
+					return true;
+				}
+
+			}
+		);
+	}
+);
+</script>
+<br/>
+<form id="frmAnsImport" method="post" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/importquestion">
+<?php
+    if(!empty($this->ansArr)){
+        $response_set_flag = false; $answer_flag = false;
+        foreach($this->ansArr as $k => $v){
+            if($v[0] != ''){
+                $response_set_flag = true;
+            }else{
+                $answer_flag = true;
+            }
+        }
+    }
+    if(!empty($this->ansArr) && $response_set_flag == true  ){        ?>
+<table width="100%" cellpadding="2"  cellspacing="2" border="0">
+<tr>
+	<td><font size="2">Valid Response Sets Found in CSV File. Select Response Sets that you want to import.</font></td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td class="tablesyle">
+		<table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+		<thead>
+		<tr class="grdheader">
+			<td align="center" width="3%" height="20px">&nbsp;</td>
+			<td align="center" width="3%"><!-- <input type="checkbox" name="chkAllRS" id="chkAllRS" value="1" style="border:0px"> --></td>
+			<td width="36%">Response Set Title</td>
+			<td width="7%" align="center">Answer Type</td>
+			<td width="7%" align="center">Weighting</td>
+			<td width="7%" align="center">Free text</td>
+			<td width="35%">Free text caption</td>
+		</tr>
+		</thead>
+		<tbody>
+<?php   $rset = null;
+        foreach($this->ansArr as $k => $v){
+            if($v[0] != ''){
+                if($rset != $v[0]) {    $class = 'rsetans' . $k; ?>
+		<tr id="tdata">
+			<td align="right" height="25" width="6%" colspan="2">
+			<span style="padding-right:10%; display:block; " ><input type="checkbox" name="chkAllRS" class="chkAllRS R<?php echo $k; ?>" value="<?php echo $k; ?>"></span></td>
+			<td colspan="5"><h2><?php echo stripslashes(nl2br($v[0])); ?></h2></td>
+		</tr>
+<?php           }        ?>
+		<tr id="tdata" class='<?php echo $class; ?>'>
+			<td align="center" width="3%"><a title="Click to edit response set - answer details" class='iframe' href='<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/question/editans/id/<?php echo $k; ?>'><img src='<?php echo $this->baseUrl(); ?>/images/admin/edit_icon.png'></a></td>
+			<td align="center" width="3%"><input type="checkbox" name="chkRS[]" id="chkRS" value="<?php echo $k; ?>" style="border:0px"></td>
+			<td id='r1-<?php echo $k; ?>'>&nbsp;&nbsp;&nbsp;<?php echo stripslashes(nl2br($v[1])); ?></td>
+			<td align="center" id='r2-<?php echo $k; ?>'><?php echo $v[2]; ?></td>
+			<td align="center" id='r3-<?php echo $k; ?>'><?php echo $v[3]; ?></td>
+			<td align="center" id='r4-<?php echo $k; ?>'><?php echo $v[4]; ?></td>
+			<td id='r5-<?php echo $k; ?>'><?php echo stripslashes(nl2br($v[5])); ?></td>
+		</tr>
+<?php           $rset = $v[0];
+            }
+        }    ?>
+		</tbody>
+          </table>
+	</td>
+	</tr>
+</table>
+<br/>
+<?php
+    }    ?>
+
+<!-- Answers Block -->
+<?php
+    if(!empty($this->ansArr) && $answer_flag == true){        ?>
+<table width="100%" cellpadding="2"  cellspacing="2" border="0">
+<tr>
+	<td><font size="2">Valid Answers Found in CSV File. Select Answers that you want to import.</font></td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+</tr>
+
+<tr>
+	<td class="tablesyle">
+		<table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+		<thead>
+		<tr class="grdheader">
+			<td align="center" width="3%">&nbsp;</td>
+			<td align="center" width="3%"><input type="checkbox" name="chkAllAns" id="chkAllAns" value="1" style="border:0px"></td>
+			<td width="36%"><strong>Answer Title</strong></td>
+			<td width="7%" align="center"><strong>Answer Type</strong></td>
+			<td width="7%" align="center"><strong>Weighting</strong></td>
+			<td width="7%" align="center"><strong>Free text</strong></td>
+			<td width="35%"><strong>Free text caption</strong></td>
+		</tr>
+		</thead>
+		<tbody>
+<?php   $rset = null;
+        foreach($this->ansArr as $k => $v){
+            if($v[0] == ''){        ?>
+		<tr id="tdata">
+			<td align="center" width="3%"><a title="Click to edit answer details" class='iframe' href='<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/question/editans/id/<?php echo $k; ?>'><img src='<?php echo $this->baseUrl(); ?>/images/admin/edit_icon.png'></a></td>
+			<td align="center" width="5%"><input type="checkbox" name="chkAns[]" id="chkAns" value="<?php echo $k; ?>" style="border:0px"></td>
+			<td id='r1-<?php echo $k; ?>'>&nbsp;&nbsp;&nbsp;<?php echo stripslashes(nl2br($v[1])); ?></td>
+			<td align="center" id='r2-<?php echo $k; ?>'><?php echo $v[2]; ?></td>
+			<td align="center" id='r3-<?php echo $k; ?>'><?php echo $v[3]; ?></td>
+			<td align="center" id='r4-<?php echo $k; ?>'><?php echo $v[4]; ?></td>
+			<td id='r5-<?php echo $k; ?>'><?php echo stripslashes(nl2br($v[5])); ?></td>
+		</tr>
+<?php           $rset = $v[0];
+            }
+        }    ?>
+		</tbody>
+          </table>
+	</td>
+</tr>
+
+
+
+
+</table>
+<br/>
+<?php
+    }    ?>
+
+
+    <!--  -->
+<?php
+    if(!empty($this->queArr)){        ?>
+<table width="100%" cellpadding="2"  cellspacing="2" border="0">
+<tr>
+	<td><font size="2">Valid Questions Found in CSV File. Select Client, Questions that you want to associate with client &amp; import. </font></td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td style="background:#e2e2e2;"><h2>Client : <select name='client_id' id='client_id'>
+			<option value=''>- Select Client -</option>
+        <?php foreach($this->clients as $k => $v){ ?>
+        	<option value='<?php echo $v['client_id']; ?>'><?php echo $v['company_name']; ?>&nbsp;(<?php echo $v['first_name'] . " " . $v['last_name']; ?>)</option>
+        <?php } ?>
+		</select>
+		</h2>
+	</td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td class="tablesyle">
+		<table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+		<thead>
+		<tr class="grdheader">
+			<td align="center" width="3%">&nbsp;</td>
+			<td align="center" width="3%"><input type="checkbox" name="chkAll" id="chkAll" value="1" style="border:0px"></td>
+			<td width="50%"><strong>Question Description</strong></td>
+			<td width="10%" align="center"><strong>Answer Type</strong></td>
+			<td width="15%" align="center"><strong>Max Response Allowed</strong></td>
+			<td width="8%" align="center"><strong>Status</strong></td>
+		</tr>
+		</thead>
+		<tbody>
+<?php   foreach($this->queArr as $k => $v){    ?>
+		<tr bgcolor="White" id="tdata">
+			<td align="center" width="3%"><a title="Click to edit question details" class='iframe' href='<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/question/editque/id/<?php echo $k; ?>'><img src='<?php echo $this->baseUrl(); ?>/images/admin/edit_icon.png'></a></td>
+			<td align="center" width="5%"><input type="checkbox" name="chk[]" id="chk" value="<?php echo $k; ?>" style="border:0px"></td>
+			<td id='q1-<?php echo $k; ?>'> <?php echo stripslashes(nl2br($v[0])); ?></td>
+			<td align="center"  id='q2-<?php echo $k; ?>'><?php echo $v[1]; ?></td>
+			<td align="center"  id='q3-<?php echo $k; ?>'><?php echo $v[2]; ?></td>
+			<td align="center"  id='q4-<?php echo $k; ?>'><?php echo $v[3]; ?></td>
+		</tr>
+<?php   }    ?>
+		</tbody>
+          </table><br/>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<td align="left" height="35" colspan="10">&nbsp;<input type="submit" name="cmdImport" id="cmdImport" value="Import Selected Response Sets, Answers, Questions"></td>
+			</tr>
+		</table>
+	</td>
+	</tr>
+</table>
+<?php
+    }    ?>
+</form>
+
+<?php if($this->is_post == false){ ?>
+<form id="frmQueImport" method="post" enctype="multipart/form-data" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/import">
+<table width="100%" cellpadding="2"  cellspacing="2" border="0">
+<tr>
+	<td width="2%">&nbsp;</td>
+	<td><font size="2">Import Questions, Answers allows you import answers, response sets, survey question using a CSV (comma seperated value) file.</font></td>
+</tr>
+<tr>
+	<td colspan="2" height="5"></td>
+</tr>
+<tr>
+	<td colspan="2">
+		<table width="100%" cellpadding="2"  cellspacing="2" border="1">
+		<thead>
+		<tr class="grdheader-large">
+			<td height="30" align="center" style="font-size: 15px;">Answers, Response Set Import</td>
+			<td height="30" align="center" style="font-size: 15px;">Question Import</td>
+		</tr>
+		</thead>
+		<tbody>
+		  <tr>
+		    <td width="50%" valign="top"><!-- ANSWER CSV BLOCK -->
+
+		      <table width="98%" align="right" cellpadding="2" cellspacing="2" border="0">
+		        <tr>
+		          <td colspan="3"><font size="2">Suggested Format / field combination setup that is required in a CSV file to import <strong>Response Set, Answer</strong> :</font></td>
+		        </tr>
+		        <tr>
+		          <td colspan="3">&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td colspan="3"><font size="2">Response_Set_Title&nbsp;<strong>;</strong>&nbsp;Answer_Text&nbsp;<strong>;</strong>&nbsp;Answer_Type&nbsp;<strong>;</strong>&nbsp;Weighting&nbsp;<strong>;</strong>&nbsp;Free_Text&nbsp;<strong>;</strong>&nbsp;Free_Text_Caption</font></td>
+		        </tr>
+		        <tr>
+		          <td colspan="3">&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td colspan="3"><font size="2">Valid values for fields :</font></td>
+		        </tr>
+		        <tr>
+		          <td colspan="3"><font size="2"><strong>&raquo;&nbsp;Answer_Type</strong> are V, NV. (V => Verbatim, NV => Non Verbatim)</font></td>
+		        </tr>
+		        <tr>
+		          <td colspan="3"><font size="2"><strong>&raquo;&nbsp;Free_Text</strong> are Y, N. ( Y => Free Text Caption included, N => Free Text Caption Not included )</font></td>
+		        </tr>
+		        <tr>
+		          <td colspan="3"><font size="2">For answers that are not part of any response set, <strong>Response_Set_Title</strong> field will hold NULL value against them.</font></td>
+		        </tr>
+		        <tr>
+		          <td colspan="3">&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td colspan="3"><font size="2">Select Answers CSV File <strong>:</strong></font>
+		            <input type='file' name='csvFileAnswer' value='' size="50"></td>
+		        </tr>
+		        <tr>
+		          <td colspan="3">&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td width="2px" align="center" ><img alt="download sample CSV file " src="<?php echo $this->baseUrl(); ?>/images/admin/download-csv.png"></td>
+		          <td width="80px"><a href="<?php echo $this->baseUrl(); ?>/answer-csv.csv"><font color='red'><strong>Click here to download sample CSV file</strong></font></a></td>
+		          <td width="250px">&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td colspan="3">&nbsp;</td>
+		        </tr>
+		      </table>
+
+		      <!-- ANSWER CSV BLOCK - END - --></td>
+		    <td width="50%" valign="top"><!-- QUESTION CSV BLOCK  -->
+
+		      <table width="98%" align="right" cellpadding="2" cellspacing="2" border="0">
+		        <tr>
+		          <td colspan="3"><font size="2">Suggested Format / field combination setup that is required in a CSV file to import <strong>Questions</strong> :</font></td>
+		        </tr>
+		        <tr>
+		          <td colspan="3">&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td colspan="3"><font size="2">Question_Description&nbsp;<strong>;</strong>&nbsp;Que_Response_Type&nbsp;<strong>;</strong>&nbsp;Max_Answer&nbsp;<strong>;</strong>&nbsp;Status</font></td>
+		        </tr>
+		        <tr>
+		          <td colspan="3">&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td colspan="3"><font size="2">Valid values for field '<strong>Que_Response_Type</strong>' are S, M. (S => Single Response, M => Multiple Response)</font></td>
+		        </tr>
+		        <tr>
+		          <td colspan="3">&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td colspan="3"><font size="2"><strong>Max_Answer</strong> relates to maximum number of responses allowed. Applicable only if "Answer_type" is set to <strong>M</strong></font></td>
+		        </tr>
+		        <tr>
+		          <td colspan="3">&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td colspan="3"><font size="2">Select Questions CSV File <strong>:</strong></font>
+		            <input type='file' name='csvFileQuestion' value='' size="50"></td>
+		        </tr>
+		        <tr>
+		          <td colspan="3">&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td width="2px" align="center"><img alt="download sample CSV file " src="<?php echo $this->baseUrl(); ?>/images/admin/download-csv.png"></td>
+		          <td width="90px"><a href="<?php echo $this->baseUrl(); ?>/que-csv.csv"><font color='red'><strong>Click here to download sample CSV file</strong></font></a></td>
+		          <td width="250px">&nbsp;</td>
+		        </tr>
+		        <tr>
+		          <td colspan="3">&nbsp;</td>
+		        </tr>
+		      </table>
+
+		      <!-- QUESTION CSV BLOCK - END -->
+		      </td>
+		  </tr>
+		</tbody>
+		</table>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
+	<td width="2%">&nbsp;</td>
+	<td align="center" ><input type='submit' value='Submit' name='cmdSubmit'>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr>
+	<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+</form>
+
+<?php
+    }
+?>

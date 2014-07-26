@@ -1,0 +1,229 @@
+<script type="text/javascript" language="javascript" src="<?php echo $this->baseUrl(); ?>/js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl(); ?>/js/fancybox/jquery.fancybox-1.3.4.css" />
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$('[id^=sq_id]').fancybox({
+		'opacity'       :   true,
+		'overlayShow'	:	true,
+		'overlayColor'  :   '#525252',
+		'width'         :   900,
+		'height'        :   650
+	});
+	
+	$("table tr#tdata").mouseout(
+		function () {
+			$(this).removeClass('active_row');
+			$(this).addClass('nonactive_row');
+		}
+	);
+
+	$('table.data tbody tr:odd').addClass('odd');
+	$('table.data tbody tr:even').addClass('even');
+
+	$("table tr#tdata").mouseover(
+		function () {
+			$(this).removeClass('nonactive_row');
+			$(this).addClass('active_row');
+		}
+	);
+
+    $(".paginationControl").change(
+    	function() {
+        	var page_index = null;
+        	page_index = $(this).val();
+        	window.location = page_index;
+    	}
+    );
+
+    $("#chkAll").click(
+    	function() {
+    		var checked_status = this.checked;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					this.checked = checked_status;
+				}
+			);
+    	}
+    );
+    $("#categories_id").change(
+        	function() {
+        		alert('No Records Selected.');
+        	}
+        );
+	$('#cid').change(
+			function(){
+          location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/topic/index/cat_id/'+jQuery('#cid').val()+'/<?php echo !empty($this->flag) ? "flag/1" : '';?>/page/<?php echo $this->pg; ?>';
+			});
+	$(".cmdDelete").click(
+		function() {
+			var cnt = 0;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					if( this.checked == true){
+						cnt++;
+					}
+				}
+			);
+			if(cnt > 0){
+				ans = confirm("Confirm Operation on Selected Records(s) ?");
+				if(ans == false){
+					return false;
+				}
+			}else{
+				alert('No Records Selected.');
+				return false;
+			}
+		}
+	);
+
+
+	$(".cmdRevoke").click(
+		function() {
+			var cnt = 0;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					if( this.checked == true){
+						cnt++;
+					}
+				}
+			);
+			if(cnt > 0){
+				ans = confirm("Confirm Operation on Selected Records(s) ?");
+				if(ans == false){
+					return false;
+				}
+			}else{
+				alert('No Records Selected.');
+				return false;
+			}
+		}
+	);
+	$('#vresponse').click(
+		function(){
+			var tr = $(this).closest("tr");
+
+			tr('#responses').hide();
+		}
+	);
+
+	
+});
+</script>
+
+<form name='frmtopic' id='frmtopic' method="POST" action="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/topic/index">
+<?php if(!empty($this->flag)){?>
+<input type="hidden" id="flag" name="flag" value="1" />
+<?php }?>
+  <div class="contentdetails">
+    <table width="100%" cellpadding="2" cellspacing="2" border="0">
+      <tr>
+        <td class="searchdiv"><table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td height="35" align="left" width="15%">&nbsp;Search By :
+                <select class="select" name="cmbKey">
+                  <option value="name">&nbsp;Topic&nbsp;</option>
+                 
+                </select></td>
+                
+              <td width="40%"><input type="text" value="" name="txtValue" id="txtValue" size="35" maxlength="50">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="submit" name="cmdSubmit" id="cmdSubmit" value="Search"></td>
+                
+                    <td height="35" align="left" width="30%">&nbsp;Filter By :
+             <select  id="cid" name="cid">
+					<option value=''>All Categories</option>
+         <?php	foreach($this->catInfo as $k => $v){	?>
+          			<option <?php echo ($this->cat_id == $v["categories_id"])?'selected="selected" ':''; ?> value="<?php echo $v["categories_id"]; ?>" >  <?php echo $v["categories_name"]; ?></option>
+         <?php	}	?>
+         		</select>
+         		
+         		</td>
+
+				<td align="center"><?php		if( $this->result_type == true){		?>
+                <a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/topic/index/clear/results/flag/<?php echo $this->flag; ?>"><b>Clear Search Result</b></a>
+                <?php		}			?></td>
+                
+            </tr>
+            
+            
+            
+          </table></td>
+      </tr>
+      <tr>
+        <td height="3"></td>
+      </tr>
+
+      <tr>
+        <td class="tablesyle"><?php
+	if( !empty($this->paginator) ){					?>
+
+	  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td colspan="10"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+            <tr>
+              <td align="left" height="35" colspan="10">&nbsp;
+                <input type="submit" name="cmdDelete" class="cmdDelete" value="Delete Selected Topics">
+                 <?php if($this->flag == 1) {?> <input type="submit" name="cmdRevoke" class="cmdRevoke" value="Revoke Violation"><?php } ?></td>
+            </tr>
+          </table>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+            <thead>
+              <tr class="grdheader">
+                <td width="<?php echo $this->col1_width; ?>%" align="center"><input type="checkbox" name="chkAll" id="chkAll" value="1" style="border:0px"></td>
+                <td align="left" width="<?php echo $this->col2_width; ?>%">&nbsp;Topic</td>
+                
+                <td align="center" width="<?php echo $this->col3_width; ?>%">&nbsp;Response Count</td>
+                <td align="center" width="<?php echo $this->col4_width; ?>%">&nbsp;Responses</td>
+                <?php if($this->flag == 1) {?>
+               <td align="center" width="8%">&nbsp;Flag Count</td>
+                <?php }?>
+                <td width="<?php echo $this->col5_width; ?>%" align="center">Add Date</td>
+                <td width="<?php echo $this->col6_width; ?>%" align="center">Status</td>
+              </tr>
+            </thead>
+            <tbody>
+              <?php	foreach($this->paginator as $v){	?>
+              <tr id="tdata">
+                <td height="30" align="center"><input type="checkbox" name="chk[]" id="chk" value="<?php echo $v["topic_id"]; ?>" style="border:0px"></td>
+                <td align="left">
+                <div id='topic<?php echo $v["topic_id"]; ?>'>
+                	&nbsp;<b><a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/topic/edit/topic_id/<?php	echo $v['topic_id']; ?>/<?php if($this->flag == 1) { echo "flag/1/"; } ?>page/<?php echo $this->pg; ?>"><?php	echo stripslashes($v['name']);	?></a></b>
+                </div>
+              
+                </td>
+                <td align="center" ><?php echo $v['response_count'];?></td>
+                <td align="center" ><strong> <?php if(!empty($v['response'])) {?><a id='sq_id<?php echo $v["topic_id"]; ?>'class="iframe" href='<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/topic/viewresponse/topic_id/<?php echo  $v["topic_id"];  ?>'>View</a><?php } else{?>View<?php }?></strong></td>
+                <?php if($this->flag == 1) {?>
+                	<td align="center" > <?php  echo $v['flag_count'][0]['count']; ?></td>
+                <?php } ?>
+                <td align="center">&nbsp;<?php echo $this->DateFormat($v['add_date'], null, 'd M Y'); ?></td>
+                <td align="center"><?php echo $v["status"]; ?></td>
+              </tr>
+              <?php	}			?>
+            </tbody>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td align="left" height="35" colspan="10">&nbsp;
+                <input type="submit" name="cmdDelete" class="cmdDelete" value="Delete Selected Topics">
+       		   <?php if($this->flag == 1) {?> <input type="submit" name="cmdRevoke" class="cmdRevoke" value="Revoke Violation"><?php } ?></td>
+            </tr>
+            <tr>
+              <td colspan="10"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+          </table>
+          <?php
+	}else{											?>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr bgcolor="White">
+              <td height="50" valign="middle" align="center">No Topics found</td>
+            </tr>
+          </table>
+          <?php
+	}												?></td>
+      </tr>
+    </table>
+  </div>
+</form>

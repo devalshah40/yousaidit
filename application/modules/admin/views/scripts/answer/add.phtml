@@ -1,0 +1,140 @@
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		
+		$('#cmdCancel').click(
+			function(){
+<?php 		if( $this->rset == 1){	?>
+				location.href = '<?php echo $this->redirect_url; ?>';
+<?php }elseif($this->qset == 1){?>
+                location.href = '<?php echo $this->r_url; ?>';
+<?php }elseif($this->qrset == 1){?>
+                location.href = '<?php echo $this->rset_url; ?>';
+<?php }else{ ?>
+           location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/answer/index/page/<?php echo $this->pg; ?>';
+<?php } ?>
+			});
+
+		$('#answer_type').change(
+		  function(){
+		      if( $(this).val() == 'nv'){
+		          $('#weightage').show();
+		          $('#free').show();
+		      }else{
+		          $('#weightage').hide();
+		          $('#free').hide();
+		          $('#caption').hide();
+		      }
+		  }
+		);
+
+		$('#free_text').change(
+		  function(){
+		      if( $(this).val() == 'y'){
+		          $('#caption').show();
+		      }else{
+		          $('#caption').hide();
+		      }
+		  }
+		);
+
+		$('#answer_type').trigger('change');
+
+		$('#free_text').trigger('change');
+
+	}
+)
+</script>
+
+<form name='frmAnswer' id='frmAnswer' method="POST" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/answer/<?php echo strtolower($this->action); ?>">
+
+  <input type="hidden" name="aid" id="aid" value="<?php echo $this->answerinfo['answer_id']; ?>">
+  <input type="hidden" name="qid" id="qid" value="<?php echo $this->qid; ?>">
+  <input type="hidden" name="pg" id="pg" value="<?php echo $this->pg; ?>">
+  <input type="hidden" name="rset" value="<?php echo $this->rset; ?>">
+  <input type="hidden" name="qset" value="<?php echo $this->qset; ?>">
+   <input type="hidden" name="qrset" value="<?php echo $this->qrset; ?>">
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+      <td height="3"></td>
+    </tr>
+    <tr>
+      <td width="100%"><!---->
+        <table width="100%" cellpadding="2" cellspacing="2" border="0" align="center" bordercolor="#a2a2a2" >
+          <tr>
+            <td height="30" width="30%" align="right"><label>Type : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <select class="select" name="answer_type" id="answer_type">
+                <option <?php echo ($this->answerinfo['answer_type'] == 'nv')?'Selected':''; ?> value="nv">Non Verbatim</option>
+                <option <?php echo ($this->answerinfo['answer_type'] == 'v')?'Selected':''; ?> value="v">Verbatim</option>
+              </select></td>
+          </tr>
+          <tr id='text'>
+            <td height="30" width="30%" valign="top" align="right"><label>Text : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <textarea rows="3" cols="50" name="answer_text" id="answer_text"><?php echo stripslashes($this->answerinfo['answer_text']); ?></textarea>&nbsp;&nbsp;<font class="compulsory" >*</font></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" valign="top" align="right">&nbsp;<label>Help Text : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <textarea rows="5" cols="50" name="help_text" id="help_text"><?php echo stripslashes($this->answerinfo['help_text']); ?></textarea ></td>
+          </tr>
+          <tr id='weightage'>
+            <td height="30" width="30%" align="right"><label>Weighting : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="weightage" id="weightage" value="<?php echo $this->answerinfo['weightage']; ?>" size="5" maxlength="5"></td>
+          </tr>
+          <tr id='free'>
+            <td height="30" align="right"><label>Include Free Text Answer : </label></td>
+            <td height="30" align="left">&nbsp;
+              <select class="select" name="free_text" id="free_text">
+                <option <?php echo ($this->answerinfo['free_text'] == 'n')?'Selected':''; ?> value="n">No</option>
+                <option <?php echo ($this->answerinfo['free_text'] == 'y')?'Selected':''; ?> value="y">Yes</option>
+              </select></td>
+          </tr>
+          <tr id="caption">
+            <td height="30" width="30%" align="right"><label>Free Text Caption : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="free_text_caption" id="free_text_caption" value="<?php echo stripslashes($this->answerinfo['free_text_caption']); ?>" size="50" maxlength="200"></td>
+          </tr>
+          <?php   if($this->action != 'Add'){     ?>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Added By : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->added_by; ?></b></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Add Date : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->answerinfo['add_date'], false, 'jS M Y'); ?></b></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Updated By : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->updated_by; ?></b></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right"><label>Last Update Date Time : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->answerinfo['updated_datetime'], 'dt'); ?></b></td>
+          </tr>
+          <?php   }     ?>
+          <tr>
+            <td height="30" align="right"><label>Status : </label></td>
+            <td height="30" align="left">&nbsp;
+              <select class="select" name="status" id="status">
+                <option <?php echo ($this->answerinfo['status'] == 'Active')?'Selected':''; ?> value="Active">Active</option>
+                <option <?php echo ($this->answerinfo['status'] == 'Inactive')?'Selected':''; ?> value="Inactive">InActive</option>
+              </select></td>
+          </tr>
+        </table>
+
+        <!----></td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="right"><font class="compulsory">*</font>&nbsp;Indicates Compulsory Fields </td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="center"><input type="submit" name="cmdSubmit" id="cmdSubmit" value="<?php echo ($this->action == 'Edit')?'Save':$this->action; ?>">
+        &nbsp;&nbsp;&nbsp;
+        <input type="button" name="cmdCancel" id="cmdCancel" value="Cancel"></td>
+    </tr>
+  </table>
+  
+</form>

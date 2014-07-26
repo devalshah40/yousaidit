@@ -1,0 +1,327 @@
+<?php
+
+class Default_Model_TopicResponse extends Zend_Db_Table {
+	
+	protected $_name = 'topic_response';
+	
+	public function inserttopicResponse($post) {
+		
+		$data = array (
+
+		'topic_id' => $post ['topic_id'],
+
+		'user_id' => $post ['user_id'],
+
+		'response' => $post ['score'],
+
+		'add_date' =>  date("Y-m-d H:i:s") )
+
+		;
+		
+		try {
+			
+			$tr_id = $this->insert ( $data );
+			
+			if ($tr_id) {
+				
+				return $tr_id;
+			
+			}
+		
+		} catch ( Exception $e ) {
+			
+			$errlog = Zend_Controller_Action_HelperBroker::getStaticHelper ( 'errorlog' );
+			
+			$errlog->direct ( "TopicResponse.inserttopicResponse : " . $e->getMessage () );
+		
+		}
+		
+		return false;
+	
+	}
+	
+	public function getTopicResponse($user_id , $topic_id) {
+		
+	//	$select = $this->select()->where("user_id = ".$user_id)->where("topic_id = ".$topic_id);
+		$select = "SELECT * FROM `topic_response` where user_id = ".$user_id." and topic_id = ".$topic_id;
+		try {
+				$row = $this->getDefaultAdapter ()->fetchAll ( $select );
+				if(count($row)>0) {
+				return $row;
+			}
+		}catch ( Exception $e ) {
+			
+			$errlog = Zend_Controller_Action_HelperBroker::getStaticHelper ( 'errorlog' );
+			
+			$errlog->direct ( "TopicResponse.getTopicResponse : " . $e->getMessage () );
+		
+		}
+		
+		return false;
+	
+	}
+
+	public function getVotesCount($topic_id) {
+		
+/*	$select = "SELECT response, ROUND( total / ( SELECT sum( total )FROM (SELECT COUNT( tr_id ) AS total,
+		 response FROM topic_response WHERE topic_id = '".$topic_id."' AND response !=0 GROUP BY response ) AS sub ) * 100  ) AS percent, sum( total ) as votes
+         FROM (  SELECT COUNT( tr_id ) AS total, response FROM topic_response WHERE topic_id ='".$topic_id."' AND response !=0 GROUP BY response)
+         AS sub GROUP BY response";
+*/
+		 $select = "SELECT response, TRUNCATE( total / ( SELECT sum( total )FROM (SELECT COUNT( tr_id ) AS total,
+		 response FROM topic_response WHERE topic_id = '".$topic_id."' AND response !=0 GROUP BY response ) AS sub ) *100 , 0) AS percent, sum( total ) as votes
+         FROM (  SELECT COUNT( tr_id ) AS total, response FROM topic_response WHERE topic_id ='".$topic_id."' AND response !=0 GROUP BY response)
+         AS sub GROUP BY response ";
+
+		try {
+			
+			$row = $this->getDefaultAdapter ()->fetchAll ( $select );
+			$values = count($row);
+			if($values > 0){
+				$value_percent = array();$sum = 0;
+				foreach ($row as $k=>$v){
+					extract($v);
+					$value_percent[] = $percent; 
+					$sum +=  $percent; 
+				}
+				$replace_vlaue = 100 - ($sum - $value_percent[$values - 1]);
+		    	$row[$values - 1]['percent'] = $replace_vlaue;
+			}	
+			if (count ( $row ) > 0) {
+				
+				return $row;
+			
+			}
+		
+		} catch ( Exception $e ) {
+			
+			$errlog = Zend_Controller_Action_HelperBroker::getStaticHelper ( 'errorlog' );
+			
+			$errlog->direct ( "TopicResponse.getVotesCount : " . $e->getMessage () );
+		
+		}
+		
+		return false;
+	
+	}
+	
+	public function getLastTopic($user_id,$topic_id) {
+		$select = "SELECT * FROM topic_response tr, topics t WHERE tr.user_id = '".$user_id."' AND tr.topic_id = '".$topic_id."'
+                   AND t.topic_id = tr.topic_id   LIMIT 1";
+		try {
+			$row = $this->getDefaultAdapter ()->fetchRow ( $select );
+			if (count ( $row ) > 0) {
+				return $row;
+			}
+		} catch ( Exception $e ) {
+			$errlog = Zend_Controller_Action_HelperBroker::getStaticHelper ( 'errorlog' );
+			$errlog->direct ( "TopicResponse.getLasTopic : " . $e->getMessage () );
+		}
+		return false;
+	}
+	
+    public function getUserOtherResponse($user_id) {
+		$select = "	SELECT
+						t.*
+					FROM
+						topics t, topic_response tr
+					WHERE
+						tr.topic_id = t.topic_id
+                   		AND t.user_id !=  '".$user_id."'
+                   		AND tr.user_id =  '".$user_id."'
+                   		AND tr.response != 0
+                   		ORDER BY
+                   			tr.add_date DESC ";
+
+		try {
+			$row = $this->getDefaultAdapter ()->fetchAll ( $select );
+			if (count ( $row ) > 0) {
+				return $row;
+			}
+		} catch ( Exception $e ) {
+			$errlog = Zend_Controller_Action_HelperBroker::getStaticHelper ( 'errorlog' );
+			$errlog->direct ( "TopicResponse.getUserOtherResponse : " . $e->getMessage () );
+		}
+		
+		return false;
+	
+	}
+	
+	
+   public function getUserResponse($user_id) {
+		
+//		 $select = "SELECT * FROM topics WHERE user_id = '".$user_id."'
+//                         AND topic_id IN (  SELECT topic_id   FROM topic_response WHERE response !=0 )
+//                         ORDER BY add_date DESC ";
+		 
+	     $select = "SELECT * FROM topics WHERE user_id = ".$user_id." ORDER BY add_date DESC ";
+
+		try {
+			
+			$row = $this->getDefaultAdapter ()->fetchAll ( $select );
+			
+			if (count ( $row ) > 0) {
+				
+				return $row;
+			
+			}
+		
+		} catch ( Exception $e ) {
+			
+			$errlog = Zend_Controller_Action_HelperBroker::getStaticHelper ( 'errorlog' );
+			
+			$errlog->direct ( "TopicResponse.getUserResponse : " . $e->getMessage () );
+		
+		}
+		
+		return false;
+	
+	}
+	
+	
+	public function skipCurrentTopic($post) {
+		
+		$data = array (
+
+		'topic_id' => $post['topic_id'],
+
+		'user_id' => $post['user_id'],
+
+		'response' => '0',
+
+		'add_date' => date ( "Y-m-d" ) )
+
+		;
+		
+		try {
+			
+			$tr_id = $this->insert ( $data );
+			
+			if ($tr_id) {
+				
+				return $tr_id;
+			
+			}
+		
+		} catch ( Exception $e ) {
+			
+			$errlog = Zend_Controller_Action_HelperBroker::getStaticHelper ( 'errorlog' );
+			
+			$errlog->direct ( "TopicResponse.inserttopicResponse : " . $e->getMessage () );
+		
+		}
+		
+		return false;
+	
+	}
+	
+
+	public function deleteTopicResponse($id) {
+
+        $where = 'topic_id = ' . $id;
+
+		try {
+
+			$result = $this->delete($where);
+
+			return true;
+
+		}catch (Exception $e){
+
+			$errlog = Zend_Controller_Action_HelperBroker::getStaticHelper('errorlog');
+
+			$errlog->direct("TopicResponse.deleteTopicResponse : " . $e->getMessage());
+
+		}
+
+		return false;
+
+	}
+	
+ 	public function getTopTenTopics($limit , $viewall = null , $country_id = null ,$categort_ids = null , $recent = null ,$user_id = null) {
+ 		/*echo $recent;*/
+ 	   if($country_id != -1){
+ 			$sqladdon1Where = " and  t.country_id = ".$country_id."  ";
+ 			$sqladdon1From = "  ";
+ 		}else{
+ 			$sqladdon1Where = '';
+ 			$sqladdon1From = '';
+ 		}
+ 		
+ 		if(empty($viewall)){
+ 			$sqladdon2Where = " LIMIT ".$limit." ";
+ 		}else{
+ 			$sqladdon2Where = ' ';
+ 		}
+ 		
+ 		if(!empty($categort_ids)){
+ 			$sqladdon3Where = " and tc.topic_id = t.topic_id and tc.categories_id IN (".$categort_ids.")  ";
+ 			$sqladdon3From = " , `topic_categories` tc  ";
+ 		}else{
+ 			$sqladdon3Where = ' ';
+ 			$sqladdon3From = " ";
+ 		}
+ 		$sqladdon4Where = 'and t.topic_id NOT IN( SELECT r.topic_id from report r where r.topic_id = t.topic_id and r.user_id = '.$user_id.') ';
+ 		
+ 		$sqladdon5Where = 'and t.topic_id NOT IN( SELECT tr.topic_id from `topic_response` tr where tr.topic_id = t.topic_id and tr.user_id = '.$user_id.' and tr.response = 0 ) ';
+ 		
+ 		if($recent == 2){
+ 			$select =  " SELECT t.topic_id,t.name FROM ".$sqladdon1From."  topics t ".$sqladdon3From."  WHERE   t.status = 'Active'  ".$sqladdon1Where." ".$sqladdon3Where." ".$sqladdon4Where." ".$sqladdon5Where." ORDER BY t.`add_date` DESC " .$sqladdon2Where . "";
+ 		}else{
+ 			$select =  " SELECT t.topic_id,t.name FROM ".$sqladdon1From." `topic_response` tr, topics t ".$sqladdon3From."  WHERE t.topic_id = tr.topic_id ".$sqladdon1Where." and t.status = 'Active' and tr.response != 0 ".$sqladdon3Where."  ".$sqladdon4Where." GROUP BY tr.topic_id ORDER BY COUNT( tr.`topic_id` ) DESC , t.`add_date` DESC " .$sqladdon2Where . "";
+ 		}
+ //		echo $select;
+ 		
+ 		/*if($country_id == -1){
+ 			echo $categort_ids;
+ 			if(empty($viewall)){
+ 				$select = " SELECT t.topic_id,t.name FROM `topic_response` tr, topics t WHERE t.topic_id = tr.topic_id and t.status = 'Active' GROUP BY tr.topic_id ORDER BY COUNT( tr.`topic_id` ) DESC , t.`add_date` DESC LIMIT ".$limit;
+ 			}elseif(!empty($categort_ids)){
+ 				$select = " SELECT t.topic_id,t.name FROM `topic_response` tr, topics t,`topic_categories` tc WHERE t.topic_id = tr.topic_id  and t.status = 'Active'and tc.topic_id = t.topic_id and tc.categories_id IN (".$categort_ids.") GROUP BY tr.topic_id ORDER BY COUNT( tr.`topic_id` ) DESC , t.`add_date` DESC LIMIT ".$limit;
+ 			}else{
+ 				$select = " SELECT t.topic_id,t.name FROM `topic_response` tr, topics t WHERE t.topic_id = tr.topic_id  and t.status = 'Active' GROUP BY tr.topic_id ORDER BY COUNT( tr.`topic_id` ) DESC , t.`add_date` DESC";
+ 			}
+ 		}else{
+ 			echo $categort_ids."xx";
+	 		if(empty($viewall) && empty($categort_ids)){
+	 				$select = " SELECT t.topic_id,t.name  FROM `topic_response` tr, topics t , user_details u WHERE t.topic_id = tr.topic_id and t.user_id = u.user_id and u.country_id = ".$country_id."  and t.status = 'Active' GROUP BY tr.topic_id ORDER BY COUNT( tr.`topic_id` ) DESC , t.`add_date` DESC LIMIT ".$limit;
+	 			//	 $select = " SELECT t.topic_id,t.name, COUNT( tr.`topic_id` ) FROM `topic_response` tr, topics t WHERE t.topic_id = tr.topic_id GROUP BY tr.topic_id ORDER BY COUNT( tr.`topic_id` ) DESC , t.`add_date` DESC";
+	 		}elseif(!empty($categort_ids)){
+					$select = " SELECT t.topic_id,t.name  FROM `topic_response` tr, topics t , user_details u ,`topic_categories` tc WHERE t.topic_id = tr.topic_id and t.user_id = u.user_id and u.country_id = ".$country_id."  and t.status = 'Active' and tc.topic_id = t.topic_id and tc.categories_id IN (".$categort_ids.") GROUP BY tr.topic_id ORDER BY COUNT( tr.`topic_id` ) DESC , t.`add_date` DESC LIMIT ".$limit;
+	 		}else{
+	 				$select = " SELECT t.topic_id,t.name  FROM `topic_response` tr, topics t , user_details u WHERE t.topic_id = tr.topic_id and t.user_id = u.user_id and u.country_id = ".$country_id." and  t.status = 'Active' GROUP BY tr.topic_id ORDER BY COUNT( tr.`topic_id` ) DESC , t.`add_date` DESC";
+	 		}
+ 		}*/
+ 		/*
+ 		echo $select;*/
+        try{
+            $result = $this->getDefaultAdapter()->fetchAll($select);
+            if ($result){
+                return $result;
+            }
+        } catch(Exception $e){
+            $errlog = Zend_Controller_Action_HelperBroker::getStaticHelper('errorlog');
+            $errlog->direct("Topic.getTopTenTopics : " . $e->getMessage());
+        }
+        return false;
+    }
+    
+	public function getTopicRedirect($tid ,$uid) {
+
+			$select = $this->select()->where("topic_id = ?", $tid)->where("user_id = ?", $uid);
+			try{
+	            $result = $this->fetchAll($select);
+				if(count($result)>0) {
+					return $result->toArray();
+				}
+				else{
+					return NULL;
+				}
+	        } catch(Exception $e){
+	            $errlog = Zend_Controller_Action_HelperBroker::getStaticHelper('errorlog');
+	            $errlog->direct("Topic.getTopicRedirect : " . $e->getMessage());
+	        }
+	        return false;
+	    }
+		
+}

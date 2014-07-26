@@ -1,0 +1,64 @@
+<?php if ($this->pageCount): ?>
+	<table width="100%" align="center"  border="0" class="pagerText" style="text-align:left;" cellpadding="5">
+	<!-- EFE3D1 -->
+	<tr>
+		<td width="15%">
+			<?php echo $this->firstItemNumber; ?> - <?php echo $this->lastItemNumber; ?> of <?php echo $this->totalItemCount; ?>
+		</td>
+		<td width="60%" align="center">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<!-- First page link -->
+			<?php if (isset($this->previous)): ?>
+				<a href="<?php echo $this->url(array('page' => $this->first)); ?>"><img title="First Page" border="0" src="<?php echo $this->baseUrl(); ?>/images/admin/PreviousLast.png" onmouseover="this.src='<?php echo $this->baseUrl(); ?>/images/admin/PreviousLastHover.png'" onmouseout="this.src='<?php echo $this->baseUrl(); ?>/images/admin/PreviousLast.png'"/></a> &nbsp;
+			<?php else: ?>
+				<span class="disabled"><img border="0" src="<?php echo $this->baseUrl(); ?>/images/admin/PreviousLastDisable.png"/></span> &nbsp;
+			<?php endif; ?>
+
+			<!-- Previous page link -->
+			<?php if (isset($this->previous)): ?>
+				<a href="<?php echo $this->url(array('page' => $this->previous)); ?>"><img title="Previous Page" border="0" src="<?php echo $this->baseUrl(); ?>/images/admin/Previous.png" onmouseover="this.src='<?php echo $this->baseUrl(); ?>/images/admin/PreviousHover.png'" onmouseout="this.src='<?php echo $this->baseUrl(); ?>/images/admin/Previous.png'"/></a> &nbsp;
+			<?php else: ?>
+				<span class="disabled"><img border="0" src="<?php echo $this->baseUrl(); ?>/images/admin/PreviousDisable.png"/></span> &nbsp;
+			<?php endif; ?>
+
+			<!-- Numbered page links -->
+			<?php foreach ($this->pagesInRange as $page): ?>
+				<?php if ($page != $this->current): ?>
+					<a href="<?php echo $this->url( array('page' => $page) ); ?>"><b><?php echo $page; ?></b></a>&nbsp;
+				<?php else: ?>
+					<font color="Red"><b><?php echo $page; ?></b></font>&nbsp;
+				<?php endif;
+					$lastPageInRange = $page;
+				?>
+			<?php endforeach; ?>
+
+			<!-- Next page link -->
+			<?php if (isset($this->next)): ?>
+				<a href="<?php echo $this->url(array('page' => $this->next)); ?>"><img title="Next Page" border="0" src="<?php echo $this->baseUrl(); ?>/images/admin/Next.png" onmouseover="this.src='<?php echo $this->baseUrl(); ?>/images/admin/NextHover.png'" onmouseout="this.src='<?php echo $this->baseUrl(); ?>/images/admin/Next.png'"/></a> &nbsp;
+			<?php else: ?>
+				<span class="disabled"><img border="0" src="<?php echo $this->baseUrl(); ?>/images/admin/NextDisable.png"/></span> &nbsp;
+			<?php endif; ?>
+
+			<!-- Last page link -->
+			<?php if (isset($this->next)): ?>
+				<a href="<?php echo $this->url(array('page' => $this->last)); ?>"><img title="Last Page" border="0" src="<?php echo $this->baseUrl(); ?>/images/admin/NextLast.png" onmouseover="this.src='<?php echo $this->baseUrl(); ?>/images/admin/NextLastHover.png'" onmouseout="this.src='<?php echo $this->baseUrl(); ?>/images/admin/NextLast.png'"/></a>
+			<?php else: ?>
+				<span class="disabled"><img border="0" src="<?php echo $this->baseUrl(); ?>/images/admin/NextLastDisable.png"/></span>
+			<?php endif; ?>
+		</td>
+		<td width="25%" align="right">
+			Jump To Page No :
+			<select id="paginationControl" class="paginationControl" size="1">
+<?php 	for($i = 1; $i <= $this->last; $i++):
+			$selected = ($i == $this->current) ? ' selected="selected"' : ''; 		?>
+			<option value="<?php echo $this->url(array('page' => $i));?>"<?php echo $selected ?>>
+				<?php echo $i; 	?>
+			</option>
+<?php 	endfor; 				?>
+			</select>
+		</td>
+	</tr>
+	</table>
+
+<?php endif; ?>
+

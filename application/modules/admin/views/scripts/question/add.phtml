@@ -1,0 +1,168 @@
+<script type="text/javascript" language="javascript" src="<?php echo $this->baseUrl(); ?>/js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl(); ?>/js/fancybox/jquery.fancybox-1.3.4.css" />
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		$('#cmdCancel').click(
+			function(){
+				location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/index/page/' +  $("#pg").val();
+			}
+		);
+
+		$('#rset_ans').fancybox({
+			'opacity'       :   true,
+			'overlayShow'	:	true,
+			'overlayColor'  :   '#525252',
+			'width'         :   900,
+			'height'        :   550
+		});
+
+		$('#answer_type').change(
+		  function(){
+		      if( $(this).val() == 'm'){
+		    	  $('#maxans').show();
+		    	  $('.rlabel').hide();
+		    	  $('#max_answer').focus();
+		      }else if($(this).val() == 'r'){
+		    	  $('#maxans').hide();
+		    	  $('#max_answer').val('0');
+		    	  $('.rlabel').show();
+		    	  $('#rating_caption_1').focus();
+			  }else{
+		    	  $('#maxans').hide();
+		    	  $('#max_answer').val('0');
+		    	  $('.rlabel').hide();
+		      }
+		  }
+		);
+
+		$('#answer_type').trigger('change');
+	}
+);
+</script>
+<form name='frmQuestion' id='frmQuestion' method="POST" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/<?php echo strtolower($this->action); ?>">
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+      <td width="100%"><!---->
+
+        <input type="hidden" name="id" id="id" value="<?php echo $this->questioninfo['question_id']; ?>">
+        <input type="hidden" name="pg" id="pg" value="<?php echo $this->pg; ?>">
+        <table width="100%" cellpadding="2" cellspacing="2" border="0" align="center">
+       
+          <tr>
+            <td height="30" width="30%" valign="top" align="right">&nbsp;
+              <label>Description : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <textarea rows="5" cols="50" name="description" id="description"><?php echo stripslashes($this->questioninfo['description']); ?></textarea >
+              &nbsp;&nbsp;<font class="compulsory">*</font></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" valign="top" align="right">&nbsp;
+              <label>Help Text : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <textarea rows="3" cols="50" name="help_text" id="help_text"><?php echo stripslashes($this->questioninfo['help_text']); ?></textarea ></td>
+          </tr>
+          <!--
+          <tr>
+            <td height="30" align="right">&nbsp;
+              <label>Legend : </label></td>
+            <td height="30" align="left">&nbsp;
+              <input type='text' name='que_legend' id='que_legend' value='<?php //echo $this->questioninfo['que_legend']; ?>' size="30" maxlength="50"></td>
+          </tr>   -->
+          <tr>
+            <td height="30" align="right">&nbsp;
+              <label>Answer Selection : </label></td>
+            <td height="30" align="left">&nbsp;
+              <select class="select" name="answer_type" id="answer_type">
+                <option <?php echo ($this->questioninfo['answer_type'] == 's')?'Selected':''; ?> value="s">Single</option>
+                <option <?php echo ($this->questioninfo['answer_type'] == 'm')?'Selected':''; ?> value="m">Multiple</option>
+                <option <?php echo ($this->questioninfo['answer_type'] == 'r')?'Selected':''; ?> value="r">Rating</option>
+              </select></td>
+          </tr>
+          <tr class='rlabel'>
+            <td height="30" align="right">&nbsp;
+              <label>Rating Label 1 : </label></td>
+            <td height="30" align="left">&nbsp;
+              <input type='text' name='rating_caption_1' id='rating_caption_1' value="<?php echo $this->escape($this->questioninfo['rating_caption_1']); ?>" size="35" maxlength="50"></td>
+          </tr>
+          <tr class='rlabel'>
+            <td height="30" align="right">&nbsp;
+              <label>Rating Label 2 : </label></td>
+            <td height="30" align="left">&nbsp;
+              <input type='text' name='rating_caption_2' id='rating_caption_2' value="<?php echo $this->escape($this->questioninfo['rating_caption_2']); ?>" size="35" maxlength="50"></td>
+          </tr>
+          <tr class='rlabel'>
+            <td height="30" align="right">&nbsp;
+              <label>Rating Label 3 : </label></td>
+            <td height="30" align="left">&nbsp;
+              <input type='text' name='rating_caption_3' id='rating_caption_3' value="<?php echo $this->escape($this->questioninfo['rating_caption_3']); ?>" size="35" maxlength="50"></td>
+          </tr>
+          <tr class='rlabel'>
+            <td height="30" align="right">&nbsp;
+              <label>Rating Label 4 : </label></td>
+            <td height="30" align="left">&nbsp;
+              <input type='text' name='rating_caption_4' id='rating_caption_4' value="<?php echo $this->escape($this->questioninfo['rating_caption_4']); ?>" size="35" maxlength="50"></td>
+          </tr>
+          <tr class='rlabel'>
+            <td height="30" align="right">&nbsp;
+              <label>Rating Label 5 : </label></td>
+            <td height="30" align="left">&nbsp;
+              <input type='text' name='rating_caption_5' id='rating_caption_5' value="<?php echo $this->escape($this->questioninfo['rating_caption_5']); ?>" size="35" maxlength="50"></td>
+          </tr>
+          
+          <tr id='maxans'>
+            <td height="30" align="right">&nbsp;
+              <label>Maximum Number of Responses Allowed : </label></td>
+            <td height="30" align="left">&nbsp;
+              <input type='text' name='max_answer' id='max_answer' value='<?php echo $this->questioninfo['max_answer']; ?>' size="2" maxlength="2"></td>
+          </tr>
+          <?php   if($this->action != 'Add'){     ?>
+          <tr>
+            <td height="30" width="30%" align="right">&nbsp;
+              <label>Response Set / Answer Association : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<a id='rset_ans' class="iframe" href='<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename ?>/question/rsetansassociation/qid/<?php echo $this->questioninfo['question_id']; ?>'><b>View</b></a></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right">&nbsp;
+              <label>Added By : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->added_by; ?></b></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right">&nbsp;
+              <label>Add Date : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->questioninfo['add_date'], false, 'jS M Y'); ?></b></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right">&nbsp;
+              <label>Updated By : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->updated_by; ?></b></td>
+          </tr>
+          <tr>
+            <td height="30" width="30%" align="right">&nbsp;
+              <label>Last Update Date Time : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->questioninfo['updated_datetime'], 'dt'); ?></b></td>
+          </tr>
+          <?php   }     ?>
+          <tr>
+            <td height="30" align="right">&nbsp;
+              <label>Status : </label></td>
+            <td height="30" align="left">&nbsp;
+              <select class="select" name="status" id="status">
+                <option <?php echo ($this->questioninfo['status'] == 'Active')?'Selected':''; ?> value="Active">Active</option>
+                <option <?php echo ($this->questioninfo['status'] == 'Inactive')?'Selected':''; ?> value="Inactive">InActive</option>
+              </select></td>
+          </tr>
+        </table>
+
+        <!----></td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="right"><font class="compulsory">*</font>&nbsp;Indicates Compulsory Fields </td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="center"><input type="submit" name="cmdSubmit" id="cmdSubmit" value="<?php echo ($this->action == 'Edit')?'Save':$this->action; ?>">
+        &nbsp;&nbsp;&nbsp;
+        <input type="button" name="cmdCancel" id="cmdCancel" value="Cancel"></td>
+    </tr>
+  </table>
+</form>

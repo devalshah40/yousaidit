@@ -1,0 +1,135 @@
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/js/jquery.raty.js"></script>
+<link type="text/css" href="<?php echo $this->baseUrl(); ?>/style/black-tie/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery-ui-1.8.22.custom.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+				
+				$('#default1').raty({
+				    readOnly:  false,
+					path : '<?php echo $this->baseUrl(); ?>/js/jquery/jquery.raty/img/',
+					hintList:  ['Very Bad', 'Bad', 'Neutral', 'Good', 'Excellent'],
+					size : 66,
+					space :true,
+					iconRange: [
+								{ range: 1, on: 'face-1.png', off: 'face-1-off.png' },
+								{ range: 2, on: 'face-2.png', off: 'face-2-off.png' },
+								{ range: 3, on: 'face-3.png', off: 'face-3-off.png' },
+								{ range: 4, on: 'face-4.png', off: 'face-4-off.png' },
+								{ range: 5, on: 'face-5.png', off: 'face-5-off.png' }
+							  ],
+							number:         5,
+        			single : true,
+        			click:function() {
+        				document.forms["frmtopic"].submit();
+            			}
+			     });
+
+				$('#dialog').dialog({
+					autoOpen: false,
+					position: ["center","center"],
+					width: 500,
+					height: 250,
+					modal:true,
+					buttons: {
+						"Yes": function() {
+							$(this).dialog("close");
+						    $('#SkipTopic').submit();
+							return true;
+						},
+						"No": function() {
+							$(this).dialog("close");
+							return false;
+						}
+					}
+				});
+				
+				$('.confirmLink1').click(
+			            function(){
+							$('#dialog').dialog('open');
+				         }
+			       );
+
+				$('.confirmLink2').click(
+			            function(){
+							$('#dialog1').dialog('open');
+				         }
+			       );
+				
+
+				$('#dialog1').dialog({
+					autoOpen: false,
+					position: ["center","center"],
+					width: 500,
+					height: 250,
+					modal:true,
+					buttons: {
+						"Yes": function() {
+							$(this).dialog("close");
+							$('#ReportForm').submit();
+							return true;
+						},
+						"No": function() {
+							$(this).dialog("close");
+							return false;
+						}
+					}
+				});
+
+			       
+});
+
+</script>
+<div id="contentarea">
+    <?php echo $this->leftmenu; ?>
+    <div id="right-content">
+      <div class="pgheader">
+        <h2>Topics </h2>
+        <div class="filterbtn"> <a class="a_demo_three" href="<?php echo $this->baseUrl(); ?>/filter-topics.html"> Filter </a> </div>
+      </div>
+      <div class="area">
+		  <?php if( !empty($this->errorMsg)){   ?>
+		            	<div class="error_msg">
+		            	    <?php echo $this->errorMsg; ?>
+		            	</div>
+		            <?php  }    ?>
+	<div class="topics-main">
+	
+	            <?php  if(!empty($this->topicList) ){ ?>
+	            
+	         	<form id="frmtopic" method="POST" action="view-toptopic.html">
+	    			<div class="topicbox"><?php echo $this->topicList['name']; ?></div>
+	    			<div class="place-vote"> Place your vote</div>
+	        			<div id="default1" class="smile" align="center"></div>
+	        		<input type= "hidden" name="topic_id" id ="topic_id" value ="<?php echo $this->topicList['topic_id']; ?>">
+	      		</form>
+	            
+				<form name="ReportForm" id="ReportForm" action="<?php echo $this->baseUrl(); ?>/default/topic/report" method="post">
+					<div class="report-v">
+					<input type= "hidden" name="topic_id" id ="topic_id" value ="<?php echo $this->topicList['topic_id']; ?>">
+	  				<input class="confirmLink2 report-btn" type="button" value="Report Violation">
+	  				</div>
+				</form>
+				
+				
+				<form name="SkipTopic" id="SkipTopic" action="<?php echo $this->baseUrl(); ?>/default/topic/skiptopic" method="post">
+					<div class="skip">
+					<input type= "hidden" name="topic_id" id ="topic_id" value ="<?php echo $this->topicList['topic_id']; ?>">
+	  				<input class="confirmLink1 report-btn" type="button" value="Skip Topic">
+	  				</div>
+				</form>
+				
+	            <?php  }else{    ?>
+	            	<div class="topicbox" align="center"><br/><strong>Opps. There are no more topics to vote.</strong></div>
+	            <?php }    ?>
+	      </div>
+      </div>
+    </div>
+  </div>
+  <div  id="dialog" title="Please Confirm">
+	<p> Hi there , Are you sure you want to Skip this Topic ? </p>
+  </div>
+  <div  id="dialog1" title="Please Confirm">
+	<p> Hi there , Are you sure you want to Report Violation on this Topic ? </p>
+  </div>
+  <!-- #content -->

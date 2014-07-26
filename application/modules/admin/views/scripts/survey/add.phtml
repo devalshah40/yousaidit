@@ -1,0 +1,115 @@
+
+<script type="text/javascript">
+$(document).ready(
+
+        function() {
+    		$('#cmdCancel').click(
+    	    	
+    			function(){
+        			location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/survey/index/page/' +  $("#pg").val();
+    			}
+    		);
+    	}
+	
+);
+</script>
+<style type="text/css">
+.post-code {
+	text-transform:uppercase;
+}
+</style>
+<form name='frmSurveyAdd' id='frmSurveyAdd' method="POST" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/survey/<?php echo strtolower($this->action); ?>">
+  <input type="hidden" name="id" id="id" value="<?php echo $this->surveyinfo['survey_id']; ?>">
+  <input type="hidden" name="pg" id="pg" value="<?php echo $this->pg; ?>">
+  <input type="hidden" name="survey_questions_flag" id="survey_questions_flag" value="<?php echo $this->survey_questions_flag; ?>">
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+      <td><table width="100%" cellpadding="0" cellspacing="15" border="0">
+          <tr>
+            <td width="100%">
+            <table width="100%" cellpadding="2" cellspacing="2" border="0" align="center" bordercolor="#a2a2a2" >
+                <tr>
+                  <td colspan="2" height="30" align="left"><h2>Survey Details</h2></td>
+                </tr>
+
+                <tr>
+                  <td height="30" align="right"><label>Title : </label></td>
+                  <td height="30" align="left">&nbsp;
+                    <input type="text" name="title" size="50" maxlength="150" value="<?php echo stripslashes(htmlspecialchars($this->surveyinfo['title'])); ?>">
+                    &nbsp;&nbsp;<font class="compulsory" >*</font></td>
+                </tr>
+                <tr>
+                  <td height="30" valign="top" align="right"><label>Description : </label></td>
+                  <td height="30" align="left">&nbsp;
+                    <textarea rows="5" cols="50" name="description" id="description"><?php echo stripslashes($this->surveyinfo['description']); ?></textarea></td>
+                </tr>
+                <!--
+                <tr>
+                  <td height="30" align="right"><label>Start Date : </label></td>
+                  <td height="30" align="left">&nbsp;
+                    <input type="text" readonly="readonly" name="start_date" id="start_date" value="<?php echo $this->surveyinfo['start_date']; ?>" size="10">
+                    <input type="hidden" name="h_start_date" id="h_start_date" value="<?php echo $this->surveyinfo['start_date']; ?>">
+                    &nbsp;&nbsp;<font class="compulsory" >*</font></td>
+                </tr>
+                <tr>
+                  <td height="30" align="right"><label>End Date : </label></td>
+                  <td height="30" align="left">&nbsp;
+                    <input type="text" readonly="readonly" name="end_date" id="end_date" value="<?php echo $this->surveyinfo['end_date']; ?>" size="10">
+                    <input type="hidden" name="h_end_date" id="h_end_date" value="<?php echo $this->surveyinfo['end_date']; ?>">
+                    &nbsp;&nbsp;<font class="compulsory" >*</font></td>
+                </tr>
+                <tr>
+                  <td height="30" align="right"><label>End Time : </label></td>
+                  <td height="30" align="left">&nbsp;
+                    <input type="text" readonly="readonly" name="end_time" id="end_time" value="<?php echo !empty($this->survey_end_time)?$this->survey_end_time:'11:55 PM'; ?>" size="8">
+                    &nbsp;&nbsp;<font class="compulsory" >*</font></td>
+                </tr>		 -->
+                <tr>
+                  <td height="30" align="right"><label>Status : </label></td>
+                  <td height="30" align="left">&nbsp;
+                    <select class="select" name="status" id="status">
+                      <option <?php echo ($this->surveyinfo['status'] == 'Inactive')?'Selected':''; ?> value="Inactive">InActive</option>
+                      <option <?php echo ($this->surveyinfo['status'] == 'Active')?'Selected':''; ?> value="Active">Active</option>
+                    </select></td>
+                </tr>
+                <?php   if($this->action != 'Add'){     ?>
+                <tr>
+                  <td height="30" align="right"><label>Add Date : </label></td>
+                  <td height="30" align="left">&nbsp;<b><?php echo $this->DateFormat($this->surveyinfo['add_date'], false, 'jS M Y'); ?></b></td>
+                </tr>
+                <tr>
+                  <td height="30" align="right"><label>Last Update Date Time : </label></td>
+                  <td height="30" align="left">&nbsp;<b><?php echo $this->DateFormat($this->surveyinfo['updated_datetime'], 'dt'); ?></b></td>
+                </tr>
+                <?php   }     ?>
+                <!--
+                <tr>
+                  <td colspan="2" height="30" align="left"><h2>Notification Messages</h2></td>
+                </tr>
+                <tr>
+                  <td height="30" valign="top" align="right"><label>Invitation Message : </label></td>
+                  <td height="30" align="left">&nbsp;
+                    <textarea rows="5" cols="50" name="invitation_msg" id="invitation_msg"><?php echo stripslashes($this->surveyinfo['invitation_msg']); ?></textarea></td>
+                </tr>
+                <tr>
+                  <td height="30" valign="top" align="right"><label>Completion Message : </label></td>
+                  <td height="30" align="left">&nbsp;
+                    <textarea rows="5" cols="50" name="completion_msg" id="completion_msg"><?php echo stripslashes($this->surveyinfo['completion_msg']); ?></textarea></td>
+                </tr>
+                 -->
+              </table>
+              </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="right"><font class="compulsory">*</font>&nbsp;Indicates Compulsory Fields </td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="center"><input type="submit" name="cmdSubmit" id="cmdSubmit" value="<?php echo ($this->action == 'Edit')?'Save':$this->action; ?>">
+        &nbsp;&nbsp;&nbsp;
+      <input type="button" name="cmdCancel" id="cmdCancel" value="Cancel"></td>
+    </tr>
+  </table>
+</form>

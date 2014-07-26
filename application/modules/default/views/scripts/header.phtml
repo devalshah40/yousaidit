@@ -1,0 +1,35 @@
+<header>
+    <div id="small-logo">
+     <?php if($this->group_id != 3){ ?>
+     	<a href='<?php echo $this->baseUrl(); ?>/user-home.html'>
+     		<img src='<?php echo $this->baseUrl(); ?>/images/new.png' width="150" height="95" />
+     		</a>
+     		<?php }else{?>
+    	<a href='<?php echo $this->baseUrl(); ?>/client-home.html'>
+     		<img src='<?php echo $this->baseUrl(); ?>/images/new.png' width="150" height="95" />
+   		</a>
+ 
+     		<?php }?>
+     		</div>
+    <?php if(!empty($this->firstname)) {?>
+    <div id="welcome-text">
+      <h2>Welcome <?php echo ucwords($this->firstname." ".$this->lastname); ?>  </h2>
+      Last Login : <?php echo $this->lastlogin; ?></div>
+     <?php }?>
+</header>
+<div id="separator"></div>
+<!--
+<hr>
+                <a href="<?php echo $this->baseUrl() . "/"  ?>user-login.html">Home</a>
+				&nbsp;<b>|</b>&nbsp;
+				<a href="<?php echo $this->baseUrl() . "/"  ?>client-login.html">Client Login</a>
+				&nbsp;<b>|</b>&nbsp;
+           		<a href="<?php echo $this->baseUrl() . "/"  ?>edit-profile.html">Profile</a>
+				&nbsp;<b>|</b>&nbsp;
+           		<a href="<?php echo $this->baseUrl() . "/"  ?>invite-friends.html">Invite friends</a>
+           		&nbsp;<b>|</b>&nbsp;
+           		<a href="<?php echo $this->baseUrl() . "/"  ?>invite-friends-to-mcubed.html">Invite Friends To M3</a>
+				&nbsp;<b>|</b>&nbsp;
+			    <a href="<?php echo $this->baseUrl() . "/"  ?>logout.html">Log Out</a>
+<hr>
+ -->

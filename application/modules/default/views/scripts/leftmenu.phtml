@@ -1,0 +1,26 @@
+<div id="left-menucontrol">
+      <ul class="menuctrl">
+       
+        <?php if($this->group_id == 3){ ?>
+        	<li><a href="<?php echo $this->baseUrl(); ?>/client-home.html" class="home"> Home </a> </li>
+        	<li><a href="<?php echo $this->baseUrl(); ?>/client-profile.html" class="profile"> Profile </a></li>
+        <?php } ?>
+<!--<?php echo basename($_SERVER['REQUEST_URI']);?>
+
+        --><?php if($this->group_id == 2){ ?>
+        	<li><a  href="<?php echo $this->baseUrl(); ?>/user-home.html" class="<?php if($this->controllername == "user" && $this->actionname == "index") { echo "home-select";} else { echo "home";} ?>"> Home </a> </li>
+            <li><a style="<?php if($this->controllername == "user" && $this->actionname == "editprofile") { echo "color : red"; }?>" href="<?php echo $this->baseUrl(); ?>/edit-profile.html" class="profile"> Profile </a></li>
+            <li><a style="<?php if($this->controllername == "topic" && ($this->actionname == "index" || $this->actionname == "topicredirect" )) { echo "color : red"; }?>" href="<?php echo $this->baseUrl(); ?>/view-topics.html" class="topics"> Topics </a></li>
+            <li><a style="<?php if($this->controllername == "topic"  && $this->actionname == "add" ) { echo "color : red"; }?>" href="<?php echo $this->baseUrl(); ?>/create-topic.html" class="post"> Post </a></li>
+            <li><a style="<?php if($this->controllername == "topic"  && ($this->actionname == "response" || $this->actionname == "topicresponse"))  { echo "color : red"; }?>" href="<?php echo $this->baseUrl(); ?>/response.html" class="responses"> Responses </a></li>
+            <li><a style="<?php if(($this->controllername == "index" && $this->actionname == "settings") || ($this->controllername == "user" && ($this->actionname == "sendinvite" || $this->actionname == "invitemcubed") )) { echo "color : red"; }?>" href="<?php echo $this->baseUrl(); ?>/settings.html" class="settings"> Settings </a></li>
+        <?php } ?>
+        
+        
+         <?php if($this->group_id == 3){ ?>
+     	   <li><a href="<?php echo $this->baseUrl(); ?>/client-logout.html" class="logout"> Logout </a></li>
+      	<?php }else{ ?>
+      	  <li><a href="<?php echo $this->baseUrl(); ?>/logout.html" class="logout"> Logout </a></li>
+        <?php }?>
+        </ul>
+</div>

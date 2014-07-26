@@ -1,0 +1,23 @@
+<?php
+    header("Content-Type: text/xml");
+    
+    echo '<?xml version="1.0" encoding="UTF-8"?>';
+
+    echo '<apns_category_list>';
+        echo "<success_flag>".$this->success_flag."</success_flag>";
+        if (! empty($this->expired_flag)){
+            echo '<session_expired>' . $this->expired_flag . '</session_expired>';
+            echo '<msg>' . $this->msg . '</msg>';
+        } else{
+            if( !empty($this->categArr) ){
+                foreach($this->categArr as $ck => $cv){
+                    echo '<apns_category>';
+                        echo '<category_id>'.$cv['id'].'</category_id>';
+                        echo '<category_name><![CDATA['.stripslashes($cv['name']).']]></category_name>';
+                        echo '<selection>'.$cv['selected_flag'].'</selection>';
+                   echo '</apns_category>';
+                }
+            }
+        }
+    echo '</apns_category_list>';
+?>

@@ -1,0 +1,69 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+		if(!empty($this->expired_flag)){
+		
+		 echo '<session_expired>'.$this->expired_flag.'</session_expired>';
+		
+		
+	} else {
+	echo '<questions>';
+    if($this->success_flag == 1){
+        $cnt = 1;
+        foreach($this->questions as $k => $v){
+            $que_desc = htmlentities(stripslashes($cnt . ". " . $v['que_info']['description']),  ENT_COMPAT, 'UTF-8');
+            $new_que_desc = str_replace('&pound;', '&#163;', $que_desc);
+            $qmax = !empty($v['que_info']['max_answer'])?$v['que_info']['max_answer']:0;
+           echo '<question>';
+                echo '<qid>'.$v['que_info']['sq_id'].'</qid>';
+                echo '<qtype>'.$v['que_info']['answer_type'].'</qtype>';
+                echo '<qmax>'.$qmax.'</qmax>';
+            
+            
+                echo '<title>'.$new_que_desc.'</title>';
+                echo '<anscnt>'.$v['que_info']['anscnt'].'</anscnt>';
+            foreach($v['answers'] as $ak => $av){
+                echo '<answers>';
+                    echo '<id>'.$av['answer_id'].'</id>';
+                    echo '<answer_text>'.htmlentities(stripslashes($av['answer_text'])).'</answer_text>';
+                    echo '<answer_type>'.$av['answer_type'].'</answer_type>';
+                    echo '<weightage>'.$av['weightage'].'</weightage>';
+                    echo '<free_text>'.htmlentities(stripslashes($av['free_text'])).'</free_text>';
+                    echo '<free_text_caption>'.htmlentities(stripslashes($av['free_text_caption'])).'</free_text_caption>';
+                echo '</answers>';
+            }
+            echo '</question>';
+            $cnt++;
+        }
+    }else{
+	    echo "<success_flag>".$this->success_flag."</success_flag>";
+        echo "<msg>".$this->msg."</msg>";
+    }
+	echo '</questions>';
+	}
+//  One question with answers per page
+//	echo '<questions>';
+//    if($this->success_flag == 1){
+//        foreach($this->questions as $k => $v){
+//                echo '<qid>'.$v['que_info']['sq_id'].'</qid>';
+//                echo '<next_qid>'.$this->next_que_id.'</next_qid>';
+//                echo '<prev_qid>'.$this->prev_que_id.'</prev_qid>';
+//                echo '<title>'.htmlentities(stripslashes($v['que_info']['description'])).'</title>';
+//            foreach($v['answers'] as $ak => $av){
+//                echo '<answers>';
+//                    echo '<id>'.$av['answer_id'].'</id>';
+//                    echo '<answer_text>'.htmlentities(stripslashes($av['answer_text'])).'</answer_text>';
+//                    echo '<answer_type>'.$av['answer_type'].'</answer_type>';
+//                    echo '<weightage>'.$av['weightage'].'</weightage>';
+//                    echo '<free_text>'.htmlentities(stripslashes($av['free_text'])).'</free_text>';
+//                    echo '<free_text_caption>'.htmlentities(stripslashes($av['free_text_caption'])).'</free_text_caption>';
+//                echo '</answers>';
+//            }
+//        }
+//    }else{
+//	    echo "<success_flag>".$this->success_flag."</success_flag>";
+//        echo "<msg>".$this->msg."</msg>";
+//    }
+//	echo '</questions>';
+?>

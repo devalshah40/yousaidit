@@ -1,0 +1,45 @@
+<div id="contentarea">
+    <?php echo $this->leftmenu; ?>
+    <div id="right-content">
+      <div class="pgheader">
+        <h2>Create Post</h2>
+      </div>
+      <div class="area">
+            <?php if( !empty($this->errorMsg)){   ?>
+            	<div class="error_msg">
+            	    <?php echo $this->errorMsg; ?>
+            	</div>
+            <?php  }    ?>
+			<form id="frmCreateTopic" method="POST" action="create-topic.html">
+            <ul>
+              <li>Title : </li>
+<<<<<<< add.phtml
+              <li><input type="text" tabindex="1" class="largebox" name="name" id="name" value="<?php echo   !empty($this->post['name']) ? $this->post['name'] : '';?>" size="50" maxlength="250" ></li>
+=======
+              <li><input type="text" class="largebox" name="name" id="name" value="<?php echo   !empty($this->post['name']) ? $this->post['name'] : '';?>" size="50" maxlength="250" ><font color="#FF0000">*</font></li>
+>>>>>>> 1.12
+              
+			<li>&nbsp;</li>
+            
+            <li>Category :</li>
+            <li>
+
+             <select  tabindex="2"  id="cid"  name="cid" style="width: 250px;"  >
+             <option   value="" > Select your Topic Category</option>
+         <?php	foreach($this->catInfo as $k => $v){	?>
+          			<option <?php echo ($this->post['cid'] == $v['categories_id'])? 'selected':''; ?>  value="<?php echo $v["categories_id"]; ?>" >  <?php echo $v["categories_name"]; ?></option>
+         <?php	}	?>
+         		</select>
+         		<font color="#FF0000">*</font>
+         		</li>
+             
+            </ul>
+            <br/>
+            <div>
+              <input  tabindex="3"  type="submit" name="cmdMSubmit" id="cmdMSubmit" value="Create Topic">
+            </div>
+      		</form>
+      </div>
+    </div>
+  </div>
+  <!-- #content -->

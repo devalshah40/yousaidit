@@ -1,0 +1,75 @@
+<table width="100%" cellpadding="2" cellspacing="2" border="0">
+<tr>
+	<td class="tablesyle">
+<?php
+	if( !empty($this->paginator) ){					?>
+	        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+		
+			<?php if($this->search_flag == false || empty($this->search_flag)){    ?>
+			<tr>
+				<td colspan="10"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+			</tr>
+				<tr>
+				<td align="left" height="35" colspan="10">&nbsp;<input type="submit" name="cmdSubmit" id="cmdSubmit" value="Add Selected Answer To Question">
+				&nbsp;&nbsp;&nbsp;
+				<input type="submit" name="cmdBack" id="cmdBack" value="Back To Answer Listing">
+				</td>
+			</tr>
+			<?php }    ?>
+		</table>
+		<table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+			<thead>
+              <tr class="grdheader">
+				<td height="30" width="3%" align="center"><input type="checkbox" name="chkAll" id="chkAll" value="1" style="border:0px"></td>
+				<td height="30" align="left" width="55%">&nbsp;<b><font color="#ffffff">Answer Text</font></b></td>
+				<td height="30" width="10%" align="center"><b><font color="#ffffff">Answer Type</font></b></td>
+				<td height="30" width="18%" align="center"><b><font color="#ffffff">Free Text</font></b></td>
+				<td height="30" width="7%" align="center"><b><font color="#ffffff">Weighting</font></b></td>
+				<td height="30" width="7%" align="center"><b><font color="#ffffff">Status</font></b></td>
+			</tr>
+			</thead>
+			<tbody>
+<?php	foreach($this->paginator as $v){	?>
+			<tr bgcolor="White" id="tdata">
+				<td height="30" align="center"><input type="checkbox" name="answer_id[]" id="chk" value="<?php echo $v["answer_id"]; ?>-<?php echo $v["free_text"]; ?>" style="border:0px">
+				<td align="left">&nbsp;<b><a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/answer/edit/aid/<?php	echo $v['answer_id']; ?>/page/<?php echo $this->pg; ?>"><?php	echo stripslashes($v['answer_text']);	?></a></b></td>
+				<td height="30" align="center"><?php echo ($v["answer_type"] == 'nv')?'Non Verbatim':'Verbatim'; ?></td>
+				<td height="30" align="center"><?php echo $v["free_text_caption"]; ?></td>
+				<td height="30" align="center"><?php echo $v["weightage"]; ?></td>
+				<td height="30" align="center"><?php echo $v["status"]; ?></td>
+			</tr>
+<?php	}									?>
+			</tbody>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<td align="left" height="35" colspan="10">&nbsp;<input type="submit" name="cmdSubmit" id="cmdSubmit" value="Add Selected Answer To Question">
+				&nbsp;&nbsp;&nbsp;
+				<input type="submit" name="cmdBack" id="cmdBack" value="Back To Answer Listing">
+				</td>
+			</tr>
+			<?php if($this->search_flag == false || empty($this->search_flag)){    ?>
+			<tr>
+				<td colspan="10"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+			</tr>
+			<?php }    ?>
+		</table>
+<?php
+	}else{											?>
+		<table width="100%" cellpadding="2" cellspacing="2" border="0">
+		<tr bgcolor="White">
+			<td height="50" valign="middle" align="center">No Answers Found
+			
+		 <br/><br/>
+              <a href='javascript:history.go(-1);'>Back To Question Listing</a>	
+			
+			
+			</td>
+ 
+		</tr>
+		</table>
+<?php
+	}												?>
+	</td>
+</tr>
+</table>

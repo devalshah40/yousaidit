@@ -1,0 +1,222 @@
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery-ui-1.8.22.custom.min.js"></script>
+<link type="text/css" href="<?php echo $this->baseUrl(); ?>/style/black-tie/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+<script type="text/javascript">
+	function generateCaptcha(){
+		$.ajax({	url: '<?php echo $this->baseUrl(); ?>/get-captcha.html',
+					success: function(data) {
+						$('#captcha').html(data);
+						$('#captcha2').html(data);
+					}	});
+	}
+	
+	$(document).ready(
+		function() {
+			generateCaptcha();
+
+			// Tabs
+			$('#tabs').tabs();
+			//hover states on the static widgets
+			$('#dialog_link, ul#icons li').hover(
+				function() { $(this).addClass('ui-state-hover'); },
+				function() { $(this).removeClass('ui-state-hover'); }
+			);
+
+			$('#dob').datepicker({
+				changeMonth: true,
+				changeYear: true
+			});
+
+		<?php if($this->valueerror == 1) { ?>
+			$("#tabs").tabs("select", <?php echo $this->valueerror; ?>);
+		<?php } ?>
+					
+		}
+	);
+</script>
+<header>
+  <div id="logo"></div>
+</header>
+<div id="contentarea">
+  <div id="tabs">
+    <ul>
+      <li><a href="#tabs-1"><b>Member Sign Up</b></a></li>
+      <li><a href="#tabs-2"><b>Client Sign Up</b></a></li>
+    </ul>
+    <div id="tabs-1">
+      <form method="POST" action="signup.html" id="mform">
+        <input type="hidden" name="mid" value="mid" />
+        <div id="frmclass">
+          <fieldset>
+            <?php if( !empty($this->errorMsg)){   ?>
+            <div class="error_msg"> <?php echo $this->errorMsg; ?> </div>
+            <?php  }    ?>
+            <ul class="signup">
+              <li>
+                <dl>
+                  <dt>
+                    <label>First Name : <font color="#FF0000">*</font> </label>
+                  </dt>
+                  <dd>
+                    <input type="text" name="first_name" id="first_name" value="<?php echo $this->first_name; ?>" >
+                  </dd>
+                  <dt>
+                    <label>Last Name : <font color="#FF0000">*</font></label>
+                  </dt>
+                  <dd>
+                    <input type="text" name="last_name" id="last_name" value="<?php echo $this->last_name; ?>" >
+                  </dd>
+                  <dt>
+                    <label>E-Mail : <font color="#FF0000">*</font></label>
+                  </dt>
+                  <dd>
+                    <input type="text" name="email" id="email" value="<?php echo $this->email; ?>">
+                  </dd>
+                  <dt>
+                    <label>Confirm E-Mail : </label>
+                  </dt>
+                  <dd>
+                    <input type="text" name="email_c" id="email_c" value="<?php echo $this->email_c; ?>">
+                  </dd>
+                  <dt>
+                    <label>Country : <font color="#FF0000">*</font></label>
+                  </dt>
+                  <dd>
+                    <select name="country" id="country" >
+                      <option value="">Select Country</option>
+                      <?php foreach($this->countryList as $k => $v) { ?>
+                      <option	<?php echo ($this->country == $v ['country_id']) ? 'selected' : ''; ?> value="<?php echo $v ['country_id']; ?>"><?php echo $v ['country_name']; ?></option>
+                      <?php } ?>
+                    </select>
+                  </dd>
+                </dl>
+              </li>
+              <li>
+                <dl>
+                  <!--   <dt><label>Username :</label></dt>
+                    <dd><input type="text" name="username" id="username" value="<?php echo $this->username; ?>" ><br/>
+                    <span class="min-max-char">minimum 5 characters</span></dd>
+                     -->
+                  <dt>
+                    <label>Password : <font color="#FF0000">*</font></label>
+                  </dt>
+                  <dd>
+                    <input type="password" name="password" id="password" value="" >
+                    <br/>
+                    <span class="min-max-char">minimum 5 characters</span>
+                    </dd>
+                  <dt>
+                    <label>Confirm Password :</label>
+                  </dt>
+                  <dd>
+                    <input type="password" name="cpassword" id="cpassword" value="">
+                  </dd>
+                  <dt>
+                    <label>Date of birth :<font color="#FF0000">*</font></label>
+                  </dt>
+                  <dd>
+                    <input type="text" readonly name="dob" id="dob" value="<?php echo $this->dob; ?>" size="11" maxlength="11" >
+                  </dd>
+                  <dt>
+                    <label>Gender :<font color="#FF0000">*</font></label>
+                  </dt>
+                  <dd>
+                    <select  name="gender" id="gender" >
+                      <option value="">Select Gender</option>
+                      <option value="male" <?php echo ($this->gender == "male") ? 'Selected' : ''; ?>>Male</option>
+                      <option value="female" <?php echo ($this->gender  == "female") ? 'Selected' : ''; ?>>Female</option>
+                    </select>
+                  </dd>
+                </dl>
+              </li>
+            </ul>
+            <div class="intrestdiv">
+             <div class="maintitle"> Your Interest </div>
+              <?php foreach ( $this->interesteList as $k => $v ) {?>
+              <input type='checkbox' <?php echo !empty($this->chkInterest) ?	(( in_array( $v['name'], $this->chkInterest)) ? "checked" : "" ) : "" ?> value=<?php echo $v['name'];?> name='chkInterest[]'>
+              <?php echo $v['name'];?>
+              <?php  } ?>
+              <br/>
+              <br/>
+              <div>Your data will <b>NOT</b> be shared without your permission.<br/>
+                <input type='checkbox' <?php echo  !empty($this->chkShareData) ? "checked" : "" ;?> value='Y' name='chkShareData'>
+                &nbsp;&nbsp;Tick if you wish your data to be shared.</div>
+            </div>
+            <div align="center" id="captcha"></div>
+            <div align="center" >
+              <input type="submit" name="cmdSubmit" id="cmdSubmit" value="SignUp">
+              &nbsp;
+              <input type="submit" name="cmdCancel" id="cmdCancel" value="Cancel">
+            </div>
+          </fieldset>
+        </div>
+      </form>
+    </div>
+    <div id="tabs-2">
+      <form id="cform" method="POST" action="signup.html">
+        <input type="hidden" name="cid" value="cid" />
+        <div id="frmclass">
+          <fieldset>
+            <?php if( !empty($this->errorMsg1)){   ?>
+            <div class="error_msg"> <?php echo $this->errorMsg1; ?> </div>
+            <?php  }    ?>
+            <ul class="signup">
+              <li>
+                <dl>
+                  <dt><label>First Name : <font color="#FF0000">*</font></label></dt>
+                  <dd><input type="text" name="first_name" id="first_name" value="<?php echo $this->first_name1; ?>"></dd>
+                  
+                  <dt><label>Last Name : <font color="#FF0000">*</font></label></dt>
+                  <dd><input type="text" name="last_name" id="last_name" value="<?php echo $this->last_name1; ?>" ></dd>
+                  
+                  <dt><label>Company Name : <font color="#FF0000">*</font></label></dt>
+                  <dd><input type="text" name="company_name" id="company_name" value="<?php echo $this->company_name1; ?>" ></dd>
+                  
+                  <dt><label>E-Mail : <font color="#FF0000">*</font></label></dt>
+                  <dd><input type="text" name="email" id="email" value="<?php echo $this->email1; ?>" ></dd>
+                  
+                  <dt><label>Confirm E-Mail : </label></dt>
+                  <dd><input type="text" name="email_c" id="email_c" value="<?php echo $this->email_c1; ?>" ></dd>
+                  
+                </dl>
+              </li>
+              <li>
+                <dl>
+                  <!--      <dt><label>Username :</label></dt>
+                    <dd><input type="text" name="username" id="username" value="<?php echo $this->username1; ?>" ><br/>
+                    <span class="min-max-char">minimum 5 characters</span></dd>
+                    -->
+                  <dt><label>Password : <font color="#FF0000">*</font></label></dt>
+                  <dd><input type="password" name="password" id="password" value="<?php echo $this->password1; ?>" ><br/>
+                    <span class="min-max-char">minimum 5 characters</span></dd>
+                  
+                  <dt><label>Confirm Password :</label></dt>
+                  <dd><input type="password" name="cpassword" id="cpassword" value="<?php echo $this->cpassword1; ?>" ></dd>
+                  
+                  <dt><label>Country : <font color="#FF0000">*</font></label></dt>
+                  <dd><select name="country" id="country" >
+                      <option value="">Select Country</option>
+                      <?php
+					    foreach ( $this->countryList as $k => $v ) {
+                        ?>
+                      <option	<?php echo ($this->country1 == $v ['country_id']) ? 'selected' : ''; ?> value="<?php echo $v ['country_id']; ?>"><?php echo $v ['country_name']; ?></option>
+                      <?php
+                        //}
+                    }        ?>
+                    </select>
+                  </dd>
+                </dl>
+              </li>
+            </ul>
+            <div align="center" id="captcha2"></div>
+            <div align="center" >
+              <input type="submit" name="cmdSubmit" id="cmdSubmit" value="SignUp">
+              &nbsp;
+              <input type="submit" name="cmdCancel" id="cmdCancel" value="Cancel">
+            </div>
+          </fieldset>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- #content -->

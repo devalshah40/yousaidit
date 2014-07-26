@@ -1,0 +1,144 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$("table tr#tdata").mouseout(
+		function () {
+			$(this).removeClass('active_row');
+			$(this).addClass('nonactive_row');
+		}
+	);
+
+	$('table.data tbody tr:odd').addClass('odd');
+	$('table.data tbody tr:even').addClass('even');
+
+	$("table tr#tdata").mouseover(
+		function () {
+			$(this).removeClass('nonactive_row');
+			$(this).addClass('active_row');
+		}
+	);
+
+	   $(".paginationControl").change(
+		    	function() {
+		        	var page_index = null;
+		        	page_index = $(this).val();
+		        	window.location = page_index;
+		    	}
+		    );
+
+    $("#chkAll").click(
+    	function() {
+    		var checked_status = this.checked;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					this.checked = checked_status;
+				}
+			);
+    	}
+    );
+
+	$(".cmdDelete").click(
+		function() {
+			var cnt = 0;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					if( this.checked == true){
+						cnt++;
+					}
+				}
+			);
+			if(cnt > 0){
+				ans = confirm("Confirm Operation on Selected Records(s) ?");
+				if(ans == false){
+					return false;
+				}
+			}else{
+				alert('No Records Selected.');
+				return false;
+			}
+		}
+	);
+});
+</script>
+
+<form name='frmResponseSet' id='frmResponseSet' method="POST" action="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/responseset/index">
+  <div class="contentdetails">
+    <table width="100%" cellpadding="2" cellspacing="2" border="0">
+      <tr>
+        <td class="searchdiv"><table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td height="35" align="left" width="25%">&nbsp;Search By :
+                <select class="select" name="cmbKey">
+                  <option value="title">&nbsp;Title&nbsp;</option>
+                  <option value="description">&nbsp;Description&nbsp;</option>
+                  </select></td>
+              <td width="35%"><input type="text" value="" name="txtValue" id="txtValue" size="35" maxlength="50">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="submit" name="cmdSubmit" id="cmdSubmit" value="Search"></td>
+              <td align="center"><?php		if( $this->result_type == true){		?>
+                <a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/responseset/index/clear/results"><b>Clear Search Result</b></a>
+                <?php		}			?></td>
+            </tr>
+          </table></td>
+      </tr>
+      <tr>
+        <td height="3"></td>
+      </tr>
+    
+   
+      
+      <tr>
+        <td class="tablesyle"><?php
+	if( !empty($this->paginator) ){					?>
+	    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td colspan="10"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+            <tr>
+              <td align="left" height="35" colspan="10">&nbsp;
+                <input type="submit" name="cmdDelete" class="cmdDelete" value="Delete Selected Response Set"></td>
+            </tr>
+          </table>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+            <thead>
+              <tr class="grdheader">
+                <td width="3%" align="center"><input type="checkbox" name="chkAll" id="chkAll" value="1" style="border:0px"></td>
+                <td align="left" width="30%">&nbsp;Title</td>
+                <td width="41%" align="left">Description</td>
+                <td width="8%" align="center">Answers</td>
+                <td width="8%" align="center">Status</td>
+              </tr>
+            </thead>
+            <tbody>
+              <?php	foreach($this->paginator as $v){	?>
+              <tr id="tdata">
+                <td align="center"><input type="checkbox" name="chk[]" id="chk" value="<?php echo $v["rs_id"]; ?>" style="border:0px">
+                <td align="left" height="30">&nbsp;<a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/responseset/edit/id/<?php echo $v['rs_id']; ?>/page/<?php echo $this->pg; ?>"><?php	echo $v['title'];	?></a></td>
+                <td align="left">&nbsp;<?php echo $v["description"]; ?></td>
+                <td align="center"><a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/responseset/answers/id/<?php echo $v['rs_id']; ?>/page/<?php echo $this->pg; ?>"><strong>View</strong></a></td>
+                <td align="center"><?php echo $v["status"]; ?></td>
+              </tr>
+              <?php	}											?>
+            </tbody>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td align="left" height="35" colspan="10">&nbsp;
+                <input type="submit" name="cmdDelete" class="cmdDelete" value="Delete Selected Response Set"></td>
+            </tr>
+            <tr>
+              <td colspan="10"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+          </table>
+          <?php
+	}else{											?>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td height="50" valign="middle" align="center">No Response sets Found</td>
+            </tr>
+          </table>
+          <?php
+	}												?></td>
+      </tr>
+    </table>
+  </div>
+</form>

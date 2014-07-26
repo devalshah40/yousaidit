@@ -1,0 +1,107 @@
+<?php
+
+//echo '<pre>';print_r($this->Topic_votes);echo '</pre>';exit;
+
+
+header ( "Content-Type: text/xml" );
+
+echo '<?xml version="1.0" encoding="UTF-8"?>';
+
+//if ($this->success_flag == 0) {
+//	echo "<success_flag>" . $this->success_flag . "</success_flag>";
+//	echo "<msg>" . $this->msg . "</msg>";
+//} else {
+if (! empty ( $this->expired_flag )) {
+	
+	echo '<session_expired>' . $this->expired_flag . '</session_expired>';
+
+} else {
+	
+	if ($this->show == 1) {
+		if (! empty ( $this->Topic_votes )) {
+			echo '<userposted>';
+			echo "<success_flag>" . $this->success_flag . "</success_flag>";
+			echo "<msg>" . $this->msg . "</msg>";
+			foreach ( $this->Topic_votes as $v ) {
+				echo '<topic>';
+				echo '<topic_id>' . $v ['topic_id'] . '</topic_id>';
+				echo '<topic_title><![CDATA[' . stripslashes ( $v ['name'] ) . ']]></topic_title>';
+				echo '<total_responses>' . $v ['response_count'] . '</total_responses>';
+				
+				//				if (! empty ( $this->Topic_votes )) {
+				//					for($t = 0; $t < count ( $this->Topic_votes ); $t ++) {
+				//						if ($v ['topic_id'] == $this->Topic_votes [$t] ['topic_id']) {
+				//							for($r = 1; $r <= 5; $r ++) {
+				//								echo '<percent' . $r . '>';
+				//								echo ! empty ( $this->Topic_votes [$t] ['responses'] ['rper_' . $r] ) ? $this->Topic_votes [$t] ['responses'] ['rper_' . $r] : 0;
+				//								echo '</percent' . $r . '>';
+				//							}
+				//						}
+				//					}
+				//				}
+				if (! empty ( $v ['response'] )) {
+					for($t = 1; $t <= 5; $t ++) {
+						echo '<percent' . $t . '>';
+						echo ! empty ( $v ['response'] ['rper_' . $t] ) ? $v ['response'] ['rper_' . $t] : 0;
+						echo '</percent' . $t . '>';
+					}
+				
+				}
+				echo '</topic>';
+			}
+		
+		
+		echo '</userposted>';
+	} else {
+		echo '<userposted>';
+		echo "<success_flag>" . $this->success_flag . "</success_flag>";
+		echo "<msg>" . $this->msg . "</msg>";
+		echo '</userposted>';
+	}
+}
+	if ($this->show == 2) {
+		if (! empty ( $this->Topic_votes )) {
+			echo '<useranswered>';
+			echo "<success_flag>" . $this->success_flag . "</success_flag>";
+			echo "<msg>" . $this->msg . "</msg>";
+			foreach ( $this->Topic_votes as $v ) {
+				echo '<topic>';
+				echo '<topic_id>' . $v ['topic_id'] . '</topic_id>';
+				echo '<topic_title><![CDATA[' . stripslashes ( $v ['name'] ) . ']]></topic_title>';
+				echo '<total_responses>' . $v ['response_count'] . '</total_responses>';
+				
+				//			if (! empty ( $this->Topic_votes )) {
+				//				for($t = 0; $t < count ( $this->Topic_votes ); $t ++) {
+				//					if ($v ['topic_id'] == $this->Topic_votes [$t] ['topic_id']) {
+				//						for($r = 1; $r <= 5; $r ++) {
+				//							echo '<percent' . $r . '>';
+				//							echo ! empty ( $this->Topic_votes [$t] ['responses'] ['rper_' . $r] ) ? $this->Topic_votes [$t] ['responses'] ['rper_' . $r] : 0;
+				//							echo '</percent' . $r . '>';
+				//						}
+				//					}
+				//				}
+				//			}
+				
+
+				if (! empty ( $v ['response'] )) {
+					for($t = 1; $t <= 5; $t ++) {
+						echo '<percent' . $t . '>';
+						echo ! empty ( $v ['response'] ['rper_' . $t] ) ? $v ['response'] ['rper_' . $t] : 0;
+						echo '</percent' . $t . '>';
+					}
+				
+				}
+				
+				echo '</topic>';
+			}
+			echo '</useranswered>';
+		} else {
+			echo '<useranswered>';
+			echo "<success_flag>" . $this->success_flag . "</success_flag>";
+			echo "<msg>" . $this->msg . "</msg>";
+			echo '</useranswered>';
+		}
+	}
+
+}
+?>

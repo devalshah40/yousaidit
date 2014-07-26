@@ -1,0 +1,74 @@
+<?php	$header		= $this->layout()->header;
+        $navigation	= $this->layout()->navigation;
+		$error		= $this->layout()->error;
+		$content	= $this->layout()->content;
+		$footer		= $this->layout()->footer;		?>
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv='X-UA-Compatible' content='IE=8'>
+<title><?php echo $this->adminTitle; ?>&nbsp;<?php echo $this->pageTitle; ?></title>
+<script type="text/javascript" language="javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery-1.7.2.min.js"></script>
+<link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->baseUrl(); ?>/images/favicon.ico">
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl(); ?>/style/styleadmin.css" />
+<!--[if lt IE 9]>
+<script src="html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+<table width="100%" cellpadding="2" cellspacing="2" border="0">
+<tr>
+    <td width="1%" align="center">&nbsp;</td>
+    <td width="98%" align="center">
+<!---->
+<table width="100%"%" cellpadding="2" cellspacing="2" border="0" align="center">
+<!-- HEADER-->
+<tr>
+    <td width="100%">
+        <?php	echo $header;		?>
+    </td>
+</tr>
+<!-- HEADER-->
+<?php	if( !empty($navigation)){		?>
+<!-- ERROR-->
+<tr>
+    <td width="100%">
+        <?php	echo $navigation;		?>
+    </td>
+</tr>
+<!-- ERROR-->
+<?php	}		?>
+<?php	if( !empty($error)){		?>
+<!-- ERROR-->
+<tr>
+    <td width="100%">
+        <?php	echo $error;		?>
+    </td>
+</tr>
+<!-- ERROR-->
+<?php	}		?>
+<tr>
+    <td width="100%" valign="top" height="440">
+        <?php	echo $content;		?>
+    </td>
+</tr>
+<tr>
+    <td width="100%">
+        <?php	echo $footer;		?>
+    </td>
+</tr>
+</table>
+<!---->
+    </td>
+    <td width="1%" align="center">&nbsp;</td>
+</tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv='X-UA-Compatible' content='IE=8'>
+<title>Edit Question - Answer - Response Set Association</title>
+
+<link rel="stylesheet" href="<?php echo $this->baseUrl(); ?>/js/jquery/jquery.tabs/themes/base/jquery.ui.all.css">
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery-1.7.2.min.js"></script>
+
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery.tabs/ui/jquery.ui.core.js"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery.tabs/ui/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery.tabs/ui/jquery.ui.tabs.js"></script>
+
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		$( "#tabs" ).tabs();
+		
+		$('#cmdClose').click(
+			function(){
+				 parent.$.fancybox.close();
+			}
+		);
+	});
+</script>
+<style type="text/css">
+html,body { font-size:0.850em; color:#333; font-family:Arial, verdana, Helvetica, sans-serif; margin:0; padding:0; }
+input[type="submit"], input[type="button"] { padding:2px 5px; background-repeat:repeat-x; background-color:#cacaca; font-weight: bold; }
+h1,h2,h3{ font-family:Georgia, 'Times New Roman', Times, serif; text-shadow:0 1px 1px #d8d9d9; margin:3px; color: #666; border-bottom:3px double #999;
+background:#efefef; padding:5px; }
+.grdheader{	background:#525252; color:#FFF; padding:5px 0; font-weight: bold; text-shadow:#525252 1px 1px; }
+.odd { background-color: #e1e1e1; height: 32px; }
+.even{ background-color: #efefef; height: 32px; }
+.tablesyle { border: 1px solid #000;}
+</style>
+</head>
+<body>
+
+<h2>Configure Smart Rule</h2>
+	<br/>
+	<strong>Question :</strong>
+	<br/><br/>
+    <?php echo nl2br(stripslashes($this->queinfo['description'])); ?>
+<?php if( !empty($this->error_msg) ){ ?>
+	<div align="center">
+		<br/>
+		<font color='#ED0A0A' size="2px;" style="font-weight: bold;">
+		    <?php echo $this->error_msg; ?>
+		</font>
+		<br/>
+	</div>
+<?php } ?>
+	<br/><br/>
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Current Question Branching Setup</a></li>
+		<li><a href="#tabs-2">Setup New Association</a></li>
+	</ul>
+	<div id="tabs-1">
+        	<?php if(!empty($this->rules)){ ?>
+        	<table border='0' width='100%' cellspacing='2'>
+        	<tr bgcolor="#EFEFEF">
+        		<td height="35" width="30%"><strong>&nbsp;Selected Answer</strong></td>
+        		<td width="60%"><strong>Targeted Question</strong></td>
+        		<td width="10%" align="center"><strong>Option</strong></td>
+        	</tr>
+        		<?php foreach($this->rules as $rk => $rv){ ?>
+        		<tr bgcolor="#EFEFEF">
+        			<td height="35" valign="top">&nbsp;<?php echo stripslashes($rv['answer_text']); ?></td>
+        			<td valign="top"><?php echo nl2br(stripslashes($rv['description'])); ?></td>
+        			<td valign="top" align="center"><a style="text-decoration: none;" title="Remove Smart Rule" href='<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/survey/querules/sid/<?php echo $this->sid; ?>/qid/<?php echo $this->qid; ?>/sqid/<?php echo $this->sqid; ?>/qrid/<?php echo $rv['qr_id']; ?>'><strong>Delete</strong></a></td>
+        		</tr>
+        		<?php } ?>
+        	</table>
+        	<?php }else{ ?>
+        		<br/><br/>
+				<div align="center">
+					No Smart Rule Found
+				</div>
+				<br/><br/>
+        	<?php } ?>
+        	<br/>
+        	<input type='submit' name='cmdClose' id='cmdClose' value='Close'>
+	</div>
+	<div id="tabs-2">
+		
+    	<form id='frmSmartRule' method="post" action='<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/survey/querules'>
+    		<input type='hidden' name='sq_id' value='<?php echo $this->sqid; ?>'>
+    		<input type='hidden' name='sid' value='<?php echo $this->sid; ?>'>
+    		<input type='hidden' name='qid' value='<?php echo $this->qid; ?>'>
+    	<br/>
+    	<strong>Answers :</strong>
+    	<select id='cmbAnswer' name='cmbAnswer'>
+    		<option value=''>Select</option>
+    		<?php foreach($this->ansinfo as $ka => $kv){ ?>
+    			<option value='<?php echo $kv['answer_id']; ?>'><?php echo $kv['answer_text']; ?></option>
+    		<?php } ?>
+    	</select>
+    	<br/><br/>
+    	<strong>Target Question :</strong>
+    	<br/>
+    	<?php
+    	    $display_flag = false;
+    	    foreach($this->questions as $qk => $qv){
+    	        if($display_flag == true){    ?>
+    	  			<input type="checkbox" value='<?php echo $qv['sq_id']; ?>' name='que_sqid[]' />&nbsp;
+    <?php           echo nl2br(stripslashes($qv['description'])) . '<br>';
+    	        }else{
+    	            if($qv['sq_id'] == $this->sqid){
+    	                $display_flag = true;
+    	            }
+    	        }
+    	    }         ?>
+    		
+    		<br/><br/>
+    		
+    		<input type='submit' name='cmdSubmit' id='cmdSubmit' value='Add Rule'>
+    		&nbsp;&nbsp;
+    		<input type='submit' name='cmdClose' id='cmdClose' value='Cancel / Close'>
+    		
+    		
+    		<br/><br/>
+    		
+    		</form>
+		
+		
+	</div>
+</div>
+
+</body>
+</html>

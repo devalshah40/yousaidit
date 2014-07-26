@@ -1,0 +1,330 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv='X-UA-Compatible' content='IE=8'>
+<title>Edit Question - Answer - Response Set Association</title>
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery-1.4.4.min.js"></script>
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		$('.cmdClose').click(
+			function(){
+				 parent.$.fancybox.close();
+			}
+		);
+		$("#chkAns").click(
+	        	function() {
+	        		var checked_status = this.checked;
+	    			$("input[id=answer_id][type='checkbox']").each(
+	    				function(){
+	    					this.checked = checked_status;
+	    				}
+	    			);
+	        	}
+		);
+		$("#chkAllAAns").click(
+	        	function() {
+	        		var checked_status = this.checked;
+	    			$("input[id=qa_id][type='checkbox']").each(
+	    				function(){
+	    					this.checked = checked_status;
+	    				}
+	    			);
+	        	}
+		);
+		$("form input:radio[name='ansgrp']").change(
+    		function(){
+    			if($(this).val() == 'r'){
+    				$('#rset').show();
+    				$('#answers').hide();
+    			}else{
+    				$('#rset').hide();
+    				$('#answers').show();
+    			}
+			}
+		);
+
+		$('table.data tbody tr:odd').addClass('odd');
+		$('table.data tbody tr:even').addClass('even');
+		
+		$("form input:radio[name='ans_type']").change(
+    		function(){
+    			if($(this).val() == 'ca'){
+    				$('#associated_ans').show();
+    				$('#available_ans').hide();
+    			}else{
+    				$('#associated_ans').hide();
+    				$('#available_ans').show();
+    			}
+			}
+		);
+	});
+</script>
+<style type="text/css"">
+html,body { font-size:0.850em; color:#333; font-family:Arial, verdana, Helvetica, sans-serif; margin:0; padding:0; }
+input[type="submit"], input[type="button"] { padding:2px 5px; background-repeat:repeat-x; background-color:#cacaca; font-weight: bold; }
+h1,h2,h3{ font-family:Georgia, 'Times New Roman', Times, serif; text-shadow:0 1px 1px #d8d9d9; margin:3px; color: #666; border-bottom:3px double #999;
+background:#efefef; padding:5px; }
+.grdheader{	background:#525252; color:#FFF; padding:5px 0; font-weight: bold; text-shadow:#525252 1px 1px; }
+.odd { background-color: #e1e1e1; height: 32px; }
+.even{ background-color: #efefef; height: 32px; }
+.tablesyle { border: 1px solid #000;}
+</style>
+</head>
+<body>
+<h2> <?php echo nl2br(stripslashes($this->queInfo['description'])); ?> </h2>
+<?php
+    if($this->no_association == true){    ?>
+<form id='frmAssociateRSet_Ans' method="post" action='<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/rsetansassociation/aflag/no'>
+  <div align="center" style="font-weight:bold;">
+    <input type='hidden' name='qid' value='<?php echo $this->qid; ?>' />
+    Associate :
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type='radio' value='r' name='ansgrp' />
+    &nbsp;Response Set
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type='radio' value='a' name='ansgrp' />
+    &nbsp;Answers <br>
+    <br>
+  </div>
+  <div id='rset' style="display: none; padding-top: 15px;">
+    <?php
+    if( !empty($this->rset)){    ?>
+    <table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+      <thead>
+        <tr>
+          <td colspan="2"><input type='submit' value='Associate To Question' name='cmdAssociateRSet' />
+            &nbsp;&nbsp;
+          <input type='button' name='cmdClose' value='Close' class='cmdClose'></td>
+        </tr>
+        <tr class="grdheader">
+          <td width="3%" align="left"></td>
+          <td align="left" width="97%">&nbsp;Title</td>
+        </tr>
+      </thead>
+      <tbody>
+        <?php   foreach($this->rset as $k => $v){    ?>
+        <tr id="tdata">
+          <td valign="top" align="left"><input type="radio" name="rset" id="rset" value="<?php echo $v['rsetInfo']["rs_id"]; ?>" style="border:0px" />
+         </td>
+          <td align="left" height="30">&nbsp;<?php echo stripslashes($v['rsetInfo']['title']);	?>
+            <?php    if( !empty($v['answers'])){        ?>
+            <ul style="line-height: 20px; margin: 0;">
+              <?php       foreach($v['answers'] as $ak => $av){    ?>
+              <li><?php echo stripslashes($av['answer_text']); ?></li>
+              <?php     	}     ?>
+            </ul>
+            <?php    }        ?></td>
+        </tr>
+        <?php   }        ?>
+        <tr>
+          <td colspan="2"><input type='submit' value='Associate To Question' name='cmdAssociateRSet'>
+            &nbsp;&nbsp;
+            <input type='button' name='cmdClose' value='Close' class='cmdClose' />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <?php
+    }    ?>
+  </div>
+  <div id='answers' style="display: none; padding-top: 15px;">
+    <?php
+    if( !empty($this->ans)){    ?>
+    <table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+      <thead>
+        <tr>
+          <td colspan="5"><input type='submit' value='Associate To Question' name='cmdAssociateAns'>
+            &nbsp;&nbsp;
+          <input type='button' name='cmdClose' value='Close' class='cmdClose'></td>
+        </tr>
+        <tr class="grdheader">
+          <td width="3%" align="center"><input type="checkbox" name="chkAll" id="chkAll" value="1" style="border:0px"></td>
+          <td align="left" width="37%">&nbsp;Answer Text</td>
+          <td width="20%" align="center">Type</td>
+          <td width="30%" align="center">Free Text</td>
+          <td width="10%" align="center">Weighting</td>
+        </tr>
+      </thead>
+      <tbody>
+        <?php   foreach($this->ans as $k => $v){    ?>
+        <tr id="tdata">
+          <td height="30" align="center"><input type="checkbox" name="answer_id[]" id="ans_id" value="<?php echo $v["answer_id"]; ?>" style="border:0px" />
+          </td>
+          <td align="left">&nbsp;<b>
+            <?php	echo stripslashes($v['answer_text']);	?>
+          </b></td>
+          <td align="center"><?php echo ($v["answer_type"] == 'v')?'Verbatim':'Non Verbatim'; ?></td>
+          <td align="left">&nbsp;<?php echo ($v['free_text'] == 'y')?stripslashes($v['free_text_caption']):'--'; ?></td>
+          <td align="center"><?php echo $v['weightage']; ?></td>
+        </tr>
+        <?php  }   ?>
+        <tr>
+          <td colspan="5"><input type='submit' value='Associate To Question' name='cmdAssociateAns'>
+            &nbsp;&nbsp;
+          <input type='button' name='cmdClose' value='Close' class='cmdClose'></td>
+        </tr>
+      <tbody>
+    </table>
+    <?php
+    }    ?>
+  </div>
+</form>
+<?php
+    }    ?>
+
+<!-- // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // **  -->
+
+<?php
+    if($this->association_type == 'r'){    ?>
+<form id='frmAssociateRSet_Ans' method="post" action='<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/rsetansassociation/aflag/r'>
+  <div id='associated_rset' style="display: block; padding-top: 15px;">
+    <input type='hidden' name='qid' value='<?php echo $this->qid; ?>'>
+    <?php
+    if( !empty($this->rset)){    ?>
+    <table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+      <thead>
+        <tr class="grdheader">
+          <td width="3%" align="left">&nbsp;</td>
+          <td align="left" width="97%">&nbsp;Response Set Title - Associated Answers</td>
+        </tr>
+      </thead>
+      <tbody>
+        <?php   foreach($this->rset as $k => $v){    ?>
+        <tr id="tdata">
+          <td valign="top" align="left">&nbsp;</td>
+          <td align="left" height="30">&nbsp;<?php echo $v['rsetInfo']['title'];	?>
+            <?php    if( !empty($v['answers'])){        ?>
+            <ul style="line-height: 20px; margin: 0;">
+              <?php       foreach($v['answers'] as $ak => $av){    ?>
+              <li><?php echo $av['answer_text']; ?></li>
+              <?php     	}     ?>
+            </ul>
+            <?php    }        ?></td>
+        </tr>
+        <tr>
+          <td colspan="2"><input type='submit' value='Delete Association' name='cmdDeleteRSet'></td>
+        </tr>
+        <?php
+        }        ?>
+      </tbody>
+    </table>
+    <?php
+    }    ?>
+    <?php
+    if( !empty($this->rset)){    ?>
+    <br>
+    <ul>
+      <li>Only 1 response set association allowed per question.</li>
+      <li>In order to associate new response set, delete current the question - response set association.</li>
+    </ul>
+    <div align='center'>
+      <input type='button' name='cmdClose' value='Close' class='cmdClose'>
+    </div>
+    <?php
+    }    ?>
+  </div>
+</form>
+<?php
+    }    ?>
+
+<!-- // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // ** // **  -->
+
+<?php
+    if($this->association_type == 'a'){    ?>
+<form id='frmAssociateRSet_Ans' method="post" action='<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/rsetansassociation/aflag/a'>
+  <div align="center" style="font-weight:bold;"> 
+  		<input type='hidden' name='qid' value='<?php echo $this->qid; ?>'>
+  		View : &nbsp;&nbsp;&nbsp;  		
+  		<input type='radio' value='ca' checked="checked" name='ans_type'/> Currently Associated
+  		&nbsp;&nbsp;&nbsp;
+  		<input type='radio' value='a' name='ans_type'>
+		&nbsp;Available 		
+  		</div>
+  <div id='associated_ans' style="display: block;">
+    <?php
+    if( !empty($this->answers)){    ?>
+    <table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+      <thead>
+        <tr>
+          <td colspan="5"><input type='submit' value='Delete Association' name='cmdDeleteAns'>
+            &nbsp;&nbsp;
+          <input type='button' name='cmdClose' value='Close' class='cmdClose'></td>
+        </tr>
+        <tr class="grdheader">
+          <td width="3%" align="center"><input type="checkbox" name="chkAll" id="chkAllAAns" value="1" style="border:0px"></td>
+          <td align="left" width="37%">&nbsp;Answer Text</td>
+          <td width="20%" align="center">Type</td>
+          <td width="30%" align="center">Free Text</td>
+          <td width="10%" align="center">Weighting</td>
+        </tr>
+      </thead>
+      <tbody>
+        <?php   foreach($this->answers as $k => $v){    ?>
+        <tr id="tdata">
+          <td height="30" align="center"><input type="checkbox" name="qa_id[]" id="qa_id" value="<?php echo $v["qa_id"]; ?>" style="border:0px">
+          <td align="left">&nbsp;<b>
+            <?php	echo stripslashes($v['answer_text']);	?>
+          </b></td>
+          <td align="center"><?php echo ($v["answer_type"] == 'v')?'Verbatim':'Non Verbatim'; ?></td>
+          <td align="left">&nbsp;<?php echo ($v['free_text'] == 'y')?stripslashes($v['free_text_caption']):'--'; ?></td>
+          <td align="center"><?php echo $v['weightage']; ?></td>
+        </tr>
+        <?php   }        ?>
+        <tr>
+          <td colspan="5"><input type='submit' value='Delete Association' name='cmdDeleteAns'>
+            &nbsp;&nbsp;
+          <input type='button' name='cmdClose' value='Close' class='cmdClose'></td>
+        </tr>
+      </tbody>
+    </table>
+    <?php
+    }    ?>
+  </div>
+  <div id='available_ans' style="display: none; padding-top: 15px;">
+    <?php
+    if( !empty($this->available_answers)){    ?>
+    <table cellpadding="2" cellspacing="2" border="0" class='data'>
+      <thead>
+        <tr>
+          <td colspan="5"><input type='submit' value='Associate To Question' name='cmdAssociateAns'>
+          &nbsp;&nbsp;
+          <input type='button' name='cmdClose' value='Close' class='cmdClose'></td>
+        </tr>
+        <tr class="grdheader">
+          <td width="3%" align="center"><input type="checkbox" name="chkAns" id="chkAns" value="1" style="border:0px"></td>
+          <td align="left" width="37%">&nbsp;Answer Text</td>
+          <td width="20%" align="center">Type</td>
+          <td width="30%" align="center">Free Text</td>
+          <td width="10%" align="center">Weighting</td>
+        </tr>
+      </thead>
+      <tbody>
+        <?php   foreach($this->available_answers as $k => $v){    ?>
+        <tr id="tdata">
+          <td height="30" align="center">
+          <input type="checkbox" name="answer_id[]" id="answer_id" value="<?php echo $v["answer_id"]; ?>" style="border:0px" />
+          </td>
+          <td align="left">&nbsp;<b>
+            <?php	echo stripslashes($v['answer_text']);	?>
+          </b></td>
+          <td align="center"><?php echo ($v["answer_type"] == 'v')?'Verbatim':'Non Verbatim'; ?></td>
+          <td align="left">&nbsp;<?php echo ($v['free_text'] == 'y')?stripslashes($v['free_text_caption']):'--'; ?></td>
+          <td align="center"><?php echo $v['weightage']; ?></td>
+        </tr>
+        <?php   }        ?>
+        <tr>
+          <td colspan="5"><input type='submit' value='Associate To Question' name='cmdAssociateAns'>&nbsp;&nbsp;
+          <input type='button' name='cmdClose' value='Close' class='cmdClose'></td>
+        </tr>
+      </tbody>
+    </table>
+    <?php
+    }    ?>
+  </div>
+</form>
+<?php
+    }    ?>
+</body>
+</html>

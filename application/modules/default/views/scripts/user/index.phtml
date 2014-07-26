@@ -1,0 +1,395 @@
+<script type="text/javascript">
+$(document).ready(function() {
+$(".paginationControl").change(
+	function() {
+    	var page_index = null;
+    	page_index = $(this).val();
+    	window.location = page_index;
+}
+);
+$('#default_user_country').click(
+		function(){
+			$('#ajaxpageload').html('<img src="<?php echo $this->baseUrl(); ?>/images/loader.gif" />');
+			$('.area').html('');
+				$.ajax({
+		       	url: '<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/user/index/country_id/'+$("input[name='default_user_contry_id']").val(),
+		        type: "post",
+		        // callback handler that will be called on success
+		        success: function(response, textStatus, jqXHR){
+		            // log a message to the console
+		            $("body").html(response);
+		          
+		      },
+		      dataType: "html"
+		        // callback handler that will be called on completion
+		        // which means, either on success or error
+//		        complete: function(){
+//		            // enable the inputs
+//		        	 $('#ajax-page-load').html('');
+//			 	}
+		    });
+		});
+$('#default_user_country1').click(
+				function(){
+					$('#ajaxpageload').html('<img src="<?php echo $this->baseUrl(); ?>/images/loader.gif" />');
+					$('.area').html('');
+						$.ajax({
+				       	url: '<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/user/index/id/1/country_id/'+$("input[name='default_user_contry_id']").val(),
+				        type: "post",
+				        // callback handler that will be called on success
+				        success: function(response, textStatus, jqXHR){
+				            // log a message to the console
+				            $("body").html(response);
+				          
+				      },
+				      dataType: "html"
+				        // callback handler that will be called on completion
+				        // which means, either on success or error
+//				        complete: function(){
+//				            // enable the inputs
+//				        	 $('#ajax-page-load').html('');
+//					 	}
+				    });
+				});
+$('#country1').change(
+		function(){
+			$('#ajaxpageload').html('<img src="<?php echo $this->baseUrl(); ?>/images/loader.gif" />');
+			$('.area').html('');
+				$.ajax({
+		       	url: '<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/user/index/country_id/'+jQuery('#country1').val(),
+		        type: "post",
+		        // callback handler that will be called on success
+		        success: function(response, textStatus, jqXHR){
+		            // log a message to the console
+		            $("body").html(response);
+		          
+		      },
+		      dataType: "html"
+		        // callback handler that will be called on completion
+		        // which means, either on success or error
+//		        complete: function(){
+//		            // enable the inputs
+//		        	 $('#ajax-page-load').html('');
+//			 	}
+		    });
+		});
+	$('#country2').change(
+		function(){
+			$('#ajaxpageload').html('<img src="<?php echo $this->baseUrl(); ?>/images/loader.gif" />');
+			$('.area').html('');
+			$.ajax({
+		       	url: '<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/user/index/id/1/country_id/'+jQuery('#country2').val(),
+		        type: "post",
+		        // callback handler that will be called on success
+		        success: function(response, textStatus, jqXHR){
+		            // log a message to the console
+		       //   console.log("It worked!");
+		          $("body").html(response);
+		          
+		      },
+		      dataType: "html"
+		        // callback handler that will be called on completion
+		        // which means, either on success or error
+		 //       complete: function(){
+		            // enable the inputs
+		 //           $inputs.removeAttr("disabled");
+		 //       }
+		    });
+		});
+
+	$('#cid').change(function(){
+		
+	    //only do something if numbers are selected
+	    if( $('#cid :selected').length > 0){
+	    	$('#ajaxpageload').html('<img src="<?php echo $this->baseUrl(); ?>/images/loader.gif" />');
+			$('.area').html('');
+	        //build an array of selected values
+	        var categort_ids = [];
+	        $('#cid :selected').each(function(i, selected) {
+	            categort_ids[i] = $(selected).val();
+	        });
+	        //post data to handler script. note the JSON.stringify call
+	        $.ajax({
+	            url: '<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/user/index',
+	            data: {'categort_ids':categort_ids},
+	            type: 'POST',
+	            success: function(response) {
+			          $("body").html(response);
+	            }
+	        });
+	    }
+	});
+	$('#cid1').change(function(){
+	    //only do something if numbers are selected
+	    if( $('#cid1 :selected').length > 0){
+
+			$('#ajaxpageload').html('<img src="<?php echo $this->baseUrl(); ?>/images/loader.gif" />');
+			$('.area').html('');
+	        //build an array of selected values
+	        var categort_ids = [];
+	        $('#cid1 :selected').each(function(i, selected) {
+	            categort_ids[i] = $(selected).val();
+	        });
+	        //post data to handler script. note the JSON.stringify call
+	        $.ajax({
+	            url: '<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/user/index/id/1',
+	            data: {'categort_ids':categort_ids},
+	            type: 'POST',
+	            success: function(response) {
+			          $("body").html(response);
+	            }
+	        });
+	    }
+	});
+//	$('#filtercategory').click(function(){
+//
+//	    //only do something if numbers are selected
+//	    if( $('#cid :selected').length > 0){
+//	    	$('#ajaxpageload').html('<img src="<?php //echo $this->baseUrl(); ?>/images/loader.gif" />');
+//			$('.area').html('');
+//	        //build an array of selected values
+//	        var categort_ids = [];
+//	        $('#cid :selected').each(function(i, selected) {
+//	            categort_ids[i] = $(selected).val();
+//	        });
+//	        //post data to handler script. note the JSON.stringify call
+//	        $.ajax({
+//	            url: '<?php //echo $this->baseUrl(); ?>/<?php //echo $this->modulename; ?>/user/index',
+//	            data: {'categort_ids':categort_ids},
+//	            type: 'POST',
+//	            success: function(response) {
+//			          $("body").html(response);
+//	            }
+//	        });
+//	    }
+//	});
+//	$('#filtercategory1').click(function(){
+//	    //only do something if numbers are selected
+//	    if( $('#cid :selected').length > 0){
+//
+//			$('#ajaxpageload').html('<img src="<?php //echo $this->baseUrl(); ?>/images/loader.gif" />');
+//			$('.area').html('');
+//	        //build an array of selected values
+//	        var categort_ids = [];
+//	        $('#cid :selected').each(function(i, selected) {
+//	            categort_ids[i] = $(selected).val();
+//	        });
+//	        //post data to handler script. note the JSON.stringify call
+//	        $.ajax({
+//	            url: '<?php //echo $this->baseUrl(); ?>/<?php //echo $this->modulename; ?>/user/index/id/1',
+//	            data: {'categort_ids':categort_ids},
+//	            type: 'POST',
+//	            success: function(response) {
+//			          $("body").html(response);
+//	            }
+//	        });
+//	    }
+//	});
+	
+	$('#mostrecent').change(function(){
+		$('#ajaxpageload').html('<img src="<?php echo $this->baseUrl(); ?>/images/loader.gif" />');
+		$('.area').html('');
+	    //only do something if numbers are selected
+	        //post data to handler script. note the JSON.stringify call
+	        $.ajax({
+	            url: '<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/user/index/recent/'+jQuery('#mostrecent').val(),
+	            type: 'POST',
+	            success: function(response) {
+			          $("body").html(response);
+	            }
+	        });
+	    });
+    
+	$('#mostrecent1').change(function(){
+		$('#ajaxpageload').html('<img src="<?php echo $this->baseUrl(); ?>/images/loader.gif" />');
+		$('.area').html('');
+	    //only do something if numbers are selected
+        //post data to handler script. note the JSON.stringify call
+        $.ajax({
+            url: '<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/user/index/id/1/recent/'+jQuery('#mostrecent1').val(),
+            type: 'POST',
+            success: function(response) {
+		          $("body").html(response);
+            }
+        });
+    });
+	
+});
+</script>
+
+<div id="contentarea"> <?php echo $this->leftmenu; ?>
+  <div id="right-content">
+   <input type="hidden" name="default_user_contry_id" id="default_user_contry_id" value="<?php echo $this->user_country_id; ?>" />
+    <div class="pgheader">
+      <h2>Home</h2>
+    </div>
+    <div id="main_div_filter">
+      <ul class="filter-list">
+        <li class="bycountry">Filter by Country :
+          <?php if(empty($this->viewall)){?>
+          <select name="country1" id="country1">
+            <option value='-1'>All Countries</option><!--
+            <option <?php echo ($this->country_id == $this->user_country_id) ? 'selected' : ''; ?> value='<?php echo $this->user_country_id; ?>'><?php echo $this->user_country_name;?></option>
+            --><?php
+				  foreach($this->countryList as $k => $v){ // if($this->user_country_id == $v['country_id']) { continue;    } ?>
+            <option <?php echo ($this->country_id == $v['country_id']) ? 'selected' : ''; ?> value="<?php echo $v['country_id']; ?>"><?php echo $v['country_name']; ?></option>
+            <?php    }            ?>
+          </select>
+          <a href="#" id="default_user_country" title="Reset to home country"><img src="<?php echo $this->baseUrl(); ?>/images/reset.png" width="25px" height="25px" title="Reset to home country" /></a>
+          <?php }else{?>
+          <select name="country2" id="country2">
+            <option value='-1'>All Countries</option>
+            <?php foreach($this->countryList as $k => $v){  ?>
+            <option <?php echo ($this->country_id == $v['country_id']) ? 'selected' : ''; ?> value="<?php echo $v['country_id']; ?>"><?php echo $v['country_name']; ?></option>
+            <?php    }            ?>
+          </select>
+          <a href="#" id="default_user_country1" title="Reset to home country"><img src="<?php echo $this->baseUrl(); ?>/images/reset.png" width="25px" height="25px" title="Reset to home country" /></a>
+          <?php }?><!--
+          <a href="#" id="default_user_country" title="Reset to home country"><img src="<?php echo $this->baseUrl(); ?>/images/reset.png" width="25px" height="25px" title="Reset to home country" /></a>
+        --></li>
+        <li class="bycategory">Filter by Category : <br/>
+          <?php if(empty($this->viewall)){?>
+          <select id="cid"  name="cid[]">
+            <option value=''>All Categories</option>
+            <?php
+		        foreach($this->catInfo as $k => $v){
+		            $selected_flag = false;
+		                if (! empty($this->categort_ids)){
+		                    foreach(explode(",", $this->categort_ids) as $k => $ms){
+		                        if ($v["categories_id"] == $ms){
+		                            $selected_flag = true;
+		                            break;
+		                        }
+		                    }
+		                }        ?>
+            <option <?php echo ($selected_flag == true) ? 'selected="selected"' : ''; ?> value="<?php echo $v["categories_id"]; ?>"> <?php echo $v["categories_name"]; ?></option>
+            <?php
+		        }
+		            ?>
+          </select>
+          <?php }else{?>
+          <select id="cid1"  name="cid1[]">
+            <option value=''>All Categories</option>
+            <?php
+		        foreach($this->catInfo as $k => $v){
+		            $selected_flag = false;
+		                if (! empty($this->categort_ids)){
+		                	
+		                    foreach( explode(",", $this->categort_ids) as $k => $ms){
+		                        if ($v["categories_id"] == $ms){
+		                            $selected_flag = true;
+		                            break;
+		                        }
+		                    }
+		                }        ?>
+            <option <?php echo ($selected_flag == true) ? 'selected="selected"' : ''; ?> value="<?php echo $v["categories_id"]; ?>"> <?php echo $v["categories_name"]; ?></option>
+            <?php
+		        }
+		            ?>
+          </select>
+          <?php }?>
+        </li>
+        <li class="bymost"> Filter by Voted/Recent :
+          <?php if(empty($this->viewall)){?>
+          <select name="mostrecent" id="mostrecent">
+            <option <?php if($this->recent == 1){ echo "selected";}?>  value='1'>Most Voted</option>
+            <option <?php if($this->recent == 2){ echo "selected";} ?>  value='2'>Most Recent</option>
+          </select>
+          <?php }else{?>
+          <select name="mostrecent1" id="mostrecent1">
+            <option <?php if($this->recent == 1){ echo "selected";}?> value='1'>Most Voted</option>
+            <option <?php if($this->recent == 2){ echo "selected";}?> value='2'>Most Recent</option>
+          </select>
+          <?php }?>
+        </li>
+        <li class="view-all">
+        <input type="button" value="View all &gt;&gt;" onclick="javascript:top.location='<?php echo $this->baseUrl(); ?>/viewall-topics.html'" title="View all" />
+        <!-- <a href="<?php echo $this->baseUrl(); ?>/viewall-topics.html" title="Viewall"><img src="<?php echo $this->baseUrl(); ?>/images/view-all-button.png" /></a> -->
+        </li>
+      </ul>
+    </div>
+    <div id="ajaxpageload" class="ajaxpageload"></div>
+    <div class="area">
+      <?php if( !empty($this->errorMsg)){   ?>
+      <div class="error_msg"> <?php echo $this->errorMsg; ?> </div>
+      <?php  }    ?>
+      
+      <!-- View all start -->
+      
+      <?php
+		if( !empty($this->paginator) ){					?>
+      <div id="top-topics">
+        <h3>All Topics</h3>
+        
+         <!-- Chirag start -->
+        <?php	foreach($this->paginator as $v){
+  
+            if($v['taken'] == 1){
+                $title = 'View Response Info';
+            }else{
+                $title = 'Click To Submit Response';
+            }    
+            ?>
+        <div id="top-topics-new">
+          <ul>
+            <li class="tp-text"> <b><a title="<?php echo $title; ?>"   href="<?php echo $this->baseUrl(); ?>/<?php echo $v['topic_id']?>/view-toptopic.html">
+            <?php	echo stripslashes($v['name']);	?>
+            </a></b> </li>
+            <li class="tp-icons">
+            <?php
+					if($v['taken'] == 1){
+			?>
+					<img src="<?php echo $this->baseUrl(); ?>/images/chart.png" width="25px" height="25px" />
+			<?php
+					} else{  ?>
+					
+					<img src="<?php echo $this->baseUrl(); ?>/images/vote.png" width="32px" height="24" />
+			<?php 	}
+          	 ?>
+            </li>
+          </ul>
+        </div>
+        <?php	}			?>
+        <!-- Chirag end -->
+      </div>
+      <?php $params = array('userpagination' => 'user/index');?>
+      <div> <?php echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml',$params); ?> </div>
+      <?php }elseif(!empty($this->topicTen)){	?>
+      
+      <!-- View all end -->
+      <div id="top-topics">
+        <h3>Top <?php echo TOPIC_RANK_LIMIT ;?> Topics</h3>
+        
+        <!-- Chirag start -->
+        <?php  foreach($this->topicTen as $k=>$v){
+            if($v['taken'] == 1){
+                $title = 'View Response Info';
+            }else{
+                $title = 'Click To Submit Response';
+            }    ?>
+        <div id="top-topics-new">
+          <ul>
+            <li class="tp-text"> <a title="<?php echo $title; ?>" href="<?php echo $v['topic_id']?>/view-toptopic.html"><?php	echo stripslashes($v['name']);	?></a> </li>
+            <li class="tp-icons">
+            <?php
+					if($v['taken'] == 1){
+			?>
+					<img src="<?php echo $this->baseUrl(); ?>/images/chart.png" width="25px" height="25px" />
+			<?php
+					} else{  ?>
+					<img src="<?php echo $this->baseUrl(); ?>/images/vote.png" width="32px" height="24" />
+			<?php 	}
+          	 ?>
+            </li>
+          </ul>
+        </div>
+        <?php }  ?>
+        <!-- Chirag end -->
+      </div>
+      <?php }else{ ?>
+      <div align="center">No Topics found for this Country.</div>
+      <?php }?>
+    </div>
+  </div>
+</div>
+<!-- #content -->

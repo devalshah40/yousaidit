@@ -1,0 +1,18 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	echo '<category_list>';
+	 echo "<success_flag>".$this->success_flag."</success_flag>";
+	 
+        foreach($this->category as $k => $v){
+        	echo '<category>';
+    
+               echo '<category_id>'.$v['categories_id'].'</category_id>';
+               echo    '<name><![CDATA['.stripslashes($v['categories_name']).']]></name>';
+             
+                echo '</category>';
+    
+        }
+	echo '</category_list>';
+?>

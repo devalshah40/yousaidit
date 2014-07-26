@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv='X-UA-Compatible' content='IE=8'>
+	<title>&nbsp;Make Me Money - Backend administration module : Associate Questions - Response Set, Answers</title>
+    <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(
+    	function() {
+    		$("form input:radio[name='ansgrp']").change(
+        		function(){
+        			$('#cmdSubmit').show();
+        			if($(this).val() == 'r'){
+        				$('#rset').show();
+        				$('#answers').hide();
+        			}else{
+        				$('#rset').hide();
+        				$('#answers').show();
+        			}
+    			}
+    		);
+
+    		$('#cmdClose').click(
+    			function(){
+    				$("#que_lnk<?php echo $this->que_id; ?>", opener.document).html('Association Completed');
+    				window.close();
+    			}
+    		);
+    	}
+    );
+    </script>
+    <style type="text/css">
+    	body {
+			font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; font-size: 11px;
+    	}
+    </style>
+</head>
+<body>
+
+<?php if( empty($this->is_post) ){    ?>
+
+<form id='frmQueRsAnsAssociate' method="post" action='<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/queansrs'>
+<input type='hidden' name='question_id' value='<?php echo $this->question_id; ?>'>
+Question : <?php echo $this->que_desc; ?>
+<br/><br/>
+Associate :
+<input type='radio' value='r' name='ansgrp'>&nbsp;Response Set
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input type='radio' value='a' name='ansgrp'>&nbsp;Answers
+
+<div id='rset' style="display: none; padding-top: 15px;">
+<?php    $rset = null;
+    if( !empty($this->rset)){    ?>
+<table border="1" width="100%" cellpadding="2" cellspacing="2" bgcolor='#F0F3F8' >
+<?php   foreach($this->rset as $k => $v){
+            if( !empty($v['rs_id']) ){
+                if($v['rs_id'] != $rset){    ?>
+                <tr>
+                	<td align="left" colspan="7"><input type='radio' value='<?php echo $v['rs_id']; ?>' name='rset'>&nbsp;<?php echo $v['title']; ?></td>
+                </tr>
+                <tr bgcolor='#7F9ACC' >
+                	<td width="30%" height="25" >&nbsp;<font color="white"><strong>Answer Title</strong></font></td>
+                	<td width="10%"><font color="white"><strong>Answer Type</strong></font></td>
+                	<td width="12%"><font color="white"><strong>Weighting</strong></font></td>
+                	<td width="8%"><font color="white"><strong>Free Text</strong></font></td>
+                	<td>Free Text Caption</td>
+                </tr>
+<?php           }        ?>
+                <tr>
+                	<td height="25"> <?php echo $v['rset_ansinfo'][1]; ?></td>
+                	<td align="center"><?php echo $v['rset_ansinfo'][2]; ?></td>
+                	<td align="center"><?php echo $v['rset_ansinfo'][3]; ?></td>
+                	<td align="center"><?php echo !empty($v['rset_ansinfo'][4])?$v['rset_ansinfo'][4]:' '; ?></td>
+                	<td><?php echo !empty($v['rset_ansinfo'][5])?$v['rset_ansinfo'][5]:' '; ?></td>
+                </tr>
+<?php            $rset = $v['rs_id'];
+            }
+        }        ?>
+</table>
+<?php
+    }    ?>
+</div>
+
+<div id='answers'  style="display: none; padding-top: 15px;"><br/>
+<?php
+    if( !empty($this->ans)){    ?>
+<table border="1" width="100%" cellpadding="2" cellspacing="2"  bgcolor='#F0F3F8' >
+                <tr bgcolor='#7F9ACC' >
+                	<td width="4%"> </td>
+                	<td><font color="white"><strong>Answer Title</strong></font></td>
+                	<td width="10%"><font color="white"><strong>Answer Type</strong></font></td>
+                	<td width="12%"><font color="white"><strong>Weighting</strong></font></td>
+                	<td width="8%"><font color="white"><strong>Free Text</strong></font></td>
+                	<td><font color="white"><strong>Free Text Caption</strong></font></td>
+                </tr>
+<?php
+        foreach($this->ans as $k => $v){
+            if( empty($v['ansinfo'][0]) ){    ?>
+                <tr>
+                	<td>
+                		<input type='hidden' value='<?php echo $v['ansinfo'][4]; ?>' name='free_text[]'>
+                		<input type='checkbox' value='<?php echo $v['answer_id']; ?>' name='answer_id[]'>
+                	</td>
+                	<td><?php echo $v['ansinfo'][1]; ?></td>
+                	<td align="center"><?php echo $v['ansinfo'][2]; ?></td>
+                	<td align="center"><?php echo !empty($v['ansinfo'][3])?$v['ansinfo'][3]:' '; ?></td>
+                	<td align="center"><?php echo !empty($v['ansinfo'][4])?$v['ansinfo'][4]:' '; ?></td>
+                	<td><?php echo !empty($v['ansinfo'][5])?$v['ansinfo'][5]:' '; ?></td>
+                </tr>
+<?php       }
+        }    ?>
+</table>
+<?php
+    }    	?>
+</div>
+
+<br><br>
+
+<input type='submit' name='cmdSubmit' id='cmdSubmit' value='Associate Now' style="display: none;">
+
+</form>
+
+<?php }else{    ?>
+
+<p style="padding-top: 100px; text-align: center; font-size: 20px; color: red;">
+    <?php echo $this->errorMsg; ?>
+</p>
+
+<br/><br/>
+
+<div align="center">
+	<input type='button' name='cmdClose' id='cmdClose' value='Close'>
+</div>
+
+<?php }    ?>
+
+</body>
+
+</html>

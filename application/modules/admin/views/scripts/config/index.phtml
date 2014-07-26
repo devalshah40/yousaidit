@@ -1,0 +1,99 @@
+<script type="text/javascript">
+$(document).ready(
+	function(){
+		$("table tr#tdata").mouseout(
+			function () {
+				$(this).removeClass('active_row');
+				$(this).addClass('nonactive_row');
+			}
+		);
+
+		$('table.data tbody tr:odd').addClass('odd'); 
+		$('table.data tbody tr:even').addClass('even');
+		
+		$("table tr#tdata").mouseover(
+			function () {
+				$(this).removeClass('nonactive_row');
+				$(this).addClass('active_row');
+			}
+		);
+
+		$('#cmbGroupId').change(
+			function(){
+				window.location = '<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/config/index/id/' + $(this).val();
+			}
+		);
+    	$("#cmdBack").click(
+    		function() {
+				window.location = '<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/config/index/id/<?php echo $this->group_id; ?>';
+    		}
+    	);
+	}
+);
+</script>
+
+<form name='frmConfig' id='frmConfig' method="POST" action="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/config/index">
+  <div class="contentdetails">
+    <table width="100%" cellpadding="2" cellspacing="2" border="0">
+      <tr>
+        <td class="searchdiv"><table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td height="35" align="left" width="100%">&nbsp;Group :
+                <select class="select" id="cmbGroupId" name="cmbGroupId">
+                  <?php	foreach($this->group as $v){			?>
+                  <option <?php echo ($v['config_group_id'] == $this->group_id)?'selected':''; ?> value="<?php echo $v['config_group_id']; ?>">&nbsp;&nbsp;<?php echo $v['group_title']; ?>&nbsp;&nbsp;</option>
+                  <?php	}			?>
+                </select></td>
+            </tr>
+          </table></td>
+      </tr>
+      <tr>
+        <td height="3"></td>
+      </tr>
+      <tr>
+        <td class="tablesyle"><?php
+	if( !empty($this->config) ){					?>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+            <thead>
+              <tr class="grdheader">
+                <td height="30" width="40%" align="left">&nbsp;<font color="#ffffff"><b>Config Parameter</b></font></td>
+                <td height="30" width="53%" >&nbsp;<font color="#ffffff"><b>Value</b></font></td>
+                <td height="30" width="7%" align="center"><font color="#ffffff"><b>Option</b></font></td>
+              </tr>
+            </thead>
+            <tbody>
+              <?php	foreach($this->config as $v){			?>
+              <tr id="tdata">
+                <td height="30" align="left">&nbsp;<b>&raquo;</b>&nbsp;<?php echo $v['config_description']; ?></td>
+                <?php	if( $v['config_id'] == $this->cid) {		?>
+                <td height="30" width="60%" colspan="2" align="left">&nbsp;
+                  <input type="text" name="txtValue" maxlength="50" size="45" value="<?php echo $v['config_value']; ?>">
+                  <input type="hidden" name="cid" value="<?php echo $v['config_id']; ?>">
+                  <input type="hidden" name="id" value="<?php echo $this->group_id; ?>">
+                  &nbsp;
+                  <input type="submit" name="cmdSubmit" id="cmdSubmit" value="Save">
+                  &nbsp;&nbsp;&nbsp;
+                  <input type="button" name="cmdBack" id="cmdBack" value="Cancel"></td>
+                <?php	}else{										?>
+                <td height="30" align="left">&nbsp;<?php echo $v['config_value']; ?></td>
+                <?php	}											?>
+                <?php	if( $v['config_id'] != $this->cid) {		?>
+                <td height="30" align="center"><b><a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/config/index/id/<?php echo $this->group_id; ?>/cid/<?php echo $v['config_id']; ?>">Edit</a></b></td>
+                <?php	}											?>
+              </tr>
+              <?php	}											?>
+            </tbody>
+          </table>
+          <?php
+	}else{											?>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr bgcolor="White">
+              <td height="50" valign="middle" align="center">No Configurable Options Found</td>
+            </tr>
+          </table>
+          <?php
+	}												?></td>
+      </tr>
+    </table>
+  </div>
+</form>

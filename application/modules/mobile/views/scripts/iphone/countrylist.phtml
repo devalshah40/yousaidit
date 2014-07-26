@@ -1,0 +1,16 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	echo '<country_list>';
+    echo "<success_flag>".$this->success_flag."</success_flag>";
+        foreach($this->country as $k => $v){
+          echo '<country>';
+    
+               echo '<country_id>'.$v['country_id'].'</country_id>';
+               echo '<name>'.$v['country_name'].'</name>';
+                
+          echo '</country>';
+        }
+	echo '</country_list>';
+?>

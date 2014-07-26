@@ -1,0 +1,238 @@
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		$('#cmdCancel').click(
+			function(){
+				location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/page/1';
+			}
+		);
+
+		$("form input:radio[name='ansgrp']").change(
+    		function(){
+    			$('#submit-btn').show();
+    			if($(this).val() == 'r'){
+    				$('#rset').show();
+    				$('#answers').hide();
+    			}else{
+    				$('#rset').hide();
+    				$('#answers').show();
+    			}
+			}
+		);
+
+		$("#chkAllQue").click(
+	        	function() {
+	        		var checked_status = this.checked;
+	    			$("input[id=qchk][type='checkbox']").each(
+	    				function(){
+	    					this.checked = checked_status;
+	    				}
+	    			);
+	        	}
+		);
+
+		$("#chkAllAns").click(
+	        	function() {
+	        		var checked_status = this.checked;
+	    			$("input[id=achk][type='checkbox']").each(
+	    				function(){
+	    					this.checked = checked_status;
+	    				}
+	    			);
+	        	}
+		);
+
+		$('#frmQueAnsRsAssociate').submit(
+			function(){
+				var is_error = false;
+				var error_str = 'Cannot Continue. Please review the following errors.' + "\n\n";
+
+				var c = $("form input:checkbox[name='queid[]']:checked").length;
+
+				if(c == 0){
+					is_error = true;
+					error_str += '* Atleast 1 question selection is required for association.' + "\n";
+				}
+
+				var d = $("form input:radio[name='ansgrp']:checked").val();
+
+				if(d == 'r'){
+					var e = $("form input:radio[name='rset']:checked").length;
+					if(e == 0){
+						is_error = true;
+						error_str += '* Atleast 1 response set selection is required' + "\n";
+					}
+				}
+
+				if(d == 'a'){
+					var f = $("form input:checkbox[name='answer_id[]']:checked").length;
+					if(f == 0){
+						is_error = true;
+						error_str += '* Atleast 1 answer selection is required' + "\n";
+					}
+				}
+
+				if(is_error == true){
+					alert(error_str);
+					return false;
+				}
+			}
+		);
+
+	}
+);
+</script>
+<br/>
+<form id="frmQueAnsRsAssociate" method="post" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/queansrs">
+<?php
+    if(!empty($this->queArr)){        ?>
+<table width="100%" cellpadding="2"  cellspacing="2" border="0">
+<tr>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td class="tablesyle">
+		<table width="100%" cellpadding="2" cellspacing="2" border="2" class='data'>
+		<thead>
+		<tr class="grdheader">
+			<td align="center" width="3%"><input type="checkbox" name="chkAllQue" id="chkAllQue" value="1" style="border:0px"></td>
+			<td width="61%"><strong>Question Description</strong></td>
+			<!--  <td width="12%"><strong>Answer, Response Set Association</strong></td>	 -->
+			<td width="7%"><strong>Answer Type</strong></td>
+			<td width="9%"><strong>Max Response Allowed</strong></td>
+			<td width="8%"><strong>Status</strong></td>
+		</tr>
+		</thead>
+		<tbody>
+<?php   foreach($this->queArr as $k => $v){    ?>
+		<tr bgcolor="White" id="tdata">
+			<td align="center" width="5%"><input type="checkbox" name="queid[]" id="qchk" value="<?php echo $v['question_id']; ?>" style="border:0px"></td>
+			<td> <?php echo stripslashes(nl2br($v['queinfo'][0])); ?></td>
+			<!--
+			<td align="center">
+				<div id='que_lnk<?php echo $v['question_id']; ?>'><?php echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="window.open(\' '.$this->baseUrl() ."/" . $this->modulename . "/question/queansrs/qid/".$v['question_id']. '\', \'abc\', \'width=900,height=650,top=100,left=100,scrollbars=yes,resizable=0\')"><strong>Associate Now</strong></a>';    ?></div>
+			</td>
+			 -->
+			<td align="center" ><?php echo $v['queinfo'][1]; ?></td>
+			<td align="center" ><?php echo $v['queinfo'][2]; ?></td>
+			<td align="center" ><?php echo $v['queinfo'][3]; ?></td>
+		</tr>
+<?php   }    ?>
+		</tbody>
+        </table>
+	</td>
+	</tr>
+</table>
+<br/>
+
+Associate :
+<?php    if( !empty($this->rset)){    ?>
+	<input type='radio' value='r' name='ansgrp'>&nbsp;Response Set
+	&nbsp;&nbsp;&nbsp;&nbsp;
+<?php     }    ?>
+
+<?php    if( !empty($this->ans)){    ?>
+	<input type='radio' value='a' name='ansgrp'>&nbsp;Answers
+<?php     }    ?>
+
+<br/><br/>
+
+<div id='rset' style="display: none; padding-top: 15px;">
+<?php    $rset = null;
+    if( !empty($this->rset)){    ?>
+<table border="1" width="100%" cellpadding="2" cellspacing="2" bgcolor='#F0F3F8' >
+<?php   foreach($this->rset as $k => $v){
+            if( !empty($v['rs_id']) ){
+                if($v['rs_id'] != $rset){    ?>
+                <tr>
+                	<td height="30" align="left" colspan="7"><input type='radio' value='<?php echo $v['rs_id']; ?>' name='rset'>&nbsp;<strong><?php echo $v['title']; ?></strong></td>
+                </tr>
+                <tr bgcolor='#7F9ACC' >
+                	<td width="30%" height="25" >&nbsp;<font color="white"><strong>Answer Title</strong></font></td>
+                	<td width="10%"><font color="white"><strong>Answer Type</strong></font></td>
+                	<td width="12%"><font color="white"><strong>Weighting</strong></font></td>
+                	<td width="8%"><font color="white"><strong>Free Text</strong></font></td>
+                	<td><font color="white"><strong>Free Text Caption</strong></font></td>
+                </tr>
+<?php           }        ?>
+                <tr>
+                	<td height="25">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $v['rset_ansinfo'][1]; ?></td>
+                	<td align="center"><?php echo $v['rset_ansinfo'][2]; ?></td>
+                	<td align="center"><?php echo $v['rset_ansinfo'][3]; ?></td>
+                	<td align="center"><?php echo !empty($v['rset_ansinfo'][4])?$v['rset_ansinfo'][4]:'&nbsp;'; ?></td>
+                	<td><?php echo !empty($v['rset_ansinfo'][5])?$v['rset_ansinfo'][5]:'&nbsp;'; ?></td>
+                </tr>
+<?php            $rset = $v['rs_id'];
+            }
+        }        ?>
+</table>
+<?php
+    }    ?>
+</div>
+
+<div id='answers'  style="display: none; padding-top: 15px;"><br/>
+<?php
+    if( !empty($this->ans)){    ?>
+<table border="1" width="100%" cellpadding="2" cellspacing="2"  bgcolor='#F0F3F8' >
+                <tr bgcolor='#7F9ACC' >
+                	<td width="4%"><input type="checkbox" name="chkAllAns" id="chkAllAns" value="1" style="border:0px"></td>
+                	<td><font color="white"><strong>Answer Title</strong></font></td>
+                	<td width="10%"><font color="white"><strong>Answer Type</strong></font></td>
+                	<td width="12%"><font color="white"><strong>Weighting</strong></font></td>
+                	<td width="8%"><font color="white"><strong>Free Text</strong></font></td>
+                	<td><font color="white"><strong>Free Text Caption</strong></font></td>
+                </tr>
+<?php
+        foreach($this->ans as $k => $v){
+            if( empty($v['ansinfo'][0]) ){    ?>
+                <tr>
+                	<td>
+                		<input type='hidden' value='<?php echo $v['ansinfo'][4]; ?>' name='free_text[]'>
+                		<input type='checkbox' value='<?php echo $v['answer_id']; ?>' id='achk' name='answer_id[]'>
+                	</td>
+                	<td><?php echo $v['ansinfo'][1]; ?></td>
+                	<td align="center"><?php echo $v['ansinfo'][2]; ?></td>
+                	<td align="center"><?php echo !empty($v['ansinfo'][3])?$v['ansinfo'][3]:'&nbsp;'; ?></td>
+                	<td align="center"><?php echo !empty($v['ansinfo'][4])?$v['ansinfo'][4]:'&nbsp;'; ?></td>
+                	<td><?php echo !empty($v['ansinfo'][5])?$v['ansinfo'][5]:'&nbsp;'; ?></td>
+                </tr>
+<?php       }
+        }    ?>
+</table>
+<?php
+    }    	?>
+</div>
+
+<br/><br/>
+<div id='submit-btn' style="display: none;">
+<input type='submit' name='cmdSubmit' value='Associate Selected Question with Response Set, Answers'>
+</div>
+<?php
+    }else{    ?>
+<br/><br/><br/>
+<div align="center">
+	<font size="3" color='red'>No more question available for association</font>
+	<br/><br/>
+	<a href='<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/survey/add'><font size="3" color='Blue'>Create Survey Using Question(s) Imported</font></a>
+	<br/><br/>
+	OR
+	<br/><br/>
+	<a href='<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/question/index'><font size="3" color='Blue'>Goto Question Listing</font></a>
+</div>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<?php
+    }    ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</form>

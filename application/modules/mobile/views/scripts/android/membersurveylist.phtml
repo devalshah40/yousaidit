@@ -1,0 +1,23 @@
+<?php
+	header("Content-Type: text/xml");
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	echo '<member_survey_list' . $this->answered_flag . '>';
+	echo '<success_flag>'.$this->success_flag.'</success_flag>';
+    if( !empty($this->survey) ) {
+     //   foreach($this->survey as $k => $v){
+     
+        	
+                echo '<survey>';               
+                echo '<sid>'.$this->survey['survey_id'].'</sid>';
+                echo    '<title><![CDATA['.stripslashes($this->survey['title']).']]></title>';
+   
+                echo '</survey>'; 
+ 
+        // print_r($this->survey);
+         
+      //  }
+    }else{
+        echo '<msg>'.$this->msg.'</msg>';
+    }
+	echo '</member_survey_list' . $this->answered_flag . '>';
+?>

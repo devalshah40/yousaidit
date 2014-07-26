@@ -1,0 +1,202 @@
+<style type="text/css">
+.active {
+	background:url(<?php echo $this->baseUrl(); ?>/images/admin/bullet_green.png) no-repeat;
+	height: 32px; text-align:right; padding-right:15px;
+}
+.inactive {
+	background:url(<?php echo $this->baseUrl(); ?>/images/admin/bullet_red.png) no-repeat;
+	height: 32px; text-align:right; padding-right:15px;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("table tr#tdata").mouseout(
+		function () {
+			$(this).removeClass('active_row');
+			$(this).addClass('nonactive_row');
+		}
+	);
+
+	$('table.data tbody tr:odd').addClass('odd');
+	$('table.data tbody tr:even').addClass('even');
+
+	$("table tr#tdata").mouseover(
+		function () {
+			$(this).removeClass('nonactive_row');
+			$(this).addClass('active_row');
+		}
+	);
+
+	   $(".paginationControl").change(
+		    	function() {
+		        	var page_index = null;
+		        	page_index = $(this).val();
+		        	window.location = page_index;
+		    	}
+		    );
+
+    $("#chkAll").click(
+    	function() {
+    		var checked_status = this.checked;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					this.checked = checked_status;
+				}
+			);
+    	}
+    );
+
+	$(".cmdDelete").click(
+		function() {
+			var cnt = 0;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					if( this.checked == true){
+						cnt++;
+					}
+				}
+			);
+			if(cnt > 0){
+				ans = confirm("Confirm Deleted Operation on Selected Surveys(s) ?" + "\n\n" + "Survey responses, associated questions will also be deleted." + "\n\n");
+				if(ans == false){
+					return false;
+				}
+			}else{
+				alert('No Records Selected.');
+				return false;
+			}
+		}
+	);
+  
+    
+
+	$('.data #sstatus a').click(
+            function(){
+
+            	var id = $(this).attr('id');
+
+                if( id != 0 ){
+
+                 $.ajax({    type    : "GET",
+                 url     : '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/survey/statusupdate/id/' + $(this).attr('id'),
+                 success : function(data) {
+                	 if( data != ''){
+                        if( data == 'Active'){
+                        	$('#status_icon' +  id).removeClass('inactive');
+                        	$('#status_icon' +  id).addClass('active');
+                         	$("#"+id  ).attr("title","Click To Change Survey Status To Inactive");
+                        }else{
+                        	$('#status_icon' +  id).removeClass('active');
+                        	$('#status_icon' +  id).addClass('inactive');
+                         	$("#"+id ).attr("title","Click To Change Survey Status To Active");
+                        }
+                     }
+                 },
+				    error	: function(data) {
+                  		alert('Error encountered Survey Status not changed, ');
+				    }
+                 });
+
+                }
+         }
+       );
+
+
+});
+</script>
+<form name='frmQuestion' id='frmQuestion' method="POST" action="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/survey/index">
+  <div class="contentdetails">
+    <table width="100%" cellpadding="2" cellspacing="2" border="0">
+      <tr>
+        <td class="searchdiv"><table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr>
+              <td height="35" align="left" width="25%">&nbsp;Search By :
+                <select class="select" name="cmbKey">
+                  <option value="title">&nbsp;Title&nbsp;</option>
+                </select></td>
+              <td width="35%"><input type="text" value="" name="txtValue" id="txtValue" size="35" maxlength="50">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="submit" name="cmdSubmit" id="cmdSubmit" value="Search"></td>
+              <td align="center"><?php		if( $this->result_type == true){		?>
+                <a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/survey/index/clear/results"><b>Clear Search Result</b></a>
+                <?php		}			?></td>
+            </tr>
+          </table></td>
+      </tr>
+      <tr>
+        <td height="3"></td>
+      </tr>
+
+      <tr>
+        <td class="tablesyle"><?php
+	if( !empty($this->paginator) ){					?>
+	 	 <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td colspan="3"><?php 	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+              <tr>
+              <td align="left" width="80%" height="35">&nbsp;
+            
+                <input type="submit" name="cmdDelete" class="cmdDelete" value="Delete Selected Survey">
+           
+               </td>
+                <td width="10%" class="active" width="68px"><b>Active</b></td>
+                <td width="10%" class="inactive" width="78px"><b>Inactive</b></td>
+            </tr>
+          </table>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+            <thead>
+              <tr class="grdheader">
+          
+                <td width="3%" align="center"><input type="checkbox" name="chkAll" id="chkAll" value="1" style="border:0px"></td>
+                <td align="left" width="67%">&nbsp;Survey Title</td>
+                <td width="10%" align="center">Questions</td>
+                <td width="10%" align="center">Responses</td>
+                <td width="10%" align="center">Status</td>
+
+              </tr>
+            </thead>
+            <tbody>
+              <?php	foreach($this->paginator as $v){	?>
+              <tr id="tdata">
+                <td height="30" align="center"><input type="checkbox" name="chk[]" id="chk" value="<?php echo $v['sinfo']["survey_id"]; ?>" style="border:0px">
+                <td align="left">&nbsp;<b><a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/survey/edit/id/<?php	echo $v['sinfo']['survey_id']; ?>/page/<?php echo $this->pg; ?>"><?php	echo stripslashes($v['sinfo']['title']);	?></a></b></td>
+                <td align="center"><a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/survey/questions/id/<?php	echo $v['sinfo']['survey_id']; ?>/page/<?php echo $this->pg; ?>/"><b>View / Select</b></a></td>
+                <td align="center"><a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/survey/responses/id/<?php	echo $v['sinfo']['survey_id']; ?>/page/<?php echo $this->pg; ?>"><b>View</b></a></td>
+                <td height="30" align="center" id='sstatus'>
+  					<a title="Click To Change Survey Status To <?php echo ($v['sinfo']["status"] == 'Active')?'Inactive':'Active'; ?>" href="#" id="<?php  echo $v['sinfo']['survey_id']; ?>" >
+  					<span style="border:0px solid #FF0000; background-position:center center; display:block;" id='status_icon<?php echo $v['sinfo']["survey_id"]; ?>' class='<?php echo ($v['sinfo']["status"] == 'Active')?'active':'inactive'; ?>'></span>
+					</a>
+                </td>
+
+              </tr>
+              <?php	}		?>
+            </tbody>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td width="80%" align="left" height="35">&nbsp;
+              <?php if($this->user_group_id == 1 || $this->user_group_id == 2 ){ ?>
+                <input type="submit" name="cmdDelete" class="cmdDelete" value="Delete Selected Survey">
+              <?php } ?>
+              </td>
+                <td width="10%" class="active" width="68px"><b>Active</b></td>
+                <td width="10%" class="inactive" width="78px"><b>Inactive</b></td>
+            </tr>
+            <tr>
+              <td colspan="3"><?php	echo $this->paginationControl($this->paginator, 'Sliding', 'my_pagination_control.phtml'); ?></td>
+            </tr>
+          </table>
+          <?php
+	}else{											?>
+          <table width="100%" cellpadding="2" cellspacing="2" border="0">
+            <tr bgcolor="White">
+              <td height="50" valign="middle" align="center">No Survey Found</td>
+            </tr>
+          </table>
+          <?php
+	}	?></td>
+      </tr>
+    </table>
+  </div>
+</form>

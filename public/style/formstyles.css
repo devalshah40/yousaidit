@@ -1,0 +1,131 @@
+label {
+	font-size: 15px;
+	font-weight: 300;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	float: left;
+	width: 100px;
+	line-height: 40px;
+	padding-right: 10px;
+	letter-spacing: 1px;
+	text-align: right;
+	color: #d6f693;
+}
+input, button {
+	font-size: 15px;
+	font-weight: bold;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	border: 1px solid #CCC;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	border-radius: 4px;
+	padding: 5px 10px;
+	background: #a4c855;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a4c855), color-stop(100%, #ccea89));
+	background-image: -webkit-linear-gradient(top, #a4c855, #ccea89);
+	background-image: -moz-linear-gradient(top, #a4c855, #ccea89);
+	background-image: -ms-linear-gradient(top, #a4c855, #ccea89);
+	background-image: -o-linear-gradient(top, #a4c855, #ccea89);
+	background-image: linear-gradient(top, #a4c855, #ccea89);
+	-webkit-box-shadow: 0 0 2px #a4c855;
+	-moz-box-shadow: 0 0 2px #a4c855;
+	box-shadow: 0 0 2px #a4c855;
+}
+input[type=submit]:hover, input[type=button]:hover {
+	background: #ccea89;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a4c855), color-stop(100%, #ccea89));
+	background-image: -webkit-linear-gradient(top, #ccea89, #a4c855);
+	background-image: -moz-linear-gradient(top, #ccea89, #a4c855);
+	background-image: -ms-linear-gradient(top, #ccea89, #a4c855);
+	background-image: -o-linear-gradient(top, #ccea89, #a4c855);
+	background-image: linear-gradient(top, #ccea89, #a4c855);
+	-webkit-box-shadow: 0 0 2px #a4c855;
+	-moz-box-shadow: 0 0 2px #a4c855;
+	box-shadow: 0 0 2px #a4c855;
+}
+input[type=text], input[type=password] {
+	padding: 10px !important;
+	min-width:30%;
+	font-weight: 300;
+	color: #525252;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	border-radius: 4px;
+	border: 1px solid #dddddd;
+	background: #ffff88;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffff88), color-stop(100%, #efef7c));
+	background-image: -webkit-linear-gradient(top, #ffff88, #efef7c);
+	background-image: -moz-linear-gradient(top, #ffff88, #efef7c);
+	background-image: -ms-linear-gradient(top, #ffff88, #efef7c);
+	background-image: -o-linear-gradient(top, #ffff88, #efef7c);
+	background-image: linear-gradient(top, #ffff88, #efef7c);
+	-webkit-box-shadow: 0 0 2px #efef7c;
+	-moz-box-shadow: 0 0 2px #efef7c;
+	box-shadow: 0 0 2px #efef7c;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+	background: #fefc52;
+}
+
+input.blur {
+	color: #a2a2a2;
+}
+		
+input.largebox {
+	font-size:15pt;
+	padding: 10px !important;
+	width: 80%;
+	color: #525252;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	border-radius: 4px;
+	border: 1px solid #dddddd;
+	background: #ffff88;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffff88), color-stop(100%, #efef7c));
+	background-image: -webkit-linear-gradient(top, #ffff88, #efef7c);
+	background-image: -moz-linear-gradient(top, #ffff88, #efef7c);
+	background-image: -ms-linear-gradient(top, #ffff88, #efef7c);
+	background-image: -o-linear-gradient(top, #ffff88, #efef7c);
+	background-image: linear-gradient(top, #ffff88, #efef7c);
+	-webkit-box-shadow: 0 0 2px #efef7c;
+	-moz-box-shadow: 0 0 2px #efef7c;
+	box-shadow: 0 0 2px #efef7c;
+}
+select {
+/*	width: 58%; */
+	border: 1px solid #CCC;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	border-radius: 4px;
+	padding: 7px 3px;
+	background: #efef7c;
+	-webkit-box-shadow: 0 0 2px #efef7c;
+	-moz-box-shadow: 0 0 2px #efef7c;
+	box-shadow: 0 0 2px #efef7c;
+}
+textarea {
+	width: 58%;
+	border: 1px solid #CCC;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	border-radius: 4px;
+	padding: 7px 3px;
+	background: #efef7c;
+	-webkit-box-shadow: 0 0 2px #efef7c;
+	-moz-box-shadow: 0 0 2px #efef7c;
+	box-shadow: 0 0 2px #efef7c;
+	resize: none
+}
+input[type=checkbox] {
+	border: 0;
+	box-shadow: 0 0 0 0 ;
+}

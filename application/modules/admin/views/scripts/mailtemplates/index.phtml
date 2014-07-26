@@ -1,0 +1,58 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$("table tr#tdata").mouseout(
+		function () {
+			$(this).removeClass('active_row');
+			$(this).addClass('nonactive_row');
+		}
+	);
+
+	$('table.data tbody tr:odd').addClass('odd');
+	$('table.data tbody tr:even').addClass('even');
+
+	$("table tr#tdata").mouseover(
+		function () {
+			$(this).removeClass('nonactive_row');
+			$(this).addClass('active_row');
+		}
+	);
+
+
+
+});
+</script>
+<form name='frmmail' id='frmmail' method="POST" action="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/mailtemplates/index">
+<div class="contentdetails">
+<?php
+if( !empty($this->maillist) ){
+?>
+		<table width="100%" cellpadding="2" cellspacing="2" border="0" class='data'>
+			<thead>
+              <tr class="grdheader">
+				<td height="30" align="left" width="85%">&nbsp;&nbsp;Description</td>
+				<td height="30" width="13%" align="center">Action</td>
+			</tr>
+			</thead>
+			<tbody>
+<?php	foreach($this->maillist as $v){			?>
+			<tr id="tdata">
+				<td align="left" height="30">&nbsp;&nbsp;<?php	echo $v['description']; ?></td>
+				<td height="30" align="center"><a href="<?php echo $this->baseUrl() . "/" . $this->modulename; ?>/mailtemplates/edit/id/<?php echo $v['mailid']; ?>"><b>Edit</b></a></td>
+			</tr>
+<?php } ?>
+			</tbody>
+          </table>
+   <?php    } else {  ?>
+
+		<table width="100%" cellpadding="2" cellspacing="2" border="0">
+		<tr bgcolor="White">
+			<td height="50" valign="middle" align="center">No Mail Template Found</td>
+		</tr>
+		</table>
+
+
+
+
+<?php } ?>
+</div>
+</form>

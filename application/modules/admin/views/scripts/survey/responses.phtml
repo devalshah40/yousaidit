@@ -1,0 +1,246 @@
+<!--<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl(); ?>/js/datepicker/smoothness.datepick.css" />
+<link rel="stylesheet" href="<?php echo $this->baseUrl(); ?>/js/datepicker/ui-lightness/jquery-ui-1.8.13.custom.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo $this->baseUrl(); ?>/js/datepicker/jquery-ui-timepicker.css?v=0.2.1" type="text/css" />
+<script type="text/javascript" language="javascript" src="<?php echo $this->baseUrl(); ?>/js/datepicker/jquery.datepick.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo $this->baseUrl(); ?>/js/datepicker/jquery.ui.core.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo $this->baseUrl(); ?>/js/datepicker/jquery.ui.timepicker.js"></script>
+--><script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery-ui-1.8.22.custom.min.js"></script>
+<link type="text/css" href="<?php echo $this->baseUrl(); ?>/style/black-tie/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/fancybox/jquery.fancybox-1.3.4.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl(); ?>/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+<script type="text/javascript">
+$(document).ready(
+	function(){
+        $('#start_date').datepicker(
+			{
+				changeMonth: true,
+				changeYear: true,
+				dateFormat : 'dd/mm/yy'}
+		);
+        $('#end_date').datepicker(
+			{
+				changeMonth: true,
+				changeYear: true,
+				dateFormat : 'dd/mm/yy'}
+		);
+		
+		$('#cmbFilter').change(
+			function(){
+				if( $(this).val() ==  't'){
+					$('#trt').show();
+					$('#tra').hide();
+					$('#trc').hide();
+					$('#trf').hide();
+				}else if( $(this).val() ==  'a'){
+					$('#trt').hide();
+					$('#tra').show();
+					$('#trc').hide();
+					$('#trf').hide();
+				}else if( $(this).val() ==  'c'){
+					$('#trt').hide();
+					$('#tra').hide();
+					$('#trc').show();
+					$('#trf').hide();
+				}else if( $(this).val() ==  'f'){
+					$('#trt').hide();
+					$('#tra').hide();
+					$('#trc').hide();
+					$('#trf').show();
+				}else{
+					$('#trt').hide();
+					$('#tra').hide();
+					$('#trc').hide();
+					$('#trf').hide();
+					//location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/survey/responses/id/<?php echo $this->surveyinfo['survey_id']; ?>/page/<?php echo $this->pg; ?>';
+				}
+			}
+		);
+
+		$('#trt').hide();
+		$('#tra').hide();
+		$('#trc').hide();
+		$('#trf').hide();
+
+		$('#cmbFilter').trigger('change');
+	}
+);
+</script>
+<div class="contentdetails">
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+      <td class="searchdiv"><table width="100%" cellpadding="2" cellspacing="2" border="0">
+          <tr>
+            <td width="7%" align="left" height="25">&nbsp;<b>Survey :</b></td>
+            <td width="93%" align="left" height="25">&nbsp;<?php echo stripslashes($this->surveyinfo['title']); ?></td>
+          </tr>
+        </table></td>
+    </tr>
+  </table>
+  <br/>
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+      <td align="left" >Total number of customers who have taken survey : <b><?php echo $this->surveyTakenCount; ?></b></td>
+    </tr>
+    <?php
+    //if( !empty($this->result_1) ){      ?>
+    <form method="POST" action="<?php echo $this->baseUrl(); ?>/admin/survey/responses" id="frmSurveyResponse">
+      <input type="hidden" name="id" value="<?php echo $this->surveyinfo['survey_id']; ?>">
+      <input type="hidden" name="page" value="<?php echo $this->pg; ?>">
+      <input type="hidden" name="detailed" value="1">
+
+      <tr>
+      	<td align="left" height="35">From Date :&nbsp;<input type="text" readonly="readonly" name="start_date" id="start_date" value="<?php echo $this->start_date; ?>" size="10">
+		&nbsp;&nbsp;
+      	To Date :&nbsp;<input type="text" readonly="readonly" name="end_date" id="end_date" value="<?php echo $this->end_date; ?>" size="10">
+      	
+      	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="submit" name="cmbSubmit" id="cmbSubmit" value="View">
+        </td>
+      </tr>
+      </form>
+      
+	  <form method="POST" action="<?php echo $this->baseUrl(); ?>/admin/survey/responsesexport" id="frmSurveyResponseExport">
+      <input type="hidden" name="id" value="<?php echo $this->surveyinfo['survey_id']; ?>">
+      <input type="hidden" name="page" value="<?php echo $this->pg; ?>"><!--
+      <tr>
+      	<td>
+			<input type="submit" name="cmdExportResponseData" id="cmdExportResponseData" value="Export Response Data">
+      	</td>
+      </tr>
+	  --></form>
+
+    
+    <?php
+    //}       ?>
+  </table>
+  <hr />
+  <?php
+    if( !empty($this->questions) ){         //echo '<pre>'; print_r($this->questions); echo '</pre>'; exit;            ?>
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+    	<td align="left">
+            <table width="100%" cellpadding="2" cellspacing="2" border="0">
+                <tr>
+                	<td align="left">
+						<h2>Survey Questions</h2>
+                	</td>
+                </tr>
+            </table>
+    	</td>
+    </tr>
+    <?php   foreach($this->questions as $k => $v){          ?>
+    <tr>
+      <td height="30" align="left" ><b>&raquo;</b>&nbsp;<?php echo stripslashes(nl2br($v['que_info']['description'])); ?>
+        <table width="100%" cellpadding="2" cellspacing="2" border="0">
+                <?php if($v['que_info']['answer_type'] == 'r'){ ?>
+				<tr>
+		            <td height="25" width="3%">&nbsp;</td>
+		            <td width="40%"  align="left" >&nbsp;</td>
+		            <td width="47%"  align="left" >
+		            	<table width="100%" cellpadding="1" cellspacing="1" border="0">
+		            	<tr>
+		            		<td width="20%"><strong>Not at all important</strong></td>
+		            		<td width="20%"><strong>Little or no importance</strong></td>
+		            		<td width="20%"><strong>Moderate importance</strong></td>
+		            		<td width="20%"><strong>Major importance</strong></td>
+		            		<td width="20%"><strong>Extremely important</strong></td>
+		            	</tr>
+		            	</table>
+					</td>
+					</tr>
+                <?php }    ?>
+                 	
+          <?php foreach($v['answers'] as $ak => $av){ ?>
+          <tr>
+            <td height="25" width="3%">&nbsp;</td>
+            <td width="40%"  align="left" >&nbsp; <?php echo stripslashes($av['answer_text']); ?>
+            <?php if($av['answer_type'] == 'v' && (int) $this->surveyTakenCount > 0){
+                echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="window.open(\' '.$this->baseUrl() ."/" . $this->modulename . "/survey/anstext/qid/".$v['que_info']['question_id']."/aid/".$av['answer_id']."/id/" . $this->surveyinfo['survey_id'].  '\', \'abc\', \'width=700,height=500,top=100,left=100,scrollbars=yes,resizable=0\'); return false;"><strong>View Responses</strong></a>';
+            } ?>
+            </td>
+            <td width="47%" align="left">
+              <?php if($this->detailed == false){  ?>
+                 <?php if($av['answer_type'] != 'v'){  ?>
+                 	<?php if($v['que_info']['answer_type'] == 'r'){ ?>
+    						<table width="100%" cellpadding="1" cellspacing="1" border="0">
+    		            	<tr>
+    		            		<td width="20%"><?php echo number_format($av['not_percentage'], 1, '.', ','); ?>&nbsp;%</td>
+    		            		<td width="20%"><?php echo number_format($av['little_percentage'], 1, '.', ','); ?>&nbsp;%</td>
+    		            		<td width="20%"><?php echo number_format($av['moderate_percentage'], 1, '.', ','); ?>&nbsp;%</td>
+    		            		<td width="20%"><?php echo number_format($av['major_percentage'], 1, '.', ','); ?>&nbsp;%</td>
+    		            		<td width="20%"><?php echo number_format($av['extremely_percentage'], 1, '.', ','); ?>&nbsp;%</td>
+    		            	</tr>
+    		            	</table>
+                 	<?php }else{ ?>
+                 			&nbsp;&nbsp;&nbsp;&nbsp;<?php echo number_format($av['percentage'], 1, '.', ','); ?>&nbsp;%
+                 	<?php } ?>
+                 <?php } ?>
+                 <?php if($av['free_text'] == 'y'){
+                         
+                             if( !empty($av['free_text_caption']) ){
+                                 echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;' . stripslashes($av['free_text_caption']) . "&nbsp;)";
+                             }
+                             if((float)$av['percentage'] > 0 && (int) $this->surveyTakenCount > 0){
+                                echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="window.open(\' '.$this->baseUrl() ."/" . $this->modulename . "/survey/anstext/qid/".$v['que_info']['question_id']."/aid/".$av['answer_id']."/id/" . $this->surveyinfo['survey_id'].  '\', \'abc\', \'width=700,height=500,top=100,left=100,scrollbars=yes,resizable=0\'); return false;"><strong>View Responses</strong></a>';
+                             }
+                       } ?>
+              <?php }else{ ?>
+              <?php    if($av['answer_type'] != 'v'){
+                          if($v['que_info']['answer_type'] == 'r'){    ?>
+                 			<table width="100%" cellpadding="1" cellspacing="1" border="0">
+    		            	<tr>
+    		            		<td width="20%"><?php echo number_format($av['not_percentage'], 1, '.', ','); ?>&nbsp;%</td>
+    		            		<td width="20%"><?php echo number_format($av['little_percentage'], 1, '.', ','); ?>&nbsp;%</td>
+    		            		<td width="20%"><?php echo number_format($av['moderate_percentage'], 1, '.', ','); ?>&nbsp;%</td>
+    		            		<td width="20%"><?php echo number_format($av['major_percentage'], 1, '.', ','); ?>&nbsp;%</td>
+    		            		<td width="20%"><?php echo number_format($av['extremely_percentage'], 1, '.', ','); ?>&nbsp;%</td>
+    		            	</tr>
+    		            	</table>
+              <?php       }else{	?>
+                              &nbsp;&nbsp;&nbsp;&nbsp;<?php echo number_format($av['percentage'], 1, '.', ','); ?>&nbsp;%
+              <?php       }			?>
+              				
+              <?php    }else{ ?>
+                 <?php    if( !empty($av['ansText']) ){
+                             echo "(" . stripslashes(nl2br($av['ansText'])) . ")";
+                          } ?>
+              <?php    } ?>
+              <?php    if($av['free_text'] == 'y'){
+                          if( !empty($av['free_text_caption']) ){
+                              echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;' . stripslashes($av['free_text_caption']) . "&nbsp;)";
+                          }
+                             if( (float)$av['percentage'] > 0 && (int) $this->surveyTakenCount > 0){
+                                echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="window.open(\' '.$this->baseUrl() ."/" . $this->modulename . "/survey/anstext/qid/".$v['que_info']['question_id']."/aid/".$av['answer_id']."/id/" . $this->surveyinfo['survey_id'].  '\', \'abc\', \'width=700,height=500,top=100,left=100,scrollbars=yes,resizable=0\'); return false;"><strong>View Responses</strong></a>';
+                             }
+                       } ?>
+              <?php    if($av['free_text'] == 'y' && !empty($av['ansText'])){ ?>
+              			  &nbsp;&nbsp;&nbsp;&nbsp;<b>Answer</b> : <?php echo stripslashes($av['ansText']); ?>
+              <?php    } ?>
+              <?php } ?></td>
+          </tr>
+          <?php } ?>
+        </table></td>
+    </tr>
+    <tr>
+      <td height="5"></td>
+    </tr>
+    <?php   }       ?>
+  </table>
+  <?php
+    }else{      ?>
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+      <td align="center" >No questions available</td>
+    </tr>
+  </table>
+  <?php
+    }           ?>
+  <br>
+  <hr/>
+  <br>
+  <?php if($this->detailed == false){ ?>
+  <div align="center"><a href="<?php echo $this->baseUrl(); ?>/admin/survey/index/page/<?php echo $this->pg; ?>"><b>Back To Survey List</b></a></div>
+  <?php }else{ ?>
+  <div align="center"> <a href="<?php echo $this->baseUrl(); ?>/admin/survey/responses/id/<?php echo $this->surveyinfo['survey_id']; ?>/page/<?php echo $this->pg; ?>"><b>Back To Summarised Response</b></a> &nbsp;||&nbsp; <a href="<?php echo $this->baseUrl(); ?>/admin/survey/index/page/<?php echo $this->pg; ?>"><b>Back To Survey List</b></a> </div>
+  <?php } ?>
+</div>

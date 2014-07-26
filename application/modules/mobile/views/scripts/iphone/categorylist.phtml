@@ -1,0 +1,19 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	echo '<category_list>';
+	echo "<success_flag>".$this->success_flag."</success_flag>";
+        foreach($this->category as $k => $v){
+        	echo '<category>';
+    
+               echo '<category_id>'.$v['categories_id'].'</category_id>';
+               echo '<name>'.str_replace('&','&amp;',$v['categories_name']).'</name>';
+            // '<survey_title><![CDATA['.stripslashes($v['title']).']]></survey_title>';
+            
+                echo '</category>';
+      
+                
+        }
+	echo '</category_list>';
+?>

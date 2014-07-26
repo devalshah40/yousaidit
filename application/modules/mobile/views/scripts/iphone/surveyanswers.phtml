@@ -1,0 +1,39 @@
+<?php
+	header("Content-Type: text/xml");
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+		if(!empty($this->expired_flag)){
+		
+		 echo '<session_expired>'.$this->expired_flag.'</session_expired>';
+		
+		
+	} else {
+	echo '<SAnswers>';
+    if($this->success_flag == 1){
+        foreach($this->answers as $k => $av){
+             $at = htmlentities(stripslashes($av['answer_text']),  ENT_COMPAT, 'UTF-8');
+             $new_at = str_replace('&pound;', '&#163;', $at);
+
+             $ft_cap = htmlentities(stripslashes($av['free_text_caption']),  ENT_COMPAT, 'UTF-8');
+             $new_ft_cap = str_replace('&pound;', '&#163;', $ft_cap);
+
+             echo '<SAnswer>';
+                 echo '<ID>'.$av['answer_id'].'</ID>';
+                 echo '<qid>'.$av['sq_id'].'</qid>';
+                 echo '<answer_text>'.$new_at.'</answer_text>';
+                 echo '<answer_type>'.$av['answer_type'].'</answer_type>';
+                 //echo '<weightage>'.$av['weightage'].'</weightage>';
+                 echo '<free_text>'.htmlentities(stripslashes($av['free_text'])).'</free_text>';
+                 echo '<free_text_caption>'.$new_ft_cap.'</free_text_caption>';
+                 echo '<remove>'.$av['remove'].'</remove>';
+                 echo '<add>'.$av['add'].'</add>';
+             echo '</SAnswer>';
+        }
+    }else{
+	    echo "<success_flag>".$this->success_flag."</success_flag>";
+        echo "<msg>".$this->msg."</msg>";
+    }
+	echo '</SAnswers>';
+	
+	}
+?>

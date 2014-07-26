@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv='X-UA-Compatible' content='IE=8'>
+<title>Edit Question Details</title>
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/jquery/jquery-1.4.4.min.js"></script>
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		$('.cmdClose').click(
+			function(){
+				 parent.$.fancybox.close();
+			}
+		);
+
+<?php if( $this->id == ''){ ?>
+		$('#q1-<?php echo $this->qid; ?>', window.parent.document).html('<?php echo $this->questioninfo[0]; ?>');
+		$('#q2-<?php echo $this->qid; ?>', window.parent.document).html('<?php echo $this->questioninfo[1]; ?>');
+		$('#q3-<?php echo $this->qid; ?>', window.parent.document).html('<?php echo $this->questioninfo[2]; ?>');
+		$('#q4-<?php echo $this->qid; ?>', window.parent.document).html('<?php echo $this->questioninfo[3]; ?>');
+		parent.$.fancybox.close();
+<?php }    ?>
+
+   });
+</script>
+<style type="text/css"">
+html,body { font-size:0.850em; color:#333; font-family:Arial, verdana, Helvetica, sans-serif; margin:0; padding:0; }
+input[type="submit"], input[type="button"] { padding:2px 5px; background:#cacaca; font-weight: bold; }
+input[type="text"]{ border:1px solid #a2a2a2; padding: 1px; height:18px; }
+textarea { padding: 1px; text-align:left; resize:none; }
+h1,h2,h3{ font-family:Georgia, 'Times New Roman', Times, serif; text-shadow:0 1px 1px #d8d9d9; margin:3px; color: #666; border-bottom:3px double #999;
+background:#efefef; padding:5px; }
+ul {list-style:none; padding:5px; border:0px solid #FF0000; overflow:auto;}
+li.label{ list-style:none; width:36%; font-weight:bold; border:0px solid #FF0000; float:left; padding:5px 0;}
+li.inputbox { list-style:none; width:63%; border:0px solid #000; float:left; padding:3px 0;}
+</style>
+</head>
+<body>
+<form method="post" action='<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/question/editque' >
+  <input type='hidden' name='id' value='<?php echo $this->id; ?>'>
+  <h2> Edit Questions </h2>
+  <ul>
+    <li class="label"> Question Description :</li>
+    <li class="inputbox">
+      <textarea rows="5" cols="50" name="description" id="description"><?php echo stripslashes($this->questioninfo[0]); ?></textarea >
+    </li>
+    <li class="label"> Answer Selection :</li>
+    <li class="inputbox">
+      <select class="select" name="answer_type" id="answer_type">
+        <option <?php echo (strtolower($this->questioninfo[1]) == 's')?'Selected':''; ?> value="s">Single</option>
+        <option <?php echo (strtolower($this->questioninfo[1]) == 'm')?'Selected':''; ?> value="m">Multiple</option>
+      </select>
+    </li>
+    <li class="label"> Maximum Number of Responses Allowed : </li>
+    <li class="inputbox">
+      <input type='text' name='max_answer' id='max_answer' value='<?php echo $this->questioninfo[2]; ?>' size="2" maxlength="2">
+    </li>
+    <li class="label"> Status : </li>
+    <li class="inputbox">
+      <select class="select" name="status" id="status">
+        <option <?php echo ($this->questioninfo[3] == 'Active')?'Selected':''; ?> value="Active">Active</option>
+        <option <?php echo ($this->questioninfo[3] == 'Inactive')?'Selected':''; ?> value="Inactive">InActive</option>
+      </select>
+    </li>
+  </ul>
+  <div align="center">
+    <input type='submit' value='Update' name='cmdSubmit' id='cmdSubmit' />
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type='button' value='Cancel' name='cmdClose' id='cmdClose' class='cmdClose' />
+  </div>
+</form>
+</body>
+</html>

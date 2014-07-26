@@ -1,0 +1,52 @@
+<div style="background-color: #F1F2F3; height: 680px;">
+<br/>
+<div align="center">
+<h2><font color="Red">Answer Text Details</font></h2>
+</div>
+<br/>
+<table width="98%" cellpadding="2" cellspacing="2" border="0" align="center">
+<tr>
+	<td bgcolor="#000000" align="center" height="35">
+<?php
+   if($this->error_flag == true){   ?>
+   		<table width="100%" cellpadding="2" cellspacing="2" border="0" bgcolor="#ffffff">
+   		<tr>
+   			<td align="center" height="35" >Cannot show answer text. Invalid / missing survey id / answer id</td>
+   		</tr>
+		</table>
+<?php
+   }else{
+      if(!empty($this->answertext)){                  ?>
+      	<table width="100%" cellpadding="2" cellspacing="2" border="0" bgcolor="#ffffff">
+      	<tr bgcolor="#E2E2E2">
+      		<td width="20%" height="30">&nbsp;<b>Member Name</b></td>
+      		<td width="60%">&nbsp;<b>Answer Text</b></td>
+      		<td width="20%" align="center" ><b>Date, Time</b></td>
+      	</tr>
+<?php
+         foreach($this->answertext as $k => $v){     ?>
+      	<tr>
+      		<td height="30">&nbsp;<?php echo $v['title']; ?>&nbsp;<?php echo $v['firstname']; ?><?php echo !empty($v['surname'])?"&nbsp;" . $v['surname']:''; ?></td>
+      		<td>&nbsp;<?php echo stripslashes($v['answer_text']); ?></td>
+      		<td  align="center" ><?php echo date('j M Y g:i A', strtotime($v['datetime'])); ?></td>
+      	</tr>
+<?php
+         }     ?>
+         </table>
+<?php
+      }else{   ?>
+   		<table width="100%" cellpadding="2" cellspacing="2" border="0" bgcolor="#ffffff">
+   		<tr>
+   			<td align="center" height="35" >No answer text to show</td>
+   		</tr>
+		</table>
+<?php
+      }
+   }         ?>
+</td>
+</tr>
+<tr>
+	<td align="center"><input type='button' name='cmdClose' onclick="window.close();" value='Close'></td>
+</tr>
+</table>
+</div>

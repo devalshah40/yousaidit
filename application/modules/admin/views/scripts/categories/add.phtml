@@ -1,0 +1,70 @@
+<script type="text/javascript">
+$(document).ready(
+		function() {
+			$('#cmdCancel').click(
+				function(){
+					location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/categories/index/page/' +  $("#pg").val();
+				}
+			);
+		}
+)
+</script>
+
+<form name='frmcatadd' id='frmcatadd' method="POST" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/categories/<?php echo strtolower($this->action); ?>">
+
+  <input type="hidden" name="categories_id" id="categories_id" value="<?php echo $this->CategoryInfo['categories_id']; ?>">
+  <input type="hidden" name="pg" id="pg" value="<?php echo $this->pg; ?>">
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr>
+      <td height="3"></td>
+    </tr>
+    <tr>
+      <td width="100%"><!---->
+        <table width="100%" cellpadding="2" cellspacing="2" border="0" align="center" bordercolor="#a2a2a2" >
+         
+         <tr id="caption">
+            <td height="30" width="30%" align="right"><label>Category Name : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <input type="text" name="categories_name" id="categories_name" value="<?php echo stripslashes($this->CategoryInfo['categories_name']); ?>" size="50" maxlength="200"></td>
+          </tr>
+          <tr id='text'>
+            <td height="30" width="30%" valign="top" align="right"><label>Category Description : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;
+              <textarea rows="3" cols="50" name="categories_description" id="categories_description"><?php echo stripslashes($this->CategoryInfo['categories_description']); ?></textarea>&nbsp;&nbsp;<font class="compulsory" >*</font></td>
+          </tr>
+  
+          <?php   if($this->action != 'Add'){     ?>
+       
+          <tr>
+            <td height="30" width="30%" align="right"><label>Add Date : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->CategoryInfo['add_date'], false, 'jS M Y'); ?></b></td>
+          </tr>
+    
+          <tr>
+            <td height="30" width="30%" align="right"><label>Last Update Date Time : </label></td>
+            <td height="30" width="70%" align="left">&nbsp;<b><?php echo $this->DateFormat($this->CategoryInfo['updated_datetime'], 'dt'); ?></b></td>
+          </tr>
+          <?php   }     ?>
+          <tr>
+            <td height="30" align="right"><label>Status : </label></td>
+            <td height="30" align="left">&nbsp;
+              <select class="select" name="status" id="status">
+                <option <?php echo ($this->CategoryInfo['status'] == 'Active')?'Selected':''; ?> value="Active">Active</option>
+                <option <?php echo ($this->CategoryInfo['status'] == 'Inactive')?'Selected':''; ?> value="Inactive">InActive</option>
+              </select></td>
+          </tr>
+        </table>
+
+        <!----></td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="right"><font class="compulsory">*</font>&nbsp;Indicates Compulsory Fields </td>
+    </tr>
+    <tr>
+      <td height="30" colspan="3" align="center"><input type="submit" name="cmdSubmit" id="cmdSubmit" value="<?php echo ($this->action == 'Edit')?'Save':$this->action; ?>">
+        &nbsp;&nbsp;&nbsp;
+        <input type="button" name="cmdCancel" id="cmdCancel" value="Cancel"></td>
+    </tr>
+  </table>
+  
+</form>

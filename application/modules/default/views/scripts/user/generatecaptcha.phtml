@@ -1,0 +1,14 @@
+<div class="catcha-div">
+<ul class="catchacode">
+	<li class="valuetxt">
+	  <input type="hidden" value="<?php echo $this->id; ?>" name="captcha[id]"/>
+	  Enter characters as show below : <font color="#FF0000">*</font> <input type="text" class="txtbox" name="captcha[value]" id="captcha_value" maxlength="5" />
+	</li>
+	<li class="code">
+		<div class='formdivcaptcha'><?php echo $this->captcha; ?></div>
+	</li>	
+	<li>
+	    <div class='formdivrefresh'><a href="javascript:generateCaptcha();"><img title='Generate new captcha code' border='0' src='<?php echo $this->baseUrl(); ?>/images/refresh.png'></a></div>
+	</li>	
+</ul>
+</div>

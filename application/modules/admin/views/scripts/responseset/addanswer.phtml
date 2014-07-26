@@ -1,0 +1,84 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$("table tr#tdata").mouseout(
+		function () {
+			$(this).removeClass('active_row');
+			$(this).addClass('nonactive_row');
+		}
+	);
+
+	$('table.data tbody tr:odd').addClass('odd');
+	$('table.data tbody tr:even').addClass('even');
+
+	$("table tr#tdata").mouseover(
+		function () {
+			$(this).removeClass('nonactive_row');
+			$(this).addClass('active_row');
+		}
+	);
+	 $(".paginationControl").change(
+		    	function() {
+		        	var page_index = null;
+		        	page_index = $(this).val();
+		        	window.location = page_index;
+		    	}
+		    );
+
+    $("#chkAll").click(
+    	function() {
+    		var checked_status = this.checked;
+			$("input[@id=chk][type='checkbox']").each(
+				function(){
+					this.checked = checked_status;
+				}
+			);
+    	}
+    );
+
+	$('#cmdCancel').click(
+		function(){
+			location.href = '<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/responseset/answers/id/<?php echo $this->rs_id; ?>/page/<?php echo $this->pg; ?>';
+		}
+	);
+
+	$('#txtAnsText').keyup(
+		function(){
+			$.ajax({	url: '<?php echo $this->baseUrl(); ?>/<?php echo $this->modulename; ?>/responseset/searchanswer/id/<?php echo $this->rs_id; ?>/search_text/' + $(this).val(),
+						success: function(data) {
+							$('#answers_block').html(data);
+						}
+					});
+			}
+	);
+
+});
+</script>
+
+<form name='frmResponseSetAddAnswer' id='frmResponseSetAddAnswer' method="POST" action="<?php echo $this->baseUrl(). "/" . $this->modulename; ?>/responseset/<?php echo strtolower($this->action); ?>answer">
+<input type="hidden" name="id" id="id" value="<?php echo $this->rs_id; ?>">
+<input type="hidden" name="pg" id="pg" value="<?php echo $this->pg; ?>">
+  <div class="contentdetails">
+    <table width="100%" cellpadding="2" cellspacing="2" border="0">
+      <tr>
+        <td class="searchdiv">
+			<table width="100%" cellpadding="2" cellspacing="2" border="0">
+			<tr>
+            	<td width="10%" align="left" height="30">&nbsp;<b>Response Set :</b></td>
+            	<td align="left" height="30">&nbsp;<?php echo stripslashes($this->responseSetInfo['title']); ?></td>
+			</tr>
+			<tr>
+            	<td width="10%" align="left" height="30">&nbsp;<b>Answer Text :</b></td>
+            	<td align="left" height="30">&nbsp;<input type='text' name='txtAnsText' id='txtAnsText' value='' size="50" maxlength="50"></td>
+			</tr>
+			</table>
+        </td>
+      </tr>
+<tr><td height="3"></td></tr>
+</table>
+<!--  -->
+<div id='answers_block'>
+<?php echo $this->answers_block; ?>
+</div>
+<!--  -->
+
+</form>
